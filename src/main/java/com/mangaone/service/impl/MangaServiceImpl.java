@@ -21,7 +21,7 @@ public class MangaServiceImpl implements MangaService {
     }
 
     @Override
-    public Manga getMangaById(Integer id) {
+    public Manga getMangaById(Long id) {
         // Tìm truyện theo ID, nếu không thấy thì trả về null
         return mangaRepository.findById(id).orElse(null);
     }
@@ -33,7 +33,7 @@ public class MangaServiceImpl implements MangaService {
     }
 
     @Override
-    public void deleteManga(Integer id) {
+    public void deleteManga(Long id) {
         // Xóa truyện dựa trên ID
         mangaRepository.deleteById(id);
     }

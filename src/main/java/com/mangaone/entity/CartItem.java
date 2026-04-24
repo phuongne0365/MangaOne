@@ -25,4 +25,15 @@ public class CartItem {
 
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
+    public Integer getCartId() { return cartId; }
+    public void setCartId(Integer cartId) { this.cartId = cartId; }
+
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
+
+    public Manga getManga() { return manga; }
+    public void setManga(Manga manga) { this.manga = manga; }
+
+    public Integer getQuantity() { return quantity; }
+    public void setQuantity(Integer quantity) { this.quantity = quantity; }
 }

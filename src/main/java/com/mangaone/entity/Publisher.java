@@ -20,4 +20,12 @@ public class Publisher {
     // Quan hệ ngược: Một Publisher có nhiều Manga
     @OneToMany(mappedBy = "publisher", fetch = FetchType.LAZY)
     private List<Manga> mangas;
+    public Integer getPublisherId() { return publisherId; }
+    public void setPublisherId(Integer publisherId) { this.publisherId = publisherId; }
+
+    public String getPublisherName() { return publisherName; }
+    public void setPublisherName(String publisherName) { this.publisherName = publisherName; }
+
+    public List<Manga> getMangas() { return mangas; }
+    public void setMangas(List<Manga> mangas) { this.mangas = mangas; }
 }

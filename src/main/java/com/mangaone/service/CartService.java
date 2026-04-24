@@ -49,5 +49,5 @@ public interface CartService {
     /**
      * UC06 — Tính tổng tiền tạm tính của giỏ hàng.
      */
-    BigDecimal calculateTotal(List<CartItem> cartItems);
+    Double calculateTotal(List<CartItem> cartItems);
 }

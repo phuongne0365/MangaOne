@@ -1,19 +1,22 @@
 package com.mangaone.entity;
 import jakarta.persistence.*;
-
 @Entity
 @Table(name = "USERS")
+
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    
     private Long userId;
-
+    
+    @Column(name = "email", unique = true, length = 100)
     private String email;
     private String password;
     private String fullName;
     private String phoneNumber;
     private String address;
     private String role = "USER"; // Mặc định ai đăng ký cũng là USER thường
+    @Column(name = "is_active")
     private Boolean isActive = true;
 	public Long getUserId() {
 		return userId;
@@ -63,6 +66,7 @@ public class User {
 	public void setIsActive(Boolean isActive) {
 		this.isActive = isActive;
 	}
-
+	
+	
     // TODO: Bạn tự Generate Getters và Setters ở đây nhé (Chuột phải -> Source -> Generate Getters and Setters)
 }

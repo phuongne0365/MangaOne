@@ -2,6 +2,7 @@ package com.mangaone.controller;
 
 import com.mangaone.entity.CartItem;
 import com.mangaone.entity.User;
+import com.mangaone.repository.MangaRepository; // Mang từ file cũ sang
 import com.mangaone.service.CartService;
 import com.mangaone.service.CategoryService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -9,54 +10,48 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.util.List;
 
-/**
- * Ví dụ cách tích hợp CategoryService & CartService vào Controller.
- * Copy và điều chỉnh vào HomeController.java thực tế của dự án.
- */
 @Controller
 public class HomeController {
 
     private final CategoryService categoryService;
     private final CartService cartService;
+    private final MangaRepository mangaRepository; // Thêm kho truyện vào đây
 
-    public HomeController(CategoryService categoryService, CartService cartService) {
+    // Kết nối các Service và Repository
+    public HomeController(CategoryService categoryService, CartService cartService, MangaRepository mangaRepository) {
         this.categoryService = categoryService;
         this.cartService = cartService;
+        this.mangaRepository = mangaRepository;
     }
 
-    /**
-     * UC01 + UC02 — Trang chủ: đẩy danh sách Category vào Model
-     * để Thymeleaf render menu điều hướng (navbar).
-     *
-     * Trong template: th:each="cat : ${categories}"
-     */
     @GetMapping("/")
     public String home(Model model) {
+        // 1. Lấy danh sách Thể loại để làm Menu Navbar (Của AI)
         model.addAttribute("categories", categoryService.getAllCategories());
-        // Thêm các attribute khác (mangas, v.v.) ở đây
+        
+        // 2. Lấy danh sách Truyện để hiển thị ra giữa màn hình (Của Sơn)
+        model.addAttribute("listManga", mangaRepository.findAll());
+        
         return "index";
     }
 
     // ----------------------------------------------------------------
-    //  GIỎ HÀNG — UC06
+    //  GIỎ HÀNG — UC06 (Giữ nguyên của AI)
     // ----------------------------------------------------------------
 
-    /** Hiển thị trang giỏ hàng */
     @GetMapping("/cart")
     public String viewCart(@AuthenticationPrincipal User currentUser, Model model) {
         List<CartItem> items = cartService.getCartItems(currentUser);
-        BigDecimal total = cartService.calculateTotal(items);
+        Double total = cartService.calculateTotal(items);
 
         model.addAttribute("cartItems", items);
         model.addAttribute("total", total);
-        model.addAttribute("categories", categoryService.getAllCategories()); // cho navbar
+        model.addAttribute("categories", categoryService.getAllCategories()); 
         return "cart";
     }
 
-    /** Thêm truyện vào giỏ — gọi từ trang chi tiết truyện */
     @PostMapping("/cart/add")
     public String addToCart(@AuthenticationPrincipal User currentUser,
                             @RequestParam Long mangaId,
@@ -65,7 +60,6 @@ public class HomeController {
         return "redirect:/cart";
     }
 
-    /** Cập nhật số lượng — nút +/- trong trang giỏ hàng */
     @PostMapping("/cart/update")
     public String updateQuantity(@RequestParam Integer cartId,
                                  @RequestParam int quantity) {
@@ -73,7 +67,6 @@ public class HomeController {
         return "redirect:/cart";
     }
 
-    /** Xóa một sản phẩm khỏi giỏ */
     @PostMapping("/cart/remove")
     public String removeFromCart(@RequestParam Integer cartId) {
         cartService.removeFromCart(cartId);

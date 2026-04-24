@@ -119,10 +119,9 @@ public class CartServiceImpl implements CartService {
      * Công thức: Σ (price × quantity) của từng CartItem.
      */
     @Override
-    public BigDecimal calculateTotal(List<CartItem> cartItems) {
+    public Double calculateTotal(List<CartItem> cartItems) {
         return cartItems.stream()
-                .map(item -> item.getManga().getPrice()
-                        .multiply(BigDecimal.valueOf(item.getQuantity())))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+                .mapToDouble(item -> item.getManga().getPrice() * item.getQuantity())
+                .sum();
     }
 }

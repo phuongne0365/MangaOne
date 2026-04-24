@@ -1,6 +1,8 @@
 package com.mangaone.entity;
 
 import jakarta.persistence.*;
+import com.mangaone.entity.Category;
+import com.mangaone.entity.Publisher;
 
 @Entity
 @Table(name = "MANGAS") 
@@ -8,7 +10,7 @@ public class Manga {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "manga_id") // Ánh xạ đúng vào cột manga_id
+    @Column(name = "id") // Ánh xạ đúng vào cột manga_id
     private Long id;
 
     private String title;       
@@ -39,4 +41,26 @@ public class Manga {
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
+    
+ // Thêm field này vào class Manga (cùng getter/setter)
+    @Column(name = "stock_quantity")
+    private Integer stockQuantity = 0;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "publisher_id")
+    private Publisher publisher;
+
+    // Getter & Setter
+    public Integer getStockQuantity() { return stockQuantity; }
+    public void setStockQuantity(Integer stockQuantity) { this.stockQuantity = stockQuantity; }
+    
+    public Category getCategory() { return category; }
+    public void setCategory(Category category) { this.category = category; }
+
+    public Publisher getPublisher() { return publisher; }
+    public void setPublisher(Publisher publisher) { this.publisher = publisher; }
 }
