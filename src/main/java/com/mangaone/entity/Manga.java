@@ -1,39 +1,48 @@
 package com.mangaone.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
+import java.math.BigDecimal;
 
+/**
+ * Entity Manga — ánh xạ 100% vào bảng MANGAS theo SQL đặc tả.
+ * Cập nhật thêm quan hệ @ManyToOne với Category và Publisher.
+ */
+@Data
 @Entity
-@Table(name = "mangas") // Tên bảng sẽ xuất hiện trong MySQL
+@Table(name = "MANGAS")
 public class Manga {
-    
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // ID tự tăng
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
-    private String title;       // Tên truyện
-    private String author;      // Tác giả
-    private Double price;       // Giá tiền
-    private String image;       // Tên file ảnh (vd: book1.jpg)
-    
-    @Column(columnDefinition = "TEXT")
-    private String description; // Mô tả truyện
+    @Column(name = "title", nullable = false, length = 255)
+    private String title;
 
-    // --- Bắt đầu phần Getter và Setter ---
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    @Column(name = "author", nullable = false, length = 100)
+    private String author;
 
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
+    @Column(name = "description", columnDefinition = "TEXT")
+    private String description;
 
-    public String getAuthor() { return author; }
-    public void setAuthor(String author) { this.author = author; }
+    @Column(name = "price", nullable = false, precision = 15, scale = 2)
+    private BigDecimal price;
 
-    public Double getPrice() { return price; }
-    public void setPrice(Double price) { this.price = price; }
+    @Column(name = "stock_quantity", columnDefinition = "INT DEFAULT 0")
+    private Integer stockQuantity = 0;
 
-    public String getImage() { return image; }
-    public void setImage(String image) { this.image = image; }
+    @Column(name = "image_url", length = 255)
+    private String imageUrl;
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+    // Quan hệ ManyToOne đến Category
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
+
+    // Quan hệ ManyToOne đến Publisher
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "publisher_id")
+    private Publisher publisher;
 }
