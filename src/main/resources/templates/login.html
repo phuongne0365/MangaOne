@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Đăng nhập MangaOne</title>
+</head>
+<body>
+    <div style="width: 300px; margin: 50px auto; text-align: center;">
+        <h2>Đăng Nhập</h2>
+        <p style="color:red" th:if="${error}" th:text="${error}"></p>
+        
+        <form th:action="@{/login}" method="post">
+            <input type="email" name="email" placeholder="Nhập Email" required style="margin-bottom: 10px; width: 100%; padding: 5px;"/><br/>
+            <input type="password" name="password" placeholder="Nhập Mật khẩu" required style="margin-bottom: 10px; width: 100%; padding: 5px;"/><br/>
+            <button type="submit" style="padding: 10px 20px;">Đăng Nhập</button>
+        </form>
+        <br>
+        <a href="/register">Chưa có tài khoản? Đăng ký ngay</a>
+    </div>
+</body>
+</html>

@@ -1,48 +1,42 @@
 package com.mangaone.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import java.math.BigDecimal;
 
-/**
- * Entity Manga — ánh xạ 100% vào bảng MANGAS theo SQL đặc tả.
- * Cập nhật thêm quan hệ @ManyToOne với Category và Publisher.
- */
-@Data
 @Entity
-@Table(name = "MANGAS")
+@Table(name = "MANGAS") 
 public class Manga {
-
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "manga_id") // Ánh xạ đúng vào cột manga_id
     private Long id;
 
-    @Column(name = "title", nullable = false, length = 255)
-    private String title;
+    private String title;       
+    private String author;      
+    private Double price;       
+    
+    @Column(name = "image_url") // Ánh xạ đúng vào cột image_url
+    private String image;       
+    
+    @Column(columnDefinition = "TEXT")
+    private String description; 
 
-    @Column(name = "author", nullable = false, length = 100)
-    private String author;
+    // --- Bắt đầu phần Getter và Setter ---
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    @Column(name = "description", columnDefinition = "TEXT")
-    private String description;
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
 
-    @Column(name = "price", nullable = false, precision = 15, scale = 2)
-    private BigDecimal price;
+    public String getAuthor() { return author; }
+    public void setAuthor(String author) { this.author = author; }
 
-    @Column(name = "stock_quantity", columnDefinition = "INT DEFAULT 0")
-    private Integer stockQuantity = 0;
+    public Double getPrice() { return price; }
+    public void setPrice(Double price) { this.price = price; }
 
-    @Column(name = "image_url", length = 255)
-    private String imageUrl;
+    public String getImage() { return image; }
+    public void setImage(String image) { this.image = image; }
 
-    // Quan hệ ManyToOne đến Category
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
-    private Category category;
-
-    // Quan hệ ManyToOne đến Publisher
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "publisher_id")
-    private Publisher publisher;
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
 }
