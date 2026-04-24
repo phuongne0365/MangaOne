@@ -3,20 +3,23 @@ package com.mangaone.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "mangas") // Tên bảng sẽ xuất hiện trong MySQL
+@Table(name = "MANGAS") // Viết hoa cho chuẩn với bảng SQL của bạn
 public class Manga {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // ID tự tăng
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "manga_id") // Ánh xạ đúng vào cột manga_id
     private Long id;
 
-    private String title;       // Tên truyện
-    private String author;      // Tác giả
-    private Double price;       // Giá tiền
-    private String image;       // Tên file ảnh (vd: book1.jpg)
+    private String title;       
+    private String author;      
+    private Double price;       
+    
+    @Column(name = "image_url") // Ánh xạ đúng vào cột image_url
+    private String image;       
     
     @Column(columnDefinition = "TEXT")
-    private String description; // Mô tả truyện
+    private String description; 
 
     // --- Bắt đầu phần Getter và Setter ---
     public Long getId() { return id; }
