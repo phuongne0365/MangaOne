@@ -8,4 +8,4 @@ public interface MangaService {
     Manga getMangaById(Long id); // Xem chi tiết 1 cuốn
     void saveManga(Manga manga); // Lưu hoặc cập nhật truyện
     void deleteManga(Long id); // Xóa truyện
-}
+} 
