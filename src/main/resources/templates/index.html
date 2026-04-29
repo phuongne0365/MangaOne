@@ -553,7 +553,7 @@
             <div class="swiper-slide" th:each="m : ${listManga}">
               <div class="card position-relative p-4 border rounded-3">
                 
-                <img th:src="@{'/images/' + ${m.image}}" class="img-fluid shadow-sm" alt="manga item" style="height: 300px; object-fit: cover;">
+                <img th:src="@{'/' + ${m.image}}" class="img-fluid shadow-sm" alt="manga item" style="height: 300px; object-fit: cover;">
                 
                 <h6 class="mt-4 mb-0 fw-bold">
                   <a href="single-product.html" th:text="${m.title}">Tên Manga</a>
