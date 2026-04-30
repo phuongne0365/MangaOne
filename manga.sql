@@ -145,7 +145,25 @@ INSERT INTO MANGAS (title, author, description, price, stock_quantity, image_url
 
 ('Blue Box (Hộp Xanh)', 'Kouji Miura', 'Câu chuyện tình cảm học đường nhẹ nhàng.', 30000, 180, 'images/manga/box-tap1.jpg', 
     (SELECT category_id FROM CATEGORIES WHERE category_name LIKE '%Romance%'), (SELECT publisher_id FROM PUBLISHERS WHERE publisher_name = 'NXB Kim Đồng'));
-    
+-- dot 3
+
+('Bleach', 'Tite Kubo', 'Hành trình làm Thần Chết và bảo vệ thế giới của Ichigo.', 35000, 100, 'images/manga/bleach-tap1.jpg', 
+    (SELECT category_id FROM CATEGORIES WHERE category_name LIKE '%Shonen%'), (SELECT publisher_id FROM PUBLISHERS WHERE publisher_name = 'NXB Kim Đồng')),
+
+('Black Clover', 'Yuki Tabata', 'Cậu bé không có phép thuật và giấc mơ trở thành Ma Pháp Vương.', 38000, 90, 'images/manga/black-clover-tap1.jpg', 
+    (SELECT category_id FROM CATEGORIES WHERE category_name LIKE '%Shonen%'), (SELECT publisher_id FROM PUBLISHERS WHERE publisher_name = 'NXB Kim Đồng')),
+
+('Fullmetal Alchemist', 'Hiromu Arakawa', 'Hai anh em nhà Elric và hành trình tìm lại cơ thể.', 42000, 80, 'images/manga/fullmetal-tap1.jpg', 
+    (SELECT category_id FROM CATEGORIES WHERE category_name LIKE '%Phiêu lưu%'), (SELECT publisher_id FROM PUBLISHERS WHERE publisher_name = 'NXB Trẻ')),
+
+('Tokyo Revengers', 'Ken Wakui', 'Xuyên không thay đổi quá khứ và cứu lấy người yêu.', 35000, 150, 'images/manga/tokyo-revengers-tap1.jpg', 
+    (SELECT category_id FROM CATEGORIES WHERE category_name LIKE '%Shonen%'), (SELECT publisher_id FROM PUBLISHERS WHERE publisher_name = 'NXB Trẻ')),
+
+('Dr. STONE', 'Riichiro Inagaki', 'Khôi phục nền văn minh nhân loại bằng sức mạnh khoa học.', 32000, 110, 'images/manga/dr-stone-tap1.jpg', 
+    (SELECT category_id FROM CATEGORIES WHERE category_name LIKE '%Shonen%'), (SELECT publisher_id FROM PUBLISHERS WHERE publisher_name = 'NXB Kim Đồng')),
+
+('Kaguya-sama: Love Is War', 'Aka Akasaka', 'Cuộc chiến tỏ tình giữa hai thiên tài trường học.', 36000, 100, 'images/manga/kaguya-sama-tap1.jpg', 
+    (SELECT category_id FROM CATEGORIES WHERE category_name LIKE '%Romance%'), (SELECT publisher_id FROM PUBLISHERS WHERE publisher_name = 'IPM'));
 
 INSERT INTO USERS (email, password, full_name, phone_number, address, role) VALUES
 ('admin@mangaone.com', '123456', 'Quản Trị Viên', '0987654321', 'Trụ sở chính', 'ADMIN'),
@@ -168,6 +186,12 @@ UPDATE MANGAS SET image_url = 'images/manga/mushoku-tensei-tap1.jpg' WHERE title
 UPDATE MANGAS SET image_url = 'images/manga/one-piece-tap1.jpg' WHERE title LIKE '%One Piece%';
 UPDATE MANGAS SET image_url = 'images/manga/oshi-no-koto-tap1.jpg' WHERE title LIKE '%Oshi no Ko%';
 UPDATE MANGAS SET image_url = 'images/manga/spy-family-tap1.jpg' WHERE title LIKE '%Spy x Family%';
+UPDATE MANGAS SET image_url = 'images/manga/bleach-tap1.jpg' WHERE title LIKE '%Bleach%';
+UPDATE MANGAS SET image_url = 'images/manga/black-clover-tap1.jpg' WHERE title LIKE '%Black Clover%';
+UPDATE MANGAS SET image_url = 'images/manga/fullmetal-tap1.jpg' WHERE title LIKE '%Fullmetal Alchemist%';
+UPDATE MANGAS SET image_url = 'images/manga/tokyo-revengers-tap1.jpg' WHERE title LIKE '%Tokyo Revengers%';
+UPDATE MANGAS SET image_url = 'images/manga/dr-stone-tap1.jpg' WHERE title LIKE '%Dr. STONE%';
+UPDATE MANGAS SET image_url = 'images/manga/kaguya-sama-tap1.jpg' WHERE title LIKE '%Kaguya-sama%';
 select * from MANGAS;
 select * from CATEGORIES;
 SELECT * FROM PUBLISHERS;

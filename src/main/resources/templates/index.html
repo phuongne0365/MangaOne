@@ -222,9 +222,34 @@
                 <li class="nav-item">
                   <a class="nav-link me-4" href="#">Giới Thiệu</a>
                 </li>
-                <li class="nav-item">
-                  <a class="nav-link me-4" href="#">Kho Truyện</a>
-                </li>
+				<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="khoTruyenDropdown" role="button" 
+       data-bs-toggle="dropdown" aria-expanded="false">
+        KHO TRUYỆN 
+        <i class="fas fa-chevron-down ms-1 transition-icon"></i>
+    </a>
+    <ul class="dropdown-menu border-0 shadow" aria-labelledby="khoTruyenDropdown">
+        <li>
+            <a class="dropdown-item fw-bold text-danger" th:href="@{/mangas}">
+                <i class="fas fa-list me-2"></i> Tất cả
+            </a>
+        </li>
+        <li><hr class="dropdown-divider"></li>
+        <div class="scrollable-menu">
+            <li><a class="dropdown-item" th:href="@{/mangas(category_id=1)}">Shonen</a></li>
+            <li><a class="dropdown-item" th:href="@{/mangas(category_id=2)}">Seinen</a></li>
+            <li><a class="dropdown-item" th:href="@{/mangas(category_id=3)}">Comedy</a></li>
+            <li><a class="dropdown-item" th:href="@{/mangas(category_id=4)}">Slice of Life</a></li>
+            <li><a class="dropdown-item" th:href="@{/mangas(category_id=5)}">Isekai</a></li>
+            <li><a class="dropdown-item" th:href="@{/mangas(category_id=6)}">Sports</a></li>
+            <li><a class="dropdown-item" th:href="@{/mangas(category_id=7)}">Romance</a></li>
+            <li><a class="dropdown-item" th:href="@{/mangas(category_id=8)}">Kinh dị</a></li>
+            <li><a class="dropdown-item" th:href="@{/mangas(category_id=9)}">Bí ẩn</a></li>
+            <li><a class="dropdown-item" th:href="@{/mangas(category_id=10)}">Tâm lý</a></li>
+            <li><a class="dropdown-item" th:href="@{/mangas(category_id=11)}">Phiêu lưu</a></li>
+        </div>
+    </ul>
+</li>
                 <li class="nav-item">
                   <a class="nav-link me-4" href="#">Tin Tức</a>
                 </li>
