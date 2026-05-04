@@ -1,53 +1,32 @@
 package com.mangaone.service;
 
+import org.springframework.stereotype.Service;
 import com.mangaone.entity.CartItem;
-import com.mangaone.entity.User;
-
-import java.math.BigDecimal;
+import com.mangaone.repository.CartItemRepository;
 import java.util.List;
 
-public interface CartService {
+@Service // Đánh dấu tầng xử lý nghiệp vụ
+public class CartService {
 
-    /**
-     * UC06 — Thêm truyện vào giỏ hàng.
-     * Nghiệp vụ cốt lõi: nếu truyện đã có trong giỏ → cộng dồn số lượng,
-     * KHÔNG tạo dòng mới.
-     *
-     * @param user     Người dùng hiện tại (lấy từ SecurityContext)
-     * @param mangaId  ID cuốn truyện muốn thêm
-     * @param quantity Số lượng muốn thêm (>= 1)
-     */
-    void addToCart(User user, Long mangaId, int quantity);
+    private final CartItemRepository cartRepo;
 
-    /**
-     * UC06 — Lấy toàn bộ danh sách CartItem của người dùng hiện tại
-     * để hiển thị trang giỏ hàng.
-     */
-    List<CartItem> getCartItems(User user);
+    // Tiêm (Inject) Repository thông qua constructor
+    public CartService(CartItemRepository cartRepo) {
+        this.cartRepo = cartRepo;
+    }
 
-    /**
-     * UC06 — Cập nhật số lượng của một CartItem cụ thể.
-     * Nếu quantity <= 0, tự động xóa dòng đó khỏi giỏ.
-     *
-     * @param cartId   ID dòng CartItem cần cập nhật
-     * @param quantity Số lượng mới
-     */
-    void updateQuantity(Integer cartId, int quantity);
+    // Lấy danh sách giỏ hàng theo User ID
+    public List<CartItem> getCartByUser(Long userId) {
+        return cartRepo.findByUserId(userId); 
+    }
 
-    /**
-     * UC06 — Xóa một truyện cụ thể khỏi giỏ hàng.
-     *
-     * @param cartId ID dòng CartItem cần xóa
-     */
-    void removeFromCart(Integer cartId);
+    // Lưu sản phẩm vào giỏ[cite: 1]
+    public CartItem saveToCart(CartItem item) {
+        return cartRepo.save(item);
+    }
 
-    /**
-     * UC07 — Xóa toàn bộ giỏ hàng sau khi đặt hàng thành công.
-     */
-    void clearCart(User user);
-
-    /**
-     * UC06 — Tính tổng tiền tạm tính của giỏ hàng.
-     */
-    Double calculateTotal(List<CartItem> cartItems);
+    // Xóa sản phẩm khỏi giỏ[cite: 1]
+    public void deleteFromCart(Long id) {
+        cartRepo.deleteById(id);
+    }
 }
