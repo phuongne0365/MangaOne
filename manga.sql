@@ -28,7 +28,7 @@ CREATE TABLE PUBLISHERS (
     publisher_name VARCHAR(150) NOT NULL
 );
 
--- Đã sửa khóa chính thành id (BIGINT) và price (FLOAT) cho khớp Java
+-- Cột id (BIGINT) khớp với Entity Java
 CREATE TABLE MANGAS (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     title VARCHAR(255) NOT NULL,
@@ -55,7 +55,7 @@ CREATE TABLE ORDERS (
     FOREIGN KEY (user_id) REFERENCES USERS(user_id)
 );
 
--- Khóa ngoại manga_id phải đổi lên BIGINT cho khớp bảng MANGAS
+-- Khóa ngoại trỏ đến id (BIGINT) của bảng MANGAS
 CREATE TABLE CART_ITEMS (
     cart_id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,
@@ -65,7 +65,7 @@ CREATE TABLE CART_ITEMS (
     FOREIGN KEY (manga_id) REFERENCES MANGAS(id)
 );
 
--- Khóa ngoại manga_id đổi BIGINT, price đổi FLOAT
+-- Khóa ngoại trỏ đến id (BIGINT) của bảng MANGAS và price kiểu FLOAT
 CREATE TABLE ORDER_DETAILS (
     order_detail_id INT PRIMARY KEY AUTO_INCREMENT,
     order_id INT NOT NULL,
@@ -104,7 +104,7 @@ INSERT INTO PUBLISHERS (publisher_name) VALUES
 ('Skybooks Tsubasa'),
 ('NXB Hà Nội');
 
--- 2.3 THÊM TRUYỆN (Ảnh đã cập nhật dạng Local, giá tiền chuẩn FLOAT)
+-- 2.3 THÊM TRUYỆN (Đầy đủ 19 bộ truyện)
 INSERT INTO MANGAS (title, author, description, price, stock_quantity, image_url, category_id, publisher_id) VALUES
 ('Chú Thuật Hồi Chiến (Jujutsu Kaisen)', 'Gege Akutami', 'Hành trình của Yuji Itadori bước vào thế giới Chú Thuật Sư.', 30000, 150, 'images/manga/jujutsu-kaisen-tap1.jpg', 
     (SELECT category_id FROM CATEGORIES WHERE category_name LIKE '%Shonen%'), (SELECT publisher_id FROM PUBLISHERS WHERE publisher_name = 'NXB Kim Đồng')),
@@ -143,16 +143,41 @@ INSERT INTO MANGAS (title, author, description, price, stock_quantity, image_url
     (SELECT category_id FROM CATEGORIES WHERE category_name LIKE '%Sports%'), (SELECT publisher_id FROM PUBLISHERS WHERE publisher_name = 'NXB Kim Đồng')),
 
 ('Blue Box (Hộp Xanh)', 'Kouji Miura', 'Câu chuyện tình cảm học đường nhẹ nhàng.', 30000, 180, 'images/manga/box-tap1.jpg', 
-    (SELECT category_id FROM CATEGORIES WHERE category_name LIKE '%Romance%'), (SELECT publisher_id FROM PUBLISHERS WHERE publisher_name = 'NXB Kim Đồng'));
+    (SELECT category_id FROM CATEGORIES WHERE category_name LIKE '%Romance%'), (SELECT publisher_id FROM PUBLISHERS WHERE publisher_name = 'NXB Kim Đồng')),
 
--- 2.4 THÊM TÀI KHOẢN
+('Bleach', 'Tite Kubo', 'Hành trình làm Thần Chết và bảo vệ thế giới của Ichigo.', 35000, 100, 'images/manga/bleach-tap1.jpg', 
+    (SELECT category_id FROM CATEGORIES WHERE category_name LIKE '%Shonen%'), (SELECT publisher_id FROM PUBLISHERS WHERE publisher_name = 'NXB Kim Đồng')),
+
+('Black Clover', 'Yuki Tabata', 'Cậu bé không có phép thuật và giấc mơ trở thành Ma Pháp Vương.', 38000, 90, 'images/manga/black-clover-tap1.jpg', 
+    (SELECT category_id FROM CATEGORIES WHERE category_name LIKE '%Shonen%'), (SELECT publisher_id FROM PUBLISHERS WHERE publisher_name = 'NXB Kim Đồng')),
+
+('Fullmetal Alchemist', 'Hiromu Arakawa', 'Hai anh em nhà Elric và hành trình tìm lại cơ thể.', 42000, 80, 'images/manga/fullmetal-tap1.jpg', 
+    (SELECT category_id FROM CATEGORIES WHERE category_name LIKE '%Phiêu lưu%'), (SELECT publisher_id FROM PUBLISHERS WHERE publisher_name = 'NXB Trẻ')),
+
+('Tokyo Revengers', 'Ken Wakui', 'Xuyên không thay đổi quá khứ và cứu lấy người yêu.', 35000, 150, 'images/manga/tokyo-revengers-tap1.jpg', 
+    (SELECT category_id FROM CATEGORIES WHERE category_name LIKE '%Shonen%'), (SELECT publisher_id FROM PUBLISHERS WHERE publisher_name = 'NXB Trẻ')),
+
+('Dr. STONE', 'Riichiro Inagaki', 'Khôi phục nền văn minh nhân loại bằng sức mạnh khoa học.', 32000, 110, 'images/manga/dr-stone-tap1.jpg', 
+    (SELECT category_id FROM CATEGORIES WHERE category_name LIKE '%Shonen%'), (SELECT publisher_id FROM PUBLISHERS WHERE publisher_name = 'NXB Kim Đồng')),
+
+('Kaguya-sama: Love Is War', 'Aka Akasaka', 'Cuộc chiến tỏ tình giữa hai thiên tài trường học.', 36000, 100, 'images/manga/kaguya-sama-tap1.jpg', 
+    (SELECT category_id FROM CATEGORIES WHERE category_name LIKE '%Romance%'), (SELECT publisher_id FROM PUBLISHERS WHERE publisher_name = 'IPM'));
+
+-- 2.4 THÊM TÀI KHOẢN (Đảm bảo tài khoản được thêm vào trước khi gán dữ liệu test)
 INSERT INTO USERS (email, password, full_name, phone_number, address, role) VALUES
 ('admin@mangaone.com', '123456', 'Quản Trị Viên', '0987654321', 'Trụ sở chính', 'ADMIN'),
 ('duyson@gmail.com', '123456', 'Đào Duy Sơn', '0912345678', 'Hà Nội', 'USER'),
 ('bichngoc@gmail.com', '123456', 'Nguyễn Thị Bích Ngọc', '0909090909', 'Hải Phòng', 'USER'),
-('phuong@gmail.com', '123456', 'Trưởng Nhóm Phượng', '0988888888', 'Đà Nẵng', 'USER');
+('phuong@gmail.com', '123456', 'Trưởng Nhóm Phượng', '0988888888', 'Đà Nẵng', 'USER'),
+('admin1@mangaone.com', '123456', 'Vu Phuong', '0901000001', 'Ha Noi', 'ADMIN'),
+('admin2@mangaone.com', '123456', 'Dao Duy Son', '0901000002', 'Ha Noi', 'ADMIN'),
+('admin3@mangaone.com', '123456', 'Nguyen Thi Bich Ngoc', '0901000003', 'Ha Noi', 'ADMIN'),
+('admin4@mangaone.com', '123456', 'Tran Hoang Duy', '0901000004', 'Ha Noi', 'ADMIN'),
+('admin5@mangaone.com', '123456', 'Dam Minh Hieu', '0901000005', 'Ha Noi', 'ADMIN'),
+('user1@mangaone.com', '123456', 'Nguoi Dung 1', '0902000001', 'Ha Noi', 'USER'),
+('user2@mangaone.com', '123456', 'Nguoi Dung 2', '0902000002', 'Ha Noi', 'USER');
 
--- 2.5 THÊM GIỎ HÀNG VÀ ĐƠN HÀNG MẪU (Để test chức năng)
+-- 2.5 THÊM GIỎ HÀNG VÀ ĐƠN HÀNG MẪU ĐỂ TEST
 INSERT INTO CART_ITEMS (user_id, manga_id, quantity) VALUES
 ((SELECT user_id FROM USERS WHERE email = 'duyson@gmail.com'), (SELECT id FROM MANGAS WHERE title LIKE '%Chú Thuật Hồi Chiến%' LIMIT 1), 2),
 ((SELECT user_id FROM USERS WHERE email = 'duyson@gmail.com'), (SELECT id FROM MANGAS WHERE title LIKE '%Chainsaw Man%' LIMIT 1), 1);
@@ -163,3 +188,9 @@ INSERT INTO ORDERS (user_id, receiver_name, receiver_phone, shipping_address, to
 INSERT INTO ORDER_DETAILS (order_id, manga_id, quantity, price) VALUES
 ((SELECT order_id FROM ORDERS WHERE receiver_name = 'Nguyễn Thị Bích Ngọc' LIMIT 1), (SELECT id FROM MANGAS WHERE title LIKE '%Spy x Family%' LIMIT 1), 1, 25000),
 ((SELECT order_id FROM ORDERS WHERE receiver_name = 'Nguyễn Thị Bích Ngọc' LIMIT 1), (SELECT id FROM MANGAS WHERE title LIKE '%Conan%' LIMIT 1), 2, 22000);
+
+-- 3. KIỂM TRA DỮ LIỆU ĐÃ TẠO
+SELECT * FROM MANGAS;
+SELECT * FROM CATEGORIES;
+SELECT * FROM PUBLISHERS;
+SELECT * FROM USERS;
