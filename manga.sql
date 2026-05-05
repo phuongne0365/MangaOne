@@ -4,7 +4,7 @@ CREATE DATABASE mangaone CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE mangaone;
 
 -- ==========================================
--- PHẦN 1: TẠO BẢNG (Chuẩn khớp Spring Boot - ID kiểu BIGINT)
+-- PHẦN 1: TẠO BẢNG CHUẨN KHỚP 100% VỚI SPRING BOOT
 -- ==========================================
 CREATE TABLE USERS (
     user_id INT PRIMARY KEY AUTO_INCREMENT,
@@ -104,7 +104,7 @@ INSERT INTO PUBLISHERS (publisher_name) VALUES
 ('Skybooks Tsubasa'),
 ('NXB Hà Nội');
 
--- 2.3 THÊM 19 BỘ TRUYỆN CÙNG ĐƯỜNG DẪN ẢNH NGAY TỪ ĐẦU (Không cần câu lệnh UPDATE nữa)
+-- 2.3 THÊM TRUYỆN (Đầy đủ 19 bộ truyện)
 INSERT INTO MANGAS (title, author, description, price, stock_quantity, image_url, category_id, publisher_id) VALUES
 ('Chú Thuật Hồi Chiến (Jujutsu Kaisen)', 'Gege Akutami', 'Hành trình của Yuji Itadori bước vào thế giới Chú Thuật Sư.', 30000, 150, 'images/manga/jujutsu-kaisen-tap1.jpg', 
     (SELECT category_id FROM CATEGORIES WHERE category_name LIKE '%Shonen%'), (SELECT publisher_id FROM PUBLISHERS WHERE publisher_name = 'NXB Kim Đồng')),
