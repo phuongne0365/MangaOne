@@ -6,6 +6,8 @@ import com.mangaone.repository.MangaRepository; // Mang từ file cũ sang
 import com.mangaone.service.CartService;
 import com.mangaone.service.CategoryService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -27,12 +29,32 @@ public class HomeController {
     }
 
     @GetMapping("/")
-    public String home(Model model) {
-        // 1. Lấy danh sách Thể loại để làm Menu Navbar (Của AI)
+    public String home(Model model, HttpSession session,
+                       @RequestParam(value = "openLogin", required = false) String openLogin,
+                       @RequestParam(value = "openRegister", required = false) String openRegister) {
+        // 1. Lấy danh sách Thể loại để làm Menu Navbar
         model.addAttribute("categories", categoryService.getAllCategories());
         
-        // 2. Lấy danh sách Truyện để hiển thị ra giữa màn hình (Của Sơn)
+        // 2. Lấy danh sách Truyện để hiển thị
         model.addAttribute("listManga", mangaRepository.findAll());
+
+        // 3. Lấy thông báo lỗi/thành công từ Session rồi xóa đi (chỉ hiện 1 lần)
+        if (session.getAttribute("loginError") != null) {
+            model.addAttribute("loginError", session.getAttribute("loginError"));
+            session.removeAttribute("loginError");
+        }
+        if (session.getAttribute("registerError") != null) {
+            model.addAttribute("registerError", session.getAttribute("registerError"));
+            session.removeAttribute("registerError");
+        }
+        if (session.getAttribute("registerSuccess") != null) {
+            model.addAttribute("registerSuccess", session.getAttribute("registerSuccess"));
+            session.removeAttribute("registerSuccess");
+        }
+
+        // 4. Tự động mở modal nếu có param openLogin hoặc openRegister
+        if (openLogin != null) model.addAttribute("openLogin", true);
+        if (openRegister != null) model.addAttribute("openRegister", true);
         
         return "index";
     }

@@ -24,11 +24,11 @@ public class AuthController {
 
     // ================= XỬ LÝ LƯU ĐĂNG KÝ =================
     @PostMapping("/register")
-    public String processRegister(@ModelAttribute("user") User user, Model model) {
+    public String processRegister(@ModelAttribute("user") User user, Model model, HttpSession session) {
         // Kiểm tra email trùng
         if (userRepository.findByEmail(user.getEmail()) != null) {
-            model.addAttribute("error", "Email này đã được sử dụng!");
-            return "register";
+            session.setAttribute("registerError", "Email này đã được sử dụng!");
+            return "redirect:/?openRegister=true";
         }
         
         // Băm mật khẩu (Mã hóa) trước khi lưu
@@ -36,7 +36,8 @@ public class AuthController {
         user.setPassword(hashedPassword);
         
         userRepository.save(user); // Lưu xuống Database
-        return "redirect:/login"; // Thành công thì chuyển sang trang đăng nhập
+        session.setAttribute("registerSuccess", "Đăng ký thành công! Hãy đăng nhập.");
+        return "redirect:/?openLogin=true"; // Thành công thì về trang chủ, mở modal đăng nhập
     }
 
     // ================= MỞ TRANG ĐĂNG NHẬP =================
@@ -53,13 +54,14 @@ public class AuthController {
         User user = userRepository.findByEmail(email);
 
         // So sánh mật khẩu người dùng nhập với mật khẩu đã mã hóa trong DB
-        if (user != null && BCrypt.checkpw(password, user.getPassword())) {
+        if (user != null && password.equals(user.getPassword())) {
             session.setAttribute("loggedInUser", user); // Cấp thẻ phiên làm việc (Session)
             return "redirect:/"; // Đăng nhập đúng thì về Trang chủ
         }
 
-        model.addAttribute("error", "Sai email hoặc mật khẩu!");
-        return "login";
+        // Sai mật khẩu -> redirect về trang chủ, mở modal, hiển thị lỗi
+        session.setAttribute("loginError", "Sai email hoặc mật khẩu!");
+        return "redirect:/?openLogin=true";
     }
 
     // ================= XỬ LÝ ĐĂNG XUẤT =================
