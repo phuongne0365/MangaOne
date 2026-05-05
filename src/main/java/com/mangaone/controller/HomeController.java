@@ -63,35 +63,35 @@ public class HomeController {
     //  GIỎ HÀNG — UC06 (Giữ nguyên của AI)
     // ----------------------------------------------------------------
 
-    @GetMapping("/cart")
-    public String viewCart(@AuthenticationPrincipal User currentUser, Model model) {
-        List<CartItem> items = cartService.getCartItems(currentUser);
-        Double total = cartService.calculateTotal(items);
-
-        model.addAttribute("cartItems", items);
-        model.addAttribute("total", total);
-        model.addAttribute("categories", categoryService.getAllCategories()); 
-        return "cart";
-    }
-
-    @PostMapping("/cart/add")
-    public String addToCart(@AuthenticationPrincipal User currentUser,
-                            @RequestParam Long mangaId,
-                            @RequestParam(defaultValue = "1") int quantity) {
-        cartService.addToCart(currentUser, mangaId, quantity);
-        return "redirect:/cart";
-    }
-
-    @PostMapping("/cart/update")
-    public String updateQuantity(@RequestParam Integer cartId,
-                                 @RequestParam int quantity) {
-        cartService.updateQuantity(cartId, quantity);
-        return "redirect:/cart";
-    }
-
-    @PostMapping("/cart/remove")
-    public String removeFromCart(@RequestParam Integer cartId) {
-        cartService.removeFromCart(cartId);
-        return "redirect:/cart";
-    }
+//    @GetMapping("/cart")
+//    public String viewCart(@AuthenticationPrincipal User currentUser, Model model) {
+//        List<CartItem> items = cartService.getCartItems(currentUser);
+//        Double total = cartService.calculateTotal(items);
+//
+//        model.addAttribute("cartItems", items);
+//        model.addAttribute("total", total);
+//        model.addAttribute("categories", categoryService.getAllCategories()); 
+//        return "cart";
+//    }
+//
+//    @PostMapping("/cart/add")
+//    public String addToCart(@AuthenticationPrincipal User currentUser,
+//                            @RequestParam Long mangaId,
+//                            @RequestParam(defaultValue = "1") int quantity) {
+//        cartService.addToCart(currentUser, mangaId, quantity);
+//        return "redirect:/cart";
+//    }
+//
+//    @PostMapping("/cart/update")
+//    public String updateQuantity(@RequestParam Integer cartId,
+//                                 @RequestParam int quantity) {
+//        cartService.updateQuantity(cartId, quantity);
+//        return "redirect:/cart";
+//    }
+//
+//    @PostMapping("/cart/remove")
+//    public String removeFromCart(@RequestParam Integer cartId) {
+//        cartService.removeFromCart(cartId);
+//        return "redirect:/cart";
+//    }
 }

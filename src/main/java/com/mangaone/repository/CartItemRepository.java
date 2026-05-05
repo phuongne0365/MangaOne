@@ -1,31 +1,37 @@
 package com.mangaone.repository;
 
 import com.mangaone.entity.CartItem;
-import com.mangaone.entity.User;
 import com.mangaone.entity.Manga;
+import com.mangaone.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Repository cho CartItem.
+ * Spring Data JPA tự sinh SQL dựa trên tên phương thức — không cần viết query thủ công.
+ */
 @Repository
 public interface CartItemRepository extends JpaRepository<CartItem, Integer> {
 
     /**
-     * Lấy toàn bộ giỏ hàng của một người dùng cụ thể.
-     * Dùng trong CartService để hiển thị giỏ hàng (UC06).
+     * Lấy toàn bộ giỏ hàng của 1 user.
+     * Spring JPA dịch: SELECT * FROM CART_ITEMS WHERE user_id = ?
      */
     List<CartItem> findByUser(User user);
 
     /**
-     * Tìm một dòng CartItem cụ thể theo User VÀ Manga.
-     * Dùng để kiểm tra "đã có trong giỏ chưa?" — nghiệp vụ cộng dồn số lượng (UC06).
+     * Kiểm tra xem user đã có manga này trong giỏ chưa.
+     * Dùng để quyết định: thêm mới hay cộng dồn số lượng.
+     * Spring JPA dịch: SELECT * FROM CART_ITEMS WHERE user_id = ? AND manga_id = ?
      */
     Optional<CartItem> findByUserAndManga(User user, Manga manga);
 
     /**
-     * Xóa toàn bộ giỏ hàng của user sau khi đặt hàng thành công (UC07).
+     * Xóa toàn bộ giỏ hàng của 1 user (gọi sau khi đặt hàng thành công).
+     * Spring JPA dịch: DELETE FROM CART_ITEMS WHERE user_id = ?
      */
     void deleteByUser(User user);
 }

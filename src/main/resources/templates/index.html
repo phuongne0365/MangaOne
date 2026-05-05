@@ -277,7 +277,14 @@
                     </a>
                   </li>
                   <li class="pe-3">
-                    <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    <!-- Nếu đã đăng nhập: hiện tên + nút đăng xuất -->
+                    <span th:if="${session.loggedInUser != null}" class="d-flex align-items-center gap-2">
+                      <span class="fw-semibold" style="font-size:0.9rem;color:#333;" 
+                            th:text="'Xin chào, ' + ${session.loggedInUser.fullName}"></span>
+                      <a href="/logout" class="btn btn-sm btn-outline-dark">Đăng xuất</a>
+                    </span>
+                    <!-- Nếu chưa đăng nhập: mở modal -->
+                    <a th:if="${session.loggedInUser == null}" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">
                       <svg class="user">
                         <use xlink:href="#user"></use>
                       </svg>
@@ -303,43 +310,55 @@
                                 </div>
                               </nav>
                               <div class="tab-content" id="nav-tabContent">
+                                <!-- ===== TAB ĐĂNG NHẬP ===== -->
                                 <div class="tab-pane fade active show" id="nav-sign-in" role="tabpanel"
                                   aria-labelledby="nav-sign-in-tab">
-                                  <div class="form-group py-3">
-                                    <label class="mb-2" for="sign-in">Username or email address *</label>
-                                    <input type="text" minlength="2" name="username" placeholder="Your Username"
-                                      class="form-control w-100 rounded-3 p-3" required>
-                                  </div>
-                                  <div class="form-group pb-3">
-                                    <label class="mb-2" for="sign-in">Password *</label>
-                                    <input type="password" minlength="2" name="password" placeholder="Your Password"
-                                      class="form-control w-100 rounded-3 p-3" required>
-                                  </div>
-                                  <label class="py-3">
-                                    <input type="checkbox" required="" class="d-inline">
-                                    <span class="label-body">Remember me</span>
-                                    <span class="label-body"><a href="#" class="fw-bold">Forgot Password</a></span>
-                                  </label>
-                                  <button type="submit" name="submit" class="btn btn-dark w-100 my-3">Login</button>
+                                  <div th:if="${loginError}" class="alert alert-danger mt-3 py-2" th:text="${loginError}"></div>
+                                  <div th:if="${registerSuccess}" class="alert alert-success mt-3 py-2" th:text="${registerSuccess}"></div>
+                                  <form th:action="@{/login}" method="post">
+                                    <div class="form-group py-3">
+                                      <label class="mb-2">Email *</label>
+                                      <input type="email" name="email" placeholder="Nhập địa chỉ Email"
+                                        class="form-control w-100 rounded-3 p-3" required>
+                                    </div>
+                                    <div class="form-group pb-3">
+                                      <label class="mb-2">Mật khẩu *</label>
+                                      <input type="password" name="password" placeholder="Nhập mật khẩu"
+                                        class="form-control w-100 rounded-3 p-3" required>
+                                    </div>
+                                    <label class="py-3">
+                                      <input type="checkbox" class="d-inline">
+                                      <span class="label-body">Ghi nhớ đăng nhập</span>
+                                    </label>
+                                    <button type="submit" class="btn btn-dark w-100 my-3">Đăng Nhập</button>
+                                  </form>
                                 </div>
+                                <!-- ===== TAB ĐĂNG KÝ ===== -->
                                 <div class="tab-pane fade" id="nav-register" role="tabpanel"
                                   aria-labelledby="nav-register-tab">
-                                  <div class="form-group py-3">
-                                    <label class="mb-2" for="register">Your email address *</label>
-                                    <input type="text" minlength="2" name="username" placeholder="Your Email Address"
-                                      class="form-control w-100 rounded-3 p-3" required>
-                                  </div>
-                                  <div class="form-group pb-3">
-                                    <label class="mb-2" for="sign-in">Password *</label>
-                                    <input type="password" minlength="2" name="password" placeholder="Your Password"
-                                      class="form-control w-100 rounded-3 p-3" required>
-                                  </div>
-                                  <label class="py-3">
-                                    <input type="checkbox" required="" class="d-inline">
-                                    <span class="label-body">I agree to the <a href="#" class="fw-bold">Privacy
-                                        Policy</a></span>
-                                  </label>
-                                  <button type="submit" name="submit" class="btn btn-dark w-100 my-3">Register</button>
+                                  <div th:if="${registerError}" class="alert alert-danger mt-3 py-2" th:text="${registerError}"></div>
+                                  <form th:action="@{/register}" method="post">
+                                    <div class="form-group py-3">
+                                      <label class="mb-2">Họ và tên *</label>
+                                      <input type="text" name="fullName" placeholder="Nhập họ và tên"
+                                        class="form-control w-100 rounded-3 p-3" required>
+                                    </div>
+                                    <div class="form-group pb-3">
+                                      <label class="mb-2">Email *</label>
+                                      <input type="email" name="email" placeholder="Nhập địa chỉ Email"
+                                        class="form-control w-100 rounded-3 p-3" required>
+                                    </div>
+                                    <div class="form-group pb-3">
+                                      <label class="mb-2">Mật khẩu *</label>
+                                      <input type="password" name="password" placeholder="Nhập mật khẩu"
+                                        class="form-control w-100 rounded-3 p-3" required>
+                                    </div>
+                                    <label class="py-3">
+                                      <input type="checkbox" required class="d-inline">
+                                      <span class="label-body">Tôi đồng ý với <a href="#" class="fw-bold">Chính sách bảo mật</a></span>
+                                    </label>
+                                    <button type="submit" class="btn btn-dark w-100 my-3">Đăng Ký</button>
+                                  </form>
                                 </div>
                               </div>
                             </div>
@@ -387,12 +406,12 @@
                       </ul>
                       <div class="d-flex flex-wrap justify-content-center">
                         <a href="#" class="w-100 btn btn-dark mb-1" type="submit">Add all to cart</a>
-                        <a href="cart.html" class="w-100 btn btn-primary" type="submit">View cart</a>
+                        <a th:href="@{/cart}" class="w-100 btn btn-primary" type="submit">View cart</a>
                       </div>
                     </div>
                   </li>
                   <li class="cart-dropdown dropdown">
-                    <a href="cart.html" class="dropdown-toggle" data-bs-toggle="dropdown" role="button"
+                    <a th:href="@{/cart}" class="dropdown-toggle" data-bs-toggle="dropdown" role="button"
                       aria-expanded="false">
                       <svg class="cart">
                         <use xlink:href="#cart"></use>
@@ -428,8 +447,8 @@
                         </li>
                       </ul>
                       <div class="d-flex flex-wrap justify-content-center">
-                        <a href="cart.html" class="w-100 btn btn-dark mb-1" type="submit">View Cart</a>
-                        <a href="checkout.html" class="w-100 btn btn-primary" type="submit">Go to checkout</a>
+                        <a th:href="@{/cart}" class="w-100 btn btn-primary mb-2" type="submit">View cart</a>
+                        <a th:href="@{/checkout}" class="w-100 btn btn-primary" type="submit">Go to checkout</a>
                       </div>
                     </div>
                   </li>
