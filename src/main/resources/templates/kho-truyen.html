@@ -262,14 +262,20 @@
      					onerror="this.src='/images/manga/default.jpg'">
 
                     <!-- Badge Còn hàng / Hết hàng dựa trên stockQuantity -->
-                    <span class="stock-badge bg-success text-white"
-                          th:if="${manga.stockQuantity != null and manga.stockQuantity > 0}">
-                        Còn hàng
-                    </span>
                     <span class="stock-badge bg-danger text-white"
-                          th:unless="${manga.stockQuantity != null and manga.stockQuantity > 0}">
-                        Hết hàng
-                    </span>
+      						th:if="${manga.stockQuantity == null or manga.stockQuantity <= 0}">
+    					Hết hàng
+					</span>
+
+					<span class="stock-badge text-white" style="background:#f07830;"
+      						th:if="${manga.stockQuantity != null and manga.stockQuantity > 0 and manga.stockQuantity < 5}">
+    					Sắp hết
+					</span>
+
+					<span class="stock-badge bg-success text-white"
+      						th:if="${manga.stockQuantity != null and manga.stockQuantity >= 5}">
+    					Còn hàng
+					</span>
 
                     <!-- Overlay nút khi hover -->
                     <div class="overlay-btn">

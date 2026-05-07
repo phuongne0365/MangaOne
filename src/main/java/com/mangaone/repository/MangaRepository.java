@@ -26,4 +26,20 @@ public interface MangaRepository extends JpaRepository<Manga, Long> {
            "m.category.categoryId = :categoryId")
     List<Manga> searchByKeywordAndCategory(@Param("keyword") String keyword,
                                            @Param("categoryId") Long categoryId);
+    @Query("SELECT m FROM Manga m WHERE m.stockQuantity < :threshold ORDER BY m.stockQuantity ASC")
+    List<Manga> findLowStockMangas(@Param("threshold") int threshold);
+ 
+    /**
+     * Đếm số đầu truyện đang hết hàng hoàn toàn (stockQuantity = 0).
+     * Dùng cho thẻ thống kê trên Dashboard.
+     */
+    @Query("SELECT COUNT(m) FROM Manga m WHERE m.stockQuantity = 0")
+    long countOutOfStock();
+ 
+    /**
+     * Đếm số đầu truyện sắp hết (0 < stockQuantity < threshold).
+     * Dùng cho thẻ thống kê trên Dashboard.
+     */
+    @Query("SELECT COUNT(m) FROM Manga m WHERE m.stockQuantity > 0 AND m.stockQuantity < :threshold")
+    long countLowStock(@Param("threshold") int threshold);
 }
