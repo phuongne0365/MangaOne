@@ -3,7 +3,6 @@ package com.mangaone.controller;
 import com.mangaone.entity.Manga;
 import com.mangaone.repository.MangaRepository;
 import com.mangaone.service.CategoryService;
-
 import com.mangaone.service.MangaService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+
 import java.util.Comparator;
 import java.util.List;
 
@@ -22,13 +22,10 @@ public class MangaController {
     private MangaRepository mangaRepository;
 
     @Autowired
-
     private CategoryService categoryService;
 
-
+    @Autowired
     private MangaService mangaService;
-
-
 
     /**
      * UC01 — Trang Kho Truyện: lấy toàn bộ danh sách từ DB, đẩy vào Model.
@@ -42,7 +39,6 @@ public class MangaController {
      * - model.addAttribute("mangas", ...) đặt danh sách vào Model với key "mangas"
      * để Thymeleaf có thể truy cập bằng cú pháp th:each="manga : ${mangas}".
      */
-
     @GetMapping("/mangas")
     public String khoTruyen(
             @RequestParam(value = "category_id", required = false) Long categoryId,
@@ -65,7 +61,6 @@ public class MangaController {
             mangas = mangaRepository.findAll();
         }
 
-
         if ("price_asc".equals(sortBy)) {
             mangas.sort(Comparator.comparingDouble(m -> m.getPrice()));
         } else if ("price_desc".equals(sortBy)) {
@@ -74,27 +69,22 @@ public class MangaController {
             mangas.sort(Comparator.comparing(Manga::getTitle));
         }
 
-        model.addAttribute("mangas",     mangas);
-        model.addAttribute("categories", categoryService.getAllCategories());
-        model.addAttribute("keyword",    keyword);
-        model.addAttribute("categoryId", categoryId);
-        model.addAttribute("sortBy",     sortBy);
-
-
-        
         model.addAttribute("mangas", mangas);
-        model.addAttribute("categories", categoryService.getAllCategories()); // Thêm categories
+        model.addAttribute("categories", categoryService.getAllCategories());
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("categoryId", categoryId);
+        model.addAttribute("sortBy", sortBy);
 
         return "kho-truyen";
     }
 
     @GetMapping("/kho-truyen") // Khi gõ /kho-truyen trên trình duyệt thì hàm này chạy
     public String listMangas(Model model) {
-        // Lấy danh sách truyện và đặt tên là "listMangas" để gửi ra giao diện
-        model.addAttribute("listMangas", mangaService.getAllMangas());
+        // Lấy danh sách truyện và dùng key "mangas" để khớp với kho-truyen.html
+        model.addAttribute("mangas", mangaRepository.findAll());
         // Thêm danh sách categories để hiển thị menu trên header
         model.addAttribute("categories", categoryService.getAllCategories());
-        return "manga-list"; // Sẽ tìm file manga-list.html trong thư mục templates
+        return "kho-truyen"; // Trả về file giao diện kho-truyen.html
     }
 
     // ================= MỞ TRANG CHI TIẾT TRUYỆN =================
