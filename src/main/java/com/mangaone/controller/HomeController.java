@@ -62,18 +62,7 @@ public class HomeController {
     // 2. GIỎ HÀNG (Đã mở khóa và tối ưu)
     // ----------------------------------------------------------------
 
-    @GetMapping("/cart")
-    public String viewCart(@AuthenticationPrincipal User currentUser, Model model) {
-        if (currentUser == null) return "redirect:/?openLogin=true"; // Bảo vệ trang giỏ hàng
-        
-        List<CartItem> items = cartService.getCartItems(currentUser);
-        Double total = cartService.calculateTotal(items);
-
-        model.addAttribute("cartItems", items);
-        model.addAttribute("total", total);
-        model.addAttribute("categories", categoryService.getAllCategories()); 
-        return "cart";
-    }
+  /* 
 
     @PostMapping("/cart/add")
     public String addToCart(@AuthenticationPrincipal User currentUser,
@@ -85,19 +74,19 @@ public class HomeController {
         return "redirect:/cart";
     }
 
-    @PostMapping("/cart/update")
-    public String updateQuantity(@RequestParam Integer cartId,
-                                 @RequestParam int quantity) {
-        cartService.updateQuantity(cartId, quantity);
-        return "redirect:/cart";
-    }
+   // @PostMapping("/cart/update")
+   // public String updateQuantity(@RequestParam Integer cartId,
+      //                           @RequestParam int quantity) {
+      //  cartService.updateQuantity(cartId, quantity);
+      //  return "redirect:/cart";
+    //}
 
     @PostMapping("/cart/remove")
     public String removeFromCart(@RequestParam Integer cartId) {
         cartService.removeFromCart(cartId);
         return "redirect:/cart";
     }
-
+*/
     // ----------------------------------------------------------------
     // 3. CÁC TRANG PHỤ
     // ----------------------------------------------------------------
