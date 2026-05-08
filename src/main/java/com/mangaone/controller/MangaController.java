@@ -27,18 +27,6 @@ public class MangaController {
     @Autowired
     private MangaService mangaService;
 
-    /**
-     * UC01 — Trang Kho Truyện: lấy toàn bộ danh sách từ DB, đẩy vào Model.
-     *
-     * [GIẢI THÍCH QUERY ĐỂ BÁO CÁO]
-     * - mangaRepository.findAll() là một phương thức có sẵn do JpaRepository cung cấp.
-     * - Spring Data JPA sẽ tự động dịch lệnh này thành câu SQL:
-     * SELECT * FROM MANGAS;
-     * - Kết quả trả về là một List<Manga>, mỗi phần tử là một hàng dữ liệu
-     * trong bảng MANGAS được ánh xạ thành đối tượng Java tương ứng.
-     * - model.addAttribute("mangas", ...) đặt danh sách vào Model với key "mangas"
-     * để Thymeleaf có thể truy cập bằng cú pháp th:each="manga : ${mangas}".
-     */
     @GetMapping("/mangas")
     public String khoTruyen(
             @RequestParam(value = "category_id", required = false) Long categoryId,
@@ -78,13 +66,13 @@ public class MangaController {
         return "kho-truyen";
     }
 
-    @GetMapping("/kho-truyen") // Khi gõ /kho-truyen trên trình duyệt thì hàm này chạy
+    @GetMapping("/kho-truyen") 
     public String listMangas(Model model) {
-        // Lấy danh sách truyện và dùng key "mangas" để khớp với kho-truyen.html
+        // Lấy danh sách truyện và dùng key "mangas" 
         model.addAttribute("mangas", mangaRepository.findAll());
         // Thêm danh sách categories để hiển thị menu trên header
         model.addAttribute("categories", categoryService.getAllCategories());
-        return "kho-truyen"; // Trả về file giao diện kho-truyen.html
+        return "kho-truyen";
     }
 
     // ================= MỞ TRANG CHI TIẾT TRUYỆN =================
@@ -96,9 +84,9 @@ public class MangaController {
             model.addAttribute("manga", manga);
             // Giữ lại menu thể loại trên thanh điều hướng
             model.addAttribute("categories", categoryService.getAllCategories());
-            return "manga-detail"; // Trỏ tới file manga-detail.html
+            return "manga-detail"; 
         }
 
-        return "redirect:/kho-truyen"; // Nếu không tìm thấy truyện, quay lại kho truyện
+        return "redirect:/kho-truyen"; 
     }
 }

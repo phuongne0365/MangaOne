@@ -13,9 +13,6 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Lớp cài đặt (Implementation) của CartService.
- * Chứa toàn bộ logic nghiệp vụ của Module Giỏ hàng.
- *
  * @Service  → Spring nhận diện đây là lớp Service, tự tạo Bean và quản lý vòng đời.
  * @Transactional → Đảm bảo mỗi phương thức là 1 giao dịch DB (rollback nếu có lỗi).
  */
@@ -25,43 +22,32 @@ public class CartServiceImpl implements CartService {
     private final CartItemRepository cartItemRepository;
     private final MangaRepository mangaRepository;
 
-    // Inject dependency qua Constructor (cách được Spring khuyến nghị)
     public CartServiceImpl(CartItemRepository cartItemRepository,
                            MangaRepository mangaRepository) {
         this.cartItemRepository = cartItemRepository;
         this.mangaRepository = mangaRepository;
     }
 
-    /**
-     * THÊM TRUYỆN VÀO GIỎ HÀNG
-     *
-     * Luồng xử lý:
-     *   1. Kiểm tra số lượng hợp lệ (> 0)
-     *   2. Tìm Manga theo ID → ném lỗi nếu không tồn tại
-     *   3. Tìm xem user đã có manga này trong giỏ chưa
-     *      - Có rồi  → cộng dồn số lượng, lưu lại
-     *      - Chưa có → tạo CartItem mới, lưu vào DB
-     */
     @Override
     @Transactional
     public void addToCart(User user, Long mangaId, int quantity) {
-        // Bước 1: Validate đầu vào
+        // Validate đầu vào
         if (quantity <= 0) {
             throw new IllegalArgumentException("Số lượng phải lớn hơn 0.");
         }
 
-        // Bước 2: Lấy thông tin Manga từ DB
+        // Lấy thông tin Manga từ DB
         Manga manga = mangaRepository.findById(mangaId)
                 .orElseThrow(() -> new IllegalArgumentException(
                         "Không tìm thấy truyện với ID: " + mangaId));
 
-        // Bước 3: Kiểm tra tồn kho
+        // Kiểm tra tồn kho
         if (manga.getStockQuantity() <= 0) {
             throw new IllegalStateException(
                     "Truyện \"" + manga.getTitle() + "\" hiện đã hết hàng.");
         }
 
-        // Bước 4: Tìm xem đã có trong giỏ chưa
+        // Tìm xem đã có trong giỏ chưa
         Optional<CartItem> existing = cartItemRepository.findByUserAndManga(user, manga);
 
         if (existing.isPresent()) {
@@ -81,7 +67,7 @@ public class CartServiceImpl implements CartService {
 
     /**
      * LẤY DANH SÁCH GIỎ HÀNG
-     * readOnly = true → Spring tối ưu: không khóa bảng, chỉ đọc.
+     * readOnly = true không khóa bảng, chỉ đọc.
      */
     @Override
     @Transactional(readOnly = true)
@@ -91,11 +77,6 @@ public class CartServiceImpl implements CartService {
 
     /**
      * CẬP NHẬT SỐ LƯỢNG
-     *
-     * Luồng xử lý:
-     *   - Tìm CartItem theo cartId → ném lỗi nếu không tìm thấy
-     *   - quantity <= 0 → xóa dòng đó khỏi giỏ
-     *   - quantity > 0  → cập nhật số lượng mới
      */
     @Override
     @Transactional
@@ -127,7 +108,7 @@ public class CartServiceImpl implements CartService {
     }
 
     /**
-     * XÓA SẠCH GIỎ HÀNG (gọi sau khi đặt hàng thành công)
+     * XÓA SẠCH GIỎ HÀNG: sau khi đặt hàng thành công
      */
     @Override
     @Transactional
@@ -137,8 +118,7 @@ public class CartServiceImpl implements CartService {
 
     /**
      * TÍNH TỔNG TIỀN
-     * Công thức: Σ (price × quantity) của từng dòng trong giỏ.
-     * Dùng Stream API để duyệt danh sách và tính tổng.
+     * Công thức: tổng xích ma (price × quantity) của từng dòng trong giỏ.
      */
     @Override
     public Double calculateTotal(List<CartItem> cartItems) {

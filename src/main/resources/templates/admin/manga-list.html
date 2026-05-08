@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{admin/admin-layout :: layout(~{::title}, ~{::section#content})}">
+
+<head>
+    <title>Quản lý Manga</title>
+</head>
+
+<body>
+<section id="content">
+
+    <!-- PAGE HEADER -->
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h4 class="fw-bold mb-1">
+                <i class="bi bi-book-half text-danger me-2"></i>Quản lý Manga
+            </h4>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0 small">
+                    <li class="breadcrumb-item">
+                        <a th:href="@{/admin/dashboard}" class="text-decoration-none text-muted">Trang chủ</a>
+                    </li>
+                    <li class="breadcrumb-item active text-muted">Quản lý truyện</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <!--  FORM THÊM / SỬA  -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white border-bottom py-3 d-flex align-items-center gap-2">
+            <span class="bg-danger bg-opacity-10 text-danger rounded p-1 lh-1">
+                <i class="bi bi-pencil-square fs-5"></i>
+            </span>
+            <h6 class="mb-0 fw-bold">Thêm / Chỉnh sửa truyện</h6>
+        </div>
+
+        <div class="card-body p-4">
+            <form th:action="@{/admin/mangas/save}"
+                  th:object="${manga}"
+                  method="post"
+                  enctype="multipart/form-data">
+
+                <!-- Hidden ID -->
+                <input type="hidden" th:field="*{id}">
+
+                <!-- ROW 1: Tên truyện + Tác giả -->
+                <div class="row g-3 mb-3">
+                    <div class="col-md-8">
+                        <label class="form-label fw-semibold small text-uppercase text-muted">
+                            Tên truyện <span class="text-danger">*</span>
+                        </label>
+                        <input type="text"
+                               class="form-control"
+                               th:field="*{title}"
+                               placeholder="Nhập tên truyện..."
+                               required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-semibold small text-uppercase text-muted">
+                            Tác giả <span class="text-danger">*</span>
+                        </label>
+                        <input type="text"
+                               class="form-control"
+                               th:field="*{author}"
+                               placeholder="Tên tác giả..."
+                               required>
+                    </div>
+                </div>
+
+                <!-- ROW 2: Giá + Kho + Thể loại + NXB -->
+                <div class="row g-3 mb-3">
+                    <div class="col-md-3">
+                        <label class="form-label fw-semibold small text-uppercase text-muted">
+                            Giá bán (₫) <span class="text-danger">*</span>
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0">
+                                <i class="bi bi-currency-dollar text-muted"></i>
+                            </span>
+                            <input type="number"
+                                   class="form-control border-start-0"
+                                   th:field="*{price}"
+                                   placeholder="0"
+                                   required
+                                   min="0">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-semibold small text-uppercase text-muted">
+                            Tồn kho <span class="text-danger">*</span>
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0">
+                                <i class="bi bi-box-seam text-muted"></i>
+                            </span>
+                            <input type="number"
+                                   class="form-control border-start-0"
+                                   th:field="*{stockQuantity}"
+                                   placeholder="0"
+                                   required
+                                   min="0">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-semibold small text-uppercase text-muted">
+                            Thể loại <span class="text-danger">*</span>
+                        </label>
+                        <select name="categoryId" class="form-select" required>
+                            <option value="">-- Chọn thể loại --</option>
+                            <option th:each="c : ${categories}"
+                                    th:value="${c.categoryId}"
+                                    th:text="${c.categoryName}"
+                                    th:selected="${manga.category != null and c.categoryId == manga.category.categoryId}">
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-semibold small text-uppercase text-muted">
+                            Nhà xuất bản <span class="text-danger">*</span>
+                        </label>
+                        <select name="publisherId" class="form-select" required>
+                            <option value="">-- Chọn NXB --</option>
+                            <option th:each="p : ${publishers}"
+                                    th:value="${p.publisherId}"
+                                    th:text="${p.publisherName}"
+                                    th:selected="${manga.publisher != null and p.publisherId == manga.publisher.publisherId}">
+                            </option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- ROW 3: Mô tả -->
+                <div class="row g-3 mb-3">
+                    <div class="col-12">
+                        <label class="form-label fw-semibold small text-uppercase text-muted">Mô tả</label>
+                        <textarea class="form-control"
+                                  th:field="*{description}"
+                                  rows="3"
+                                  placeholder="Nhập mô tả ngắn về truyện..."></textarea>
+                    </div>
+                </div>
+
+                <!-- ROW 4: Upload ảnh -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label fw-semibold small text-uppercase text-muted">Ảnh bìa</label>
+                        <input type="file"
+                               name="imageFile"
+                               class="form-control"
+                               accept="image/*"
+                               onchange="previewImage(event)">
+                        <div class="form-text">
+                            <i class="bi bi-info-circle me-1"></i>Chấp nhận PNG, JPG, WEBP. Tối đa 5MB.
+                        </div>
+                    </div>
+
+                    <!-- Ảnh hiện tại khi EDIT -->
+                    <div class="col-md-6 d-flex align-items-center gap-3"
+                         th:if="${manga.image != null}"
+                         id="current-image-box">
+                        <img th:src="${manga.image}"
+                             id="preview-img"
+                             alt="Ảnh bìa"
+                             width="60"
+                             height="76"
+                             class="rounded-2 object-fit-cover border shadow-sm">
+                        <div>
+                            <div class="fw-semibold small">Ảnh hiện tại</div>
+                            <div class="text-muted small">Chọn file mới để thay thế</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ACTIONS -->
+                <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+                    <a th:href="@{/admin/mangas}" class="btn btn-light border px-4">
+                        <i class="bi bi-x-lg me-1"></i>Hủy
+                    </a>
+                    <button type="submit" class="btn btn-danger px-4">
+                        <i class="bi bi-save me-1"></i>Lưu truyện
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <!--  TABLE DANH SÁCH  -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white border-bottom py-3 d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-2">
+                <span class="bg-danger bg-opacity-10 text-danger rounded p-1 lh-1">
+                    <i class="bi bi-list-ul fs-5"></i>
+                </span>
+                <h6 class="mb-0 fw-bold">Danh sách truyện</h6>
+                <span class="badge bg-danger bg-opacity-10 text-danger fw-semibold"
+                      th:text="${#lists.size(mangas)} + ' đầu truyện'">
+                    0 đầu truyện
+                </span>
+            </div>
+            <!-- Lọc nhanh -->
+            <div class="input-group input-group-sm" style="width: 220px;">
+                <span class="input-group-text bg-light border-end-0">
+                    <i class="bi bi-search text-muted"></i>
+                </span>
+                <input type="text"
+                       class="form-control border-start-0 bg-light"
+                       placeholder="Lọc nhanh..."
+                       oninput="filterTable(this.value)">
+            </div>
+        </div>
+
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0" id="manga-table">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-4 text-muted small fw-semibold text-uppercase" style="width:56px">ID</th>
+                            <th class="text-muted small fw-semibold text-uppercase" style="width:72px">Ảnh</th>
+                            <th class="text-muted small fw-semibold text-uppercase">Tên truyện</th>
+                            <th class="text-muted small fw-semibold text-uppercase">Tác giả</th>
+                            <th class="text-muted small fw-semibold text-uppercase">Thể loại</th>
+                            <th class="text-muted small fw-semibold text-uppercase">NXB</th>
+                            <th class="text-muted small fw-semibold text-uppercase">Giá</th>
+                            <th class="text-muted small fw-semibold text-uppercase">Kho</th>
+                            <th class="text-muted small fw-semibold text-uppercase text-center pe-4">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="m : ${mangas}">
+
+                            <!-- ID -->
+                            <td class="ps-4">
+                                <span class="badge bg-light text-muted border fw-semibold"
+                                      th:text="${m.id}">1</span>
+                            </td>
+
+                            <!-- Ảnh -->
+                            <td>
+                                <img th:if="${m.image != null}"
+                                     th:src="${m.image}"
+                                     width="44" height="56"
+                                     class="rounded-2 object-fit-cover border shadow-sm"
+                                     alt="bìa truyện">
+                                <div th:if="${m.image == null}"
+                                     class="rounded-2 bg-light border d-flex align-items-center justify-content-center text-muted"
+                                     style="width:44px;height:56px">
+                                    <i class="bi bi-image fs-5"></i>
+                                </div>
+                            </td>
+
+                            <!-- Tên + Mô tả -->
+                            <td>
+                                <div class="fw-semibold" th:text="${m.title}">Tên truyện</div>
+                                <div class="text-muted small text-truncate"
+                                     style="max-width:200px"
+                                     th:text="${m.description}">Mô tả...</div>
+                            </td>
+
+                            <!-- Tác giả -->
+                            <td class="text-muted small" th:text="${m.author}">Tác giả</td>
+
+                            <!-- Thể loại -->
+                            <td>
+                                <span class="badge rounded-pill bg-primary bg-opacity-10 text-primary fw-semibold"
+                                      th:text="${m.category != null ? m.category.categoryName : '—'}">
+                                    Shounen
+                                </span>
+                            </td>
+
+                            <!-- NXB -->
+                            <td class="text-muted small"
+                                th:text="${m.publisher != null ? m.publisher.publisherName : '—'}">
+                                Kim Đồng
+                            </td>
+
+                            <!-- Giá -->
+                            <td>
+                                <span class="fw-bold text-danger"
+                                      th:text="${#numbers.formatDecimal(m.price, 0, 'COMMA', 0, 'POINT') + ' ₫'}">
+                                    25.000 ₫
+                                </span>
+                            </td>
+
+                            <!-- Kho -->
+                            <td>
+                                <span th:text="${m.stockQuantity}"
+                                      th:classappend="${m.stockQuantity == 0 ? 'text-danger fw-bold' :
+                                                       (m.stockQuantity < 5  ? 'text-warning fw-bold' :
+                                                                               'text-success fw-bold')}">
+                                    42
+                                </span>
+                            </td>
+
+                            <!-- Thao tác -->
+                            <td class="text-center pe-4">
+                                <div class="d-flex gap-2 justify-content-center">
+                                    <a th:href="@{/admin/mangas/edit/{id}(id=${m.id})}"
+                                       class="btn btn-sm btn-outline-primary d-flex align-items-center gap-1">
+                                        <i class="bi bi-pencil"></i> Sửa
+                                    </a>
+                                    <a th:href="@{/admin/mangas/delete/{id}(id=${m.id})}"
+                                       class="btn btn-sm btn-outline-danger d-flex align-items-center gap-1"
+                                       onclick="return confirm('Xác nhận xóa truyện này?')">
+                                        <i class="bi bi-trash"></i> Xóa
+                                    </a>
+                                </div>
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Footer: số lượng kết quả -->
+        <div class="card-footer bg-white border-top py-3 px-4 d-flex align-items-center justify-content-between">
+            <small class="text-muted"
+                   th:text="'Hiển thị ' + ${#lists.size(mangas)} + ' kết quả'">
+                Hiển thị 0 kết quả
+            </small>
+        </div>
+
+    </div>
+
+    <!--  SCRIPT  -->
+    <script>
+        /* Lọc bảng theo từ khóa */
+        function filterTable(val) {
+            const q = val.toLowerCase();
+            document.querySelectorAll('#manga-table tbody tr').forEach(row => {
+                row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+            });
+        }
+
+        /* Preview ảnh khi chọn file mới */
+        function previewImage(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const url = URL.createObjectURL(file);
+            let box = document.getElementById('current-image-box');
+            if (box) {
+                const img = box.querySelector('img');
+                if (img) img.src = url;
+                const label = box.querySelector('.fw-semibold');
+                if (label) label.textContent = file.name;
+            } else {
+                /* Tạo mới nếu đang ở chế độ thêm mới */
+                box = document.createElement('div');
+                box.id = 'current-image-box';
+                box.className = 'col-md-6 d-flex align-items-center gap-3';
+                box.innerHTML = `
+                    <img src="${url}" id="preview-img" alt="preview"
+                         width="60" height="76"
+                         class="rounded-2 object-fit-cover border shadow-sm">
+                    <div>
+                        <div class="fw-semibold small">${file.name}</div>
+                        <div class="text-muted small">Ảnh xem trước</div>
+                    </div>`;
+                e.target.closest('.row').appendChild(box);
+            }
+        }
+    </script>
+
+</section>
+</body>
+</html>

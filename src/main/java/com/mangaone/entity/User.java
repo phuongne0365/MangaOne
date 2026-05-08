@@ -66,7 +66,4 @@ public class User {
 	public void setIsActive(Boolean isActive) {
 		this.isActive = isActive;
 	}
-	
-	
-    // TODO: Bạn tự Generate Getters và Setters ở đây nhé (Chuột phải -> Source -> Generate Getters and Setters)
 }

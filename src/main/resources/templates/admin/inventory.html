@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<!--
+  FILE: inventory.html
+  Đường dẫn: src/main/resources/templates/admin/inventory.html
+-->
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{admin/admin-layout :: layout(~{::title}, ~{::section#content})}">
+<head>
+  <title>Quản lý kho - MangaOne Admin</title>
+</head>
+<body>
+
+<section id="content">
+
+  <!-- Tiêu đề -->
+  <div class="d-flex align-items-start justify-content-between mb-4">
+    <div>
+      <h1 class="page-title">Quản lý kho 📦</h1>
+      <p class="page-subtitle">Nhập/xuất hàng và theo dõi tồn kho theo thời gian thực.</p>
+    </div>
+  </div>
+
+  <!-- Thông báo flash (thêm/xóa thành công/lỗi) -->
+  <div th:if="${successMsg}" class="alert d-flex align-items-center mb-3"
+       style="background:#edfaf4; border:1px solid #b7f0d4; border-radius:10px; color:#18b86e;">
+    <i class="bi bi-check-circle-fill me-2"></i>
+    <span th:text="${successMsg}"></span>
+  </div>
+  <div th:if="${errorMsg}" class="alert d-flex align-items-center mb-3"
+       style="background:#fff0f0; border:1px solid #ffc5c5; border-radius:10px; color:#e03;">
+    <i class="bi bi-exclamation-circle-fill me-2"></i>
+    <span th:text="${errorMsg}"></span>
+  </div>
+
+  <!-- Bảng danh sách tồn kho -->
+  <div class="content-card">
+    <div class="content-card-header">
+      <h5><i class="bi bi-table me-2" style="color:var(--primary);"></i>Danh sách tồn kho</h5>
+      <span style="font-size:13px; color:#8890aa;"
+            th:text="${danhSachTruyen.size()} + ' đầu truyện'">0 đầu truyện</span>
+    </div>
+
+    <div style="overflow-x:auto;">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Tên truyện</th>
+            <th>Tác giả</th>
+            <th class="text-center">Giá bán</th>
+            <th class="text-center">Tồn kho</th>
+            <th class="text-center">Trạng thái</th>
+            <th class="text-center" style="min-width:260px;">Thao tác (Nhập / Xuất)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="manga : ${danhSachTruyen}">
+
+            <!-- Tên truyện -->
+            <td>
+              <div style="font-weight:700; font-size:14px;" th:text="${manga.title}">Tên</div>
+            </td>
+
+            <!-- Tác giả -->
+            <td class="text-muted" th:text="${manga.author}">Tác giả</td>
+
+            <!-- Giá -->
+            <td class="text-center" style="font-weight:700; color:var(--primary);"
+                th:text="${#numbers.formatDecimal(manga.price, 0, 'COMMA', 0, 'POINT')} + ' đ'">
+            </td>
+
+            <!-- Số lượng tồn kho -->
+            <td class="text-center">
+              <strong th:text="${manga.stockQuantity}"
+                      th:style="${manga.stockQuantity == 0} ? 'color:#e03; font-size:16px;' :
+                                 (${manga.stockQuantity < 5} ? 'color:#f07830; font-size:16px;' :
+                                  'color:#18b86e; font-size:16px;')">
+              </strong>
+            </td>
+
+            <!-- Trạng thái -->
+            <td class="text-center">
+              <span th:if="${manga.stockQuantity == 0}" class="stock-badge out">
+                <i class="bi bi-x-circle-fill"></i> Hết hàng
+              </span>
+              <span th:if="${manga.stockQuantity > 0 and manga.stockQuantity < 5}" class="stock-badge low">
+                <i class="bi bi-exclamation-circle-fill"></i> Sắp hết
+              </span>
+              <span th:if="${manga.stockQuantity >= 5}" class="stock-badge ok">
+                <i class="bi bi-check-circle-fill"></i> Còn hàng
+              </span>
+            </td>
+
+            <!-- Form Nhập hàng + Xuất hàng -->
+            <td>
+              <div class="d-flex gap-2 justify-content-center">
+
+                <!-- Form NHẬP HÀNG (cộng thêm) -->
+                <!--
+                  POST /admin/inventory/nhap?mangaId=X&soLuong=Y
+                  th:value="${manga.id}" → điền sẵn ID của truyện này
+                -->
+                <form th:action="@{/admin/inventory/nhap}" method="post"
+                      class="d-flex gap-1 align-items-center">
+                  <input type="hidden" name="mangaId" th:value="${manga.id}"/>
+                  <input type="number" name="soLuong"
+                         min="1" placeholder="SL" required
+                         style="width:60px; border:1.5px solid #e8eaf0; border-radius:8px;
+                                padding:5px 8px; font-size:13px; font-family:'Nunito',sans-serif;
+                                outline:none; text-align:center;"/>
+                  <button type="submit"
+                          style="background:#edfaf4; color:#18b86e; border:none;
+                                 border-radius:8px; padding:5px 10px; font-size:13px;
+                                 font-weight:700; cursor:pointer; white-space:nowrap;">
+                    <i class="bi bi-plus-lg"></i> Nhập
+                  </button>
+                </form>
+
+                <!-- Form XUẤT HÀNG / ĐIỀU CHỈNH GIẢM -->
+                <form th:action="@{/admin/inventory/xuat}" method="post"
+                      class="d-flex gap-1 align-items-center">
+                  <input type="hidden" name="mangaId" th:value="${manga.id}"/>
+                  <input type="number" name="soLuong"
+                         min="1" th:max="${manga.stockQuantity}" placeholder="SL" required
+                         style="width:60px; border:1.5px solid #e8eaf0; border-radius:8px;
+                                padding:5px 8px; font-size:13px; font-family:'Nunito',sans-serif;
+                                outline:none; text-align:center;"/>
+                  <button type="submit"
+                          th:disabled="${manga.stockQuantity == 0}"
+                          style="background:#fff0f0; color:#e03; border:none;
+                                 border-radius:8px; padding:5px 10px; font-size:13px;
+                                 font-weight:700; cursor:pointer; white-space:nowrap;"
+                          th:style="${manga.stockQuantity == 0} ?
+                            'background:#f5f5f5; color:#bbb; border:none; border-radius:8px;
+                             padding:5px 10px; font-size:13px; font-weight:700; cursor:not-allowed;' :
+                            'background:#fff0f0; color:#e03; border:none; border-radius:8px;
+                             padding:5px 10px; font-size:13px; font-weight:700; cursor:pointer;'">
+                    <i class="bi bi-dash-lg"></i> Xuất
+                  </button>
+                </form>
+
+              </div>
+            </td>
+
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</section>
+</body>
+</html>

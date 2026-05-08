@@ -1,31 +1,44 @@
 package com.mangaone.entity;
 
 import jakarta.persistence.*;
-import com.mangaone.entity.Category;
-import com.mangaone.entity.Publisher;
 
 @Entity
-@Table(name = "MANGAS") 
+@Table(name = "mangas") // Linh để chữ thường cho đồng bộ với MySQL trên Linux/Server
 public class Manga {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id") // Ánh xạ đúng vào cột manga_id
-    private Long id;
+    @Column(name = "manga_id") // Đổi từ id thành manga_id cho chuyên nghiệp
+    private Long mangaId;
 
+    @Column(nullable = false)
     private String title;       
+    
     private String author;      
+    
+    @Column(nullable = false)
     private Double price;       
     
-    @Column(name = "image_url") // Ánh xạ đúng vào cột image_url
+    @Column(name = "image_url") 
     private String image;       
     
     @Column(columnDefinition = "TEXT")
     private String description; 
 
-    // --- Bắt đầu phần Getter và Setter ---
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    @Column(name = "stock_quantity")
+    private Integer stockQuantity = 0;
+    
+    @ManyToOne(fetch = FetchType.EAGER) // Chuyển sang EAGER để lúc hiện trang chủ không bị lỗi LazyInit
+    @JoinColumn(name = "category_id")
+    private Category category;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "publisher_id")
+    private Publisher publisher;
+
+    // --- GETTER & SETTER ---
+    public Long getMangaId() { return mangaId; }
+    public void setMangaId(Long mangaId) { this.mangaId = mangaId; }
 
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }
@@ -41,20 +54,7 @@ public class Manga {
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
-    
- // Thêm field này vào class Manga (cùng getter/setter)
-    @Column(name = "stock_quantity")
-    private Integer stockQuantity = 0;
-    
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
-    private Category category;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "publisher_id")
-    private Publisher publisher;
-
-    // Getter & Setter
     public Integer getStockQuantity() { return stockQuantity; }
     public void setStockQuantity(Integer stockQuantity) { this.stockQuantity = stockQuantity; }
     

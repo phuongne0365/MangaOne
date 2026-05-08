@@ -5,11 +5,6 @@ import com.mangaone.entity.User;
 
 import java.util.List;
 
-/**
- * Interface định nghĩa các hành vi (nghiệp vụ) của Module Giỏ hàng.
- * Controller chỉ gọi các phương thức này — không cần biết cách cài đặt bên trong.
- * Đây là nguyên tắc "Dependency Inversion" trong mô hình MVC của Spring Boot.
- */
 public interface CartService {
 
     /** Thêm truyện vào giỏ (tự động cộng dồn nếu đã có) */

@@ -5,8 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kho Truyện - MangaOne</title>
 
-    <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- nhúng css và vendor -->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/vendor.css}">
+	<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <!-- Google Fonts -->
@@ -18,7 +20,7 @@
             background-color: #f8f9fa;
         }
 
-        /* ===== BREADCRUMB BAR ===== */
+        /*  BREADCRUMB BAR  */
         .page-header {
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
             padding: 50px 0;
@@ -33,7 +35,7 @@
         .breadcrumb-item.active { color: #ccc; }
         .breadcrumb-item + .breadcrumb-item::before { color: #888; }
 
-        /* ===== MANGA CARD ===== */
+        /*  MANGA CARD */
         .manga-card {
             border: none;
             border-radius: 12px;
@@ -154,40 +156,11 @@
 </head>
 <body>
 
-<!-- ===== NAVBAR (copy từ index.html của bạn nếu có fragment) ===== -->
-<nav class="navbar navbar-expand-lg navbar-dark" style="background:#1a1a2e;">
-    <div class="container">
-        <a class="navbar-brand fw-800" href="/" style="color:#e94560; font-weight:800; font-size:1.4rem;">
-            📚 MangaOne
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navMenu">
-            <ul class="navbar-nav ms-auto gap-1">
-                <li class="nav-item"><a class="nav-link" href="/">Trang Chủ</a></li>
-                <li class="nav-item"><a class="nav-link active" href="/kho-truyen">Kho Truyện</a></li>
-                <li class="nav-item"><a class="nav-link" href="/cart">Giỏ Hàng</a></li>
-                <li class="nav-item"><a class="nav-link" href="/login">Đăng Nhập</a></li>
-            </ul>
-        </div>
-    </div>
-</nav>
+<div th:replace="~{fragments/header :: header(activePage='mangas')}"></div>
 
-<!-- ===== PAGE HEADER ===== -->
-<div class="page-header">
-    <div class="container">
-        <h1><i class="bi bi-collection me-2"></i>Kho Truyện</h1>
-        <nav aria-label="breadcrumb" class="mt-2">
-            <ol class="breadcrumb mb-0">
-                <li class="breadcrumb-item"><a href="/">Trang Chủ</a></li>
-                <li class="breadcrumb-item active">Kho Truyện</li>
-            </ol>
-        </nav>
-    </div>
-</div>
 
-<!-- ===== NỘI DUNG CHÍNH ===== -->
+
+<!--  NỘI DUNG CHÍNH  -->
 <div class="container my-5">
 
     <!-- FILTER BAR -->
@@ -262,14 +235,20 @@
      					onerror="this.src='/images/manga/default.jpg'">
 
                     <!-- Badge Còn hàng / Hết hàng dựa trên stockQuantity -->
-                    <span class="stock-badge bg-success text-white"
-                          th:if="${manga.stockQuantity != null and manga.stockQuantity > 0}">
-                        Còn hàng
-                    </span>
                     <span class="stock-badge bg-danger text-white"
-                          th:unless="${manga.stockQuantity != null and manga.stockQuantity > 0}">
-                        Hết hàng
-                    </span>
+      						th:if="${manga.stockQuantity == null or manga.stockQuantity <= 0}">
+    					Hết hàng
+					</span>
+
+					<span class="stock-badge text-white" style="background:#f07830;"
+      						th:if="${manga.stockQuantity != null and manga.stockQuantity > 0 and manga.stockQuantity < 5}">
+    					Sắp hết
+					</span>
+
+					<span class="stock-badge bg-success text-white"
+      						th:if="${manga.stockQuantity != null and manga.stockQuantity >= 5}">
+    					Còn hàng
+					</span>
 
                     <!-- Overlay nút khi hover -->
                     <div class="overlay-btn">
@@ -307,10 +286,10 @@
                     </div>
                 </div>
 
-            </div><!-- end manga-card -->
-        </div><!-- end col -->
+            </div>
+        </div>
 
-    </div><!-- end row -->
+    </div>
 
     <!-- EMPTY STATE — hiện khi DB không có truyện nào -->
     <div class="empty-state" th:if="${mangas == null or mangas.isEmpty()}">
@@ -319,16 +298,15 @@
         <p>Hãy thêm truyện vào Database để hiển thị tại đây.</p>
     </div>
 
-</div><!-- end container -->
+</div>
 
-<!-- ===== FOOTER ===== -->
+<!--  FOOTER  -->
 <footer class="py-4 mt-5" style="background:#1a1a2e; color:#aaa;">
     <div class="container text-center">
         <p class="mb-0">© 2025 MangaOne. Bản quyền thuộc nhóm phát triển.</p>
     </div>
 </footer>
 
-<!-- Bootstrap 5 JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

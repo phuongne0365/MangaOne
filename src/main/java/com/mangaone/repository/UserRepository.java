@@ -6,8 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    
-    // Spring Boot sẽ TỰ ĐỘNG viết câu lệnh SQL: SELECT * FROM USERS WHERE email = ?
     User findByEmail(String email); 
     
 }
