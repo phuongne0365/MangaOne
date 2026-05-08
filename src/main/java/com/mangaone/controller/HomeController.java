@@ -37,6 +37,8 @@ public class HomeController {
         
         // 2. Lấy danh sách Truyện để hiển thị
         model.addAttribute("listManga", mangaRepository.findAll());
+     // 2.5. Lấy danh sách BÁN CHẠY 
+        model.addAttribute("bestSellers", mangaRepository.findTopBestSellers());
 
         // 3. Lấy thông báo lỗi/thành công từ Session rồi xóa đi (chỉ hiện 1 lần)
         if (session.getAttribute("loginError") != null) {
@@ -94,4 +96,24 @@ public class HomeController {
 //        cartService.removeFromCart(cartId);
 //        return "redirect:/cart";
 //    }
+ // 1. Trang Giới thiệu
+    @GetMapping("/about")
+    public String about(Model model) {
+        model.addAttribute("categories", categoryService.getAllCategories());
+        return "about"; // Trả về file about.html trong templates
+    }
+
+    // 2. Trang Tin tức
+    @GetMapping("/news")
+    public String news(Model model) {
+        model.addAttribute("categories", categoryService.getAllCategories());
+        return "news"; // Trả về file news.html trong templates
+    }
+
+    // 3. Trang Liên hệ
+    @GetMapping("/contact")
+    public String contact(Model model) {
+        model.addAttribute("categories", categoryService.getAllCategories());
+        return "contact"; // Trả về file contact.html trong templates
+    }
 }

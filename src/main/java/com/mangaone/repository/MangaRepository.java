@@ -26,4 +26,8 @@ public interface MangaRepository extends JpaRepository<Manga, Long> {
            "m.category.categoryId = :categoryId")
     List<Manga> searchByKeywordAndCategory(@Param("keyword") String keyword,
                                            @Param("categoryId") Long categoryId);
+    
+ // Lấy top 5 truyện bán chạy (dựa trên tồn kho ít nhất)
+    @Query(value = "SELECT * FROM MANGAS ORDER BY stock_quantity ASC LIMIT 5", nativeQuery = true)
+    List<Manga> findTopBestSellers();
 }
