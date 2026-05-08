@@ -7,7 +7,6 @@
   - th:replace="~{admin/admin-layout :: layout(~{::title}, ~{::section#content})}"
     → Lấy fragment "layout" từ admin-layout.html
     → Truyền vào 2 tham số: <title> và <section id="content">
-  - Thymeleaf ghép chúng lại → trả về trang hoàn chỉnh cho browser
 -->
 <html xmlns:th="http://www.thymeleaf.org"
       th:replace="~{admin/admin-layout :: layout(~{::title}, ~{::section#content})}">
@@ -16,7 +15,7 @@
 </head>
 <body>
 
-<!-- Nội dung trang Dashboard — sẽ được nhúng vào #main-content của layout -->
+<!-- Nội dung trang Dashboard sẽ được nhúng vào #main-content của layout -->
 <section id="content">
 
   <!-- Tiêu đề trang -->
@@ -33,7 +32,7 @@
     </nav>
   </div>
 
-  <!-- ══════════════ 3 THẺ THỐNG KÊ ══════════════ -->
+  <!--  3 THẺ THỐNG KÊ  -->
   <div class="row g-3 mb-4">
 
     <!-- Thẻ 1: Tổng số đầu truyện -->
@@ -96,7 +95,7 @@
     </div>
   </div>
 
-  <!-- ══════════════ BẢNG CẢNH BÁO SẮP HẾT HÀNG ══════════════ -->
+  <!--  BẢNG CẢNH BÁO SẮP HẾT HÀNG  -->
   <div class="content-card">
     <div class="content-card-header">
       <h5>

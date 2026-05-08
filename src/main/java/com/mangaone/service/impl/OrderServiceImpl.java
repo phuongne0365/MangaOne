@@ -20,7 +20,6 @@ import java.util.List;
 @Service
 public class OrderServiceImpl implements OrderService {
 
-    // 1. Khai báo ĐẦY ĐỦ 4 kho chứa dữ liệu cần thiết
     @Autowired
     private OrderRepository orderRepository;
 
@@ -33,18 +32,11 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private MangaRepository mangaRepository;
 
-    /**
-     * @Transactional cực kỳ quan trọng:
-     * Nếu đoạn code bên trong bị lỗi (ví dụ hết hàng không trừ được kho),
-     * Spring sẽ tự động Rollback (hủy bỏ) toàn bộ: Không tạo đơn, không lưu chi tiết, không xóa giỏ.
-     */
     @Override
     @Transactional
     public Order createOrder(Order order) {
 
-        // ==========================================
-        // PHẦN 1: LƯU ĐƠN HÀNG (Logic cũ của Sơn)
-        // ==========================================
+        // PHẦN 1: LƯU ĐƠN HÀNG 
         Order savedOrder = orderRepository.save(order);
 
         if (savedOrder.getOrderDetails() != null) {
@@ -54,9 +46,7 @@ public class OrderServiceImpl implements OrderService {
             }
         }
 
-        // ==========================================
-        // PHẦN 2: KHẤU TRỪ KHO & XÓA GIỎ HÀNG (Logic của AI)
-        // ==========================================
+        // PHẦN 2: KHẤU TRỪ KHO & XÓA GIỎ HÀNG
         User user = order.getUser();
         List<CartItem> cartItems = cartItemRepository.findByUser(user);
 

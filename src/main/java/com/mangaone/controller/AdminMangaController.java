@@ -28,9 +28,7 @@ public class AdminMangaController {
     @Autowired
     private PublisherRepository publisherRepository;
 
-    // =========================
     // LIST
-    // =========================
     @GetMapping("/admin/mangas")
     public String list(Model model) {
 
@@ -45,9 +43,7 @@ public class AdminMangaController {
         return "admin/manga-list";
     }
 
-    // =========================
     // SAVE (ADD + UPDATE)
-    // =========================
     @PostMapping("/admin/mangas/save")
     public String save(
             @ModelAttribute Manga manga,
@@ -61,10 +57,7 @@ public class AdminMangaController {
             @RequestParam("imageFile") MultipartFile imageFile)
             throws IOException {
 
-        // =========================
         // VALIDATION
-        // =========================
-
         // title
         if (manga.getTitle() == null || manga.getTitle().trim().isEmpty()) {
             return "redirect:/admin/mangas";
@@ -85,9 +78,7 @@ public class AdminMangaController {
             return "redirect:/admin/mangas";
         }
 
-        // =========================
         // CATEGORY
-        // =========================
         if (categoryId != null) {
 
             Category category = new Category();
@@ -97,9 +88,7 @@ public class AdminMangaController {
             manga.setCategory(category);
         }
 
-        // =========================
         // PUBLISHER
-        // =========================
         if (publisherId != null) {
 
             Publisher publisher = new Publisher();
@@ -109,10 +98,7 @@ public class AdminMangaController {
             manga.setPublisher(publisher);
         }
 
-        // =========================
         // UPLOAD IMAGE
-        // =========================
-
         if (!imageFile.isEmpty()) {
 
             String fileName = imageFile.getOriginalFilename();
@@ -140,7 +126,6 @@ public class AdminMangaController {
         } else {
 
             // giữ ảnh cũ khi edit
-
             if (manga.getId() != null) {
 
                 Manga oldManga =
@@ -153,17 +138,13 @@ public class AdminMangaController {
             }
         }
 
-        // =========================
         // SAVE
-        // =========================
         mangaRepository.save(manga);
 
         return "redirect:/admin/mangas";
     }
 
-    // =========================
     // EDIT
-    // =========================
     @GetMapping("/admin/mangas/edit/{id}")
     public String edit(@PathVariable Long id, Model model) {
 
@@ -179,10 +160,8 @@ public class AdminMangaController {
 
         return "admin/manga-list";
     }
-
-    // =========================
+    
     // DELETE
-    // =========================
     @GetMapping("/admin/mangas/delete/{id}")
     public String delete(@PathVariable Long id) {
 

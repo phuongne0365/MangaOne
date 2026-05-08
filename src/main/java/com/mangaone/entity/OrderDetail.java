@@ -25,7 +25,6 @@ public class OrderDetail {
 
     private Integer price;
 
-    // Getter Setter
 
     public Long getOrderDetailId() {
         return orderDetailId;

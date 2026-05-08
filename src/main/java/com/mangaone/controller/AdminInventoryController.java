@@ -7,9 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
- * Controller cho toàn bộ khu vực Admin.
  * Tất cả URL bắt đầu bằng /admin → chỉ Admin mới được truy cập
- * (cấu hình phân quyền trong Spring Security — nếu nhóm có dùng).
  */
 @Controller
 @RequestMapping("/admin")
@@ -21,18 +19,17 @@ public class AdminInventoryController {
         this.inventoryService = inventoryService;
     }
 
-    // THÊM MỚI: /admin → redirect về /admin/dashboard
+    // 
     @GetMapping
     public String adminHome() {
         return "redirect:/admin/dashboard";
     }
-    // ===================================================================
-    // TRANG DASHBOARD CHÍNH: GET /admin/dashboard
-    // ===================================================================
+
+    // TRANG DASHBOARD : GET /admin/dashboard
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
 
-    	model.addAttribute("currentPage", "dashboard"); // ← THÊM DÒNG NÀY
+    	model.addAttribute("currentPage", "dashboard"); 
         // Thẻ thống kê
         model.addAttribute("tongSoTruyen",  inventoryService.demTongSoTruyen());
         model.addAttribute("soHetHang",     inventoryService.demHetHang());
@@ -41,22 +38,18 @@ public class AdminInventoryController {
         // Bảng cảnh báo sắp hết hàng
         model.addAttribute("danhSachSapHet", inventoryService.getSapHetHang());
 
-        return "admin/dashboard";   // → templates/admin/dashboard.html
+        return "admin/dashboard";   
     }
 
-    // ===================================================================
     // TRANG QUẢN LÝ KHO: GET /admin/inventory
-    // ===================================================================
     @GetMapping("/inventory")
     public String inventory(Model model) {
-    	model.addAttribute("currentPage", "inventory"); // ← THÊM DÒNG NÀY
+    	model.addAttribute("currentPage", "inventory");
         model.addAttribute("danhSachTruyen", inventoryService.getAllMangasForAdmin());
-        return "admin/inventory";   // → templates/admin/inventory.html
+        return "admin/inventory";  
     }
 
-    // ===================================================================
     // NHẬP HÀNG: POST /admin/inventory/nhap
-    // ===================================================================
     @PostMapping("/inventory/nhap")
     public String nhapHang(@RequestParam Long mangaId,
                            @RequestParam int soLuong,
@@ -71,9 +64,7 @@ public class AdminInventoryController {
         return "redirect:/admin/inventory";
     }
 
-    // ===================================================================
     // XUẤT HÀNG / ĐIỀU CHỈNH GIẢM: POST /admin/inventory/xuat
-    // ===================================================================
     @PostMapping("/inventory/xuat")
     public String xuatHang(@RequestParam Long mangaId,
                            @RequestParam int soLuong,

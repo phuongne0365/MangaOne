@@ -9,15 +9,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
- * Cài đặt nghiệp vụ Quản lý Tồn kho.
- *
  * @Transactional đảm bảo mọi thay đổi số lượng đều an toàn:
  * nếu có lỗi giữa chừng → Spring tự ROLLBACK, không để DB ở trạng thái nửa vời.
  */
 @Service
 public class InventoryServiceImpl implements InventoryService {
 
-    // Ngưỡng cảnh báo sắp hết hàng — đặt hằng số dễ thay đổi sau này
+    // Ngưỡng cảnh báo sắp hết hàng — đặt hằng số dễ thay đổi
     private static final int NGUONG_SAP_HET = 5;
 
     private final MangaRepository mangaRepository;
@@ -34,9 +32,6 @@ public class InventoryServiceImpl implements InventoryService {
 
     /**
      * NHẬP HÀNG: Admin nhập số lượng → hàm này cộng vào stockQuantity hiện tại.
-     *
-     * Luồng: POST /admin/inventory/nhap?mangaId=1&soLuong=50
-     *        → Controller gọi hàm này → Tìm Manga → Cộng dồn → Lưu DB
      */
     @Override
     @Transactional

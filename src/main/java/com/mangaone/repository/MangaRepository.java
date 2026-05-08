@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MangaRepository extends JpaRepository<Manga, Long> {
 
-    // Hàm cũ của nhóm - giữ nguyên
     List<Manga> findByCategory_CategoryId(Long categoryId);
 
     // Tìm kiếm theo từ khóa (tên truyện hoặc tác giả) - không phân biệt hoa thường
@@ -31,14 +30,12 @@ public interface MangaRepository extends JpaRepository<Manga, Long> {
  
     /**
      * Đếm số đầu truyện đang hết hàng hoàn toàn (stockQuantity = 0).
-     * Dùng cho thẻ thống kê trên Dashboard.
      */
     @Query("SELECT COUNT(m) FROM Manga m WHERE m.stockQuantity = 0")
     long countOutOfStock();
  
     /**
      * Đếm số đầu truyện sắp hết (0 < stockQuantity < threshold).
-     * Dùng cho thẻ thống kê trên Dashboard.
      */
     @Query("SELECT COUNT(m) FROM Manga m WHERE m.stockQuantity > 0 AND m.stockQuantity < :threshold")
     long countLowStock(@Param("threshold") int threshold);

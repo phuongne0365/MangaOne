@@ -3,10 +3,6 @@ package com.mangaone.service;
 import com.mangaone.entity.Manga;
 import java.util.List;
 
-/**
- * Interface định nghĩa nghiệp vụ Quản lý Tồn kho.
- * Controller chỉ gọi qua interface này — không phụ thuộc vào cài đặt cụ thể.
- */
 public interface InventoryService {
 
     /** Lấy toàn bộ danh sách truyện kèm tồn kho (trang Admin) */

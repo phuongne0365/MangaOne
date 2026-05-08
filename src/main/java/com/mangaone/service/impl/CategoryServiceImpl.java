@@ -14,18 +14,10 @@ public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
 
-    // Constructor Injection (khuyến nghị hơn @Autowired field)
     public CategoryServiceImpl(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
     }
 
-    /**
-     * Lấy toàn bộ danh sách thể loại — dùng trong Controller để đẩy vào Model
-     * cho Thymeleaf render menu điều hướng (navbar).
-     *
-     * Ví dụ dùng trong Controller:
-     *   model.addAttribute("categories", categoryService.getAllCategories());
-     */
     @Override
     @Transactional(readOnly = true)
     public List<Category> getAllCategories() {
@@ -45,7 +37,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     /**
-     * Xóa thể loại — kiểm tra ràng buộc UC14a:
+     * Xóa thể loại:
      * Không cho xóa nếu thể loại đang có truyện liên kết.
      */
     @Override
@@ -54,7 +46,7 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy thể loại với ID: " + id));
 
-        // Kiểm tra ràng buộc: nếu còn truyện thì từ chối xóa (UC14a)
+        // Kiểm tra ràng buộc: nếu còn truyện thì từ chối xóa 
         if (category.getMangas() != null && !category.getMangas().isEmpty()) {
             throw new IllegalStateException(
                 "Không thể xóa thể loại \"" + category.getCategoryName()

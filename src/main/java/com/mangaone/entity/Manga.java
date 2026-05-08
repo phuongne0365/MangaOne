@@ -10,20 +10,20 @@ public class Manga {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id") // Ánh xạ đúng vào cột manga_id
+    @Column(name = "id") 
     private Long id;
 
     private String title;       
     private String author;      
     private Double price;       
     
-    @Column(name = "image_url") // Ánh xạ đúng vào cột image_url
+    @Column(name = "image_url") 
     private String image;       
     
     @Column(columnDefinition = "TEXT")
     private String description; 
 
-    // --- Bắt đầu phần Getter và Setter ---
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -41,8 +41,7 @@ public class Manga {
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
-    
- // Thêm field này vào class Manga (cùng getter/setter)
+
     @Column(name = "stock_quantity")
     private Integer stockQuantity = 0;
     
@@ -54,7 +53,6 @@ public class Manga {
     @JoinColumn(name = "publisher_id")
     private Publisher publisher;
 
-    // Getter & Setter
     public Integer getStockQuantity() { return stockQuantity; }
     public void setStockQuantity(Integer stockQuantity) { this.stockQuantity = stockQuantity; }
     

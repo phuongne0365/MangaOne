@@ -37,7 +37,7 @@ public class AuthController {
         
         userRepository.save(user); // Lưu xuống Database
         session.setAttribute("registerSuccess", "Đăng ký thành công! Hãy đăng nhập.");
-        return "redirect:/?openLogin=true"; // Thành công thì về trang chủ, mở modal đăng nhập
+        return "redirect:/?openLogin=true"; 
     }
 
     // ================= MỞ TRANG ĐĂNG NHẬP =================
@@ -56,7 +56,7 @@ public class AuthController {
         // So sánh mật khẩu người dùng nhập với mật khẩu đã mã hóa trong DB
         if (user != null && password.equals(user.getPassword())) {
             session.setAttribute("loggedInUser", user); // Cấp thẻ phiên làm việc (Session)
-            return "redirect:/"; // Đăng nhập đúng thì về Trang chủ
+            return "redirect:/"; 
         }
 
         // Sai mật khẩu -> redirect về trang chủ, mở modal, hiển thị lỗi

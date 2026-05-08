@@ -16,7 +16,7 @@ public class SecurityConfig {
                 .anyRequest().permitAll() // Cho phép tất cả request đi qua
             )
             .formLogin(form -> form.disable()) // Tắt trang login mặc định của Spring
-            .logout(logout -> logout.disable()); // Bạn tự xử lý logout bằng session
+            .logout(logout -> logout.disable()); // tự xử lý logout bằng session
 
         return http.build();
     }
