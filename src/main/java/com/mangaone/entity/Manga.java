@@ -3,13 +3,13 @@ package com.mangaone.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "mangas") // Linh để chữ thường cho đồng bộ với MySQL trên Linux/Server
+@Table(name = "mangas") 
 public class Manga {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "manga_id") // Đổi từ id thành manga_id cho chuyên nghiệp
-    private Long mangaId;
+    @Column(name = "manga_id") 
+    private Long id;
 
     @Column(nullable = false)
     private String title;       
@@ -37,8 +37,8 @@ public class Manga {
     private Publisher publisher;
 
     // --- GETTER & SETTER ---
-    public Long getMangaId() { return mangaId; }
-    public void setMangaId(Long mangaId) { this.mangaId = mangaId; }
+    public Long getId() { return id; }
+    public void setId(Long mangaId) { this.id = id; }
 
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }

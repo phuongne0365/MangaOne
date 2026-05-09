@@ -30,7 +30,7 @@ CREATE TABLE PUBLISHERS (
 
 -- Cột id (BIGINT) khớp với Entity Java
 CREATE TABLE MANGAS (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    manga_id BIGINT PRIMARY KEY AUTO_INCREMENT,
     title VARCHAR(255) NOT NULL,
     author VARCHAR(150),
     description TEXT,
@@ -62,7 +62,7 @@ CREATE TABLE CART_ITEMS (
     manga_id BIGINT NOT NULL,
     quantity INT NOT NULL CHECK (quantity > 0),
     FOREIGN KEY (user_id) REFERENCES USERS(user_id),
-    FOREIGN KEY (manga_id) REFERENCES MANGAS(id)
+    FOREIGN KEY (manga_id) REFERENCES MANGAS(manga_id)
 );
 
 -- Khóa ngoại trỏ đến id (BIGINT) của bảng MANGAS và price kiểu FLOAT
@@ -73,7 +73,7 @@ CREATE TABLE ORDER_DETAILS (
     quantity INT NOT NULL CHECK (quantity > 0),
     price FLOAT NOT NULL,
     FOREIGN KEY (order_id) REFERENCES ORDERS(order_id),
-    FOREIGN KEY (manga_id) REFERENCES MANGAS(id)
+    FOREIGN KEY (manga_id) REFERENCES MANGAS(manga_id)
 );
 
 -- ==========================================
@@ -179,15 +179,15 @@ INSERT INTO USERS (email, password, full_name, phone_number, address, role) VALU
 
 -- 2.5 THÊM GIỎ HÀNG VÀ ĐƠN HÀNG MẪU ĐỂ TEST
 INSERT INTO CART_ITEMS (user_id, manga_id, quantity) VALUES
-((SELECT user_id FROM USERS WHERE email = 'duyson@gmail.com'), (SELECT id FROM MANGAS WHERE title LIKE '%Chú Thuật Hồi Chiến%' LIMIT 1), 2),
-((SELECT user_id FROM USERS WHERE email = 'duyson@gmail.com'), (SELECT id FROM MANGAS WHERE title LIKE '%Chainsaw Man%' LIMIT 1), 1);
+((SELECT user_id FROM USERS WHERE email = 'duyson@gmail.com'), (SELECT manga_id FROM MANGAS WHERE title LIKE '%Chú Thuật Hồi Chiến%' LIMIT 1), 2),
+((SELECT user_id FROM USERS WHERE email = 'duyson@gmail.com'), (SELECT manga_id FROM MANGAS WHERE title LIKE '%Chainsaw Man%' LIMIT 1), 1);
 
 INSERT INTO ORDERS (user_id, receiver_name, receiver_phone, shipping_address, total_amount, status) VALUES
 ((SELECT user_id FROM USERS WHERE email = 'bichngoc@gmail.com'), 'Nguyễn Thị Bích Ngọc', '0909090909', 'Số 1, Lê Lợi, Hải Phòng', 69000, 'SHIPPING');
 
 INSERT INTO ORDER_DETAILS (order_id, manga_id, quantity, price) VALUES
-((SELECT order_id FROM ORDERS WHERE receiver_name = 'Nguyễn Thị Bích Ngọc' LIMIT 1), (SELECT id FROM MANGAS WHERE title LIKE '%Spy x Family%' LIMIT 1), 1, 25000),
-((SELECT order_id FROM ORDERS WHERE receiver_name = 'Nguyễn Thị Bích Ngọc' LIMIT 1), (SELECT id FROM MANGAS WHERE title LIKE '%Conan%' LIMIT 1), 2, 22000);
+((SELECT order_id FROM ORDERS WHERE receiver_name = 'Nguyễn Thị Bích Ngọc' LIMIT 1), (SELECT manga_id FROM MANGAS WHERE title LIKE '%Spy x Family%' LIMIT 1), 1, 25000),
+((SELECT order_id FROM ORDERS WHERE receiver_name = 'Nguyễn Thị Bích Ngọc' LIMIT 1), (SELECT manga_id FROM MANGAS WHERE title LIKE '%Conan%' LIMIT 1), 2, 22000);
 
 -- 3. KIỂM TRA DỮ LIỆU ĐÃ TẠO
 SELECT * FROM MANGAS;
