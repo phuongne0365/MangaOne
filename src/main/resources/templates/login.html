@@ -259,5 +259,85 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Dark/Light Mode Toggle -->
+<div style="position:fixed;top:20px;right:20px;z-index:200;display:flex;align-items:center;gap:8px;">
+  <span style="font-size:0.8rem;font-weight:600;" id="mode-label">🌙 Tối</span>
+  <div onclick="toggleMode()" id="mode-track"
+       style="width:52px;height:28px;background:rgba(255,255,255,0.2);border-radius:14px;
+              cursor:pointer;position:relative;border:1px solid rgba(255,255,255,0.3);transition:background 0.3s;">
+    <div id="mode-thumb"
+         style="position:absolute;top:4px;left:4px;width:20px;height:20px;border-radius:50%;
+                background:white;transition:transform 0.3s;display:flex;align-items:center;
+                justify-content:center;font-size:0.65rem;">🌙</div>
+  </div>
+</div>
+
+<!-- Đèn bật/tắt -->
+<div id="lamp-wrap" onclick="toggleLamp()"
+     style="position:fixed;bottom:24px;left:24px;z-index:9999;
+            display:flex;flex-direction:column;align-items:center;cursor:pointer;"
+     title="Bật/Tắt đèn">
+  <div id="lamp-bulb"
+       style="width:48px;height:48px;border-radius:50%;
+              background:radial-gradient(circle at 40% 35%,#fffde0,#f9c74f);
+              box-shadow:0 0 22px 10px rgba(249,199,79,0.7);
+              border:2px solid #f4a100;transition:all 0.4s;"></div>
+  <div style="width:2px;height:22px;background:rgba(200,200,200,0.4);"></div>
+  <div style="width:30px;height:6px;background:rgba(200,200,200,0.3);border-radius:3px;"></div>
+  <span style="color:rgba(255,255,255,0.5);font-size:0.65rem;margin-top:4px;font-weight:600;">Đèn (click)</span>
+</div>
+<!-- Overlay tối khi tắt đèn -->
+<div id="lamp-overlay"
+     style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.94);z-index:9990;"></div>
+
+<script>
+// ===== DARK / LIGHT MODE =====
+var isDark = true;
+function toggleMode() {
+  isDark = !isDark;
+  var label = document.getElementById('mode-label');
+  var thumb = document.getElementById('mode-thumb');
+  var track = document.getElementById('mode-track');
+  var formBox = document.querySelector('.login-form-box');
+  if (isDark) {
+    document.body.style.background = '';
+    label.style.color = 'rgba(255,255,255,0.8)';
+    label.textContent = '🌙 Tối';
+    thumb.style.transform = 'translateX(0)';
+    thumb.textContent = '🌙';
+    track.style.background = 'rgba(255,255,255,0.2)';
+    if (formBox) { formBox.style.background = '#fff'; formBox.style.color = ''; }
+  } else {
+    document.body.style.background = 'linear-gradient(135deg,#f0f4ff 0%,#e8ecf8 50%,#dde3f5 100%)';
+    label.style.color = '#1a1a2e';
+    label.textContent = '☀️ Sáng';
+    thumb.style.transform = 'translateX(24px)';
+    thumb.textContent = '☀️';
+    track.style.background = '#f9c74f';
+    if (formBox) { formBox.style.background = '#fff'; }
+  }
+}
+
+// ===== ĐÈN BẬT / TẮT =====
+var lampOn = true;
+function toggleLamp() {
+  lampOn = !lampOn;
+  var bulb    = document.getElementById('lamp-bulb');
+  var overlay = document.getElementById('lamp-overlay');
+  if (lampOn) {
+    bulb.style.background = 'radial-gradient(circle at 40% 35%,#fffde0,#f9c74f)';
+    bulb.style.boxShadow  = '0 0 22px 10px rgba(249,199,79,0.7)';
+    bulb.style.border     = '2px solid #f4a100';
+    overlay.style.display = 'none';
+  } else {
+    bulb.style.background = '#222';
+    bulb.style.boxShadow  = 'none';
+    bulb.style.border     = '2px solid #444';
+    overlay.style.display = 'block';
+  }
+}
+</script>
+
 </body>
 </html>

@@ -319,6 +319,41 @@
         <p>Hãy thêm truyện vào Database để hiển thị tại đây.</p>
     </div>
 
+    <!-- ===== PHÂN TRANG ===== -->
+    <div class="d-flex justify-content-center mt-5" th:if="${totalPages > 1}">
+        <nav>
+            <ul class="pagination">
+                <!-- Nút Trước -->
+                <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/mangas(page=${currentPage - 1}, keyword=${keyword}, category_id=${categoryId}, sortBy=${sortBy})}">
+                        <i class="bi bi-chevron-left"></i>
+                    </a>
+                </li>
+
+                <!-- Các số trang -->
+                <li class="page-item"
+                    th:each="i : ${#numbers.sequence(1, totalPages)}"
+                    th:classappend="${i == currentPage} ? 'active'">
+                    <a class="page-link"
+                       th:href="@{/mangas(page=${i}, keyword=${keyword}, category_id=${categoryId}, sortBy=${sortBy})}"
+                       th:text="${i}">1</a>
+                </li>
+
+                <!-- Nút Sau -->
+                <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
+                    <a class="page-link"
+                       th:href="@{/mangas(page=${currentPage + 1}, keyword=${keyword}, category_id=${categoryId}, sortBy=${sortBy})}">
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <!-- Hiện thông tin trang -->
+    <p class="text-center text-muted mt-2" th:if="${totalPages > 1}"
+       th:text="'Trang ' + ${currentPage} + ' / ' + ${totalPages} + ' — Tổng ' + ${totalItems} + ' truyện'"></p>
+
 </div><!-- end container -->
 
 <!-- ===== FOOTER ===== -->

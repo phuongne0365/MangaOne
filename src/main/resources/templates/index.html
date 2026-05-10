@@ -279,8 +279,14 @@
                   <li class="pe-3">
                     <!-- Nếu đã đăng nhập: hiện tên + nút đăng xuất -->
                     <span th:if="${session.loggedInUser != null}" class="d-flex align-items-center gap-2">
-                      <span class="fw-semibold" style="font-size:0.9rem;color:#333;" 
+                      <span class="fw-semibold" style="font-size:0.9rem;color:#333;"
                             th:text="'Xin chào, ' + ${session.loggedInUser.fullName}"></span>
+                      <!-- Nút Quản lý chỉ hiện với Admin -->
+                      <a th:if="${session.loggedInUser.role == 'ADMIN'}"
+                         href="/admin/users" class="btn btn-sm btn-warning fw-bold">
+                        ⚙️ Quản lý
+                      </a>
+                      <a href="/profile" class="btn btn-sm btn-outline-secondary">Hồ sơ</a>
                       <a href="/logout" class="btn btn-sm btn-outline-dark">Đăng xuất</a>
                     </span>
                     <!-- Nếu chưa đăng nhập: mở modal -->
@@ -1475,11 +1481,159 @@
       </div>
     </div>
 
+    <!-- ===== CHATBOT AI ===== -->
+    <div id="chatbot-widget" style="position:fixed;bottom:24px;right:24px;z-index:9999;font-family:'Nunito',sans-serif;">
+      <!-- Nút mở chatbot -->
+      <button id="chatbot-toggle" onclick="toggleChatbot()"
+        style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#e94560,#c73652);
+               border:none;cursor:pointer;box-shadow:0 4px 20px rgba(233,69,96,0.5);
+               display:flex;align-items:center;justify-content:center;font-size:1.5rem;
+               transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'"
+        onmouseout="this.style.transform='scale(1)'">
+        💬
+      </button>
+      <!-- Hộp chat -->
+      <div id="chatbot-box" style="display:none;position:absolute;bottom:70px;right:0;
+           width:320px;background:#fff;border-radius:16px;
+           box-shadow:0 8px 40px rgba(0,0,0,0.2);overflow:hidden;border:1px solid #f0f0f0;">
+        <!-- Header -->
+        <div style="background:linear-gradient(135deg,#1a1a2e,#0f3460);padding:14px 18px;
+                    display:flex;align-items:center;justify-content:space-between;">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-size:1.3rem;">🤖</span>
+            <div>
+              <div style="color:white;font-weight:800;font-size:0.9rem;">MangaBot</div>
+              <div style="color:rgba(255,255,255,0.5);font-size:0.72rem;">Trợ lý AI của MangaOne</div>
+            </div>
+          </div>
+          <button onclick="toggleChatbot()" style="background:none;border:none;color:white;cursor:pointer;font-size:1.1rem;">✕</button>
+        </div>
+        <!-- Tin nhắn -->
+        <div id="chatbot-messages" style="height:260px;overflow-y:auto;padding:14px;
+             display:flex;flex-direction:column;gap:10px;background:#f8f9fa;">
+          <div style="background:#e94560;color:white;padding:10px 14px;border-radius:12px 12px 12px 0;
+                      font-size:0.85rem;max-width:80%;align-self:flex-start;">
+            Xin chào! Tôi là MangaBot 🤖 Bạn cần tôi giúp gì về truyện manga không?
+          </div>
+        </div>
+        <!-- Input -->
+        <div style="padding:12px;border-top:1px solid #f0f0f0;display:flex;gap:8px;background:white;">
+          <input id="chatbot-input" type="text" placeholder="Nhập câu hỏi..."
+            style="flex:1;border:1.5px solid #dee2e6;border-radius:8px;padding:8px 12px;
+                   font-size:0.85rem;outline:none;font-family:inherit;"
+            onkeypress="if(event.key==='Enter')sendChatMessage()"
+            onfocus="this.style.borderColor='#e94560'" onblur="this.style.borderColor='#dee2e6'">
+          <button onclick="sendChatMessage()"
+            style="background:#e94560;color:white;border:none;border-radius:8px;
+                   padding:8px 14px;cursor:pointer;font-size:0.85rem;font-weight:700;">
+            Gửi
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== ĐÈN BẬT/TẮT (Bóng đèn góc dưới trái) ===== -->
+    <div id="lamp-widget" style="position:fixed;bottom:24px;left:24px;z-index:9999;
+         display:flex;flex-direction:column;align-items:center;cursor:pointer;"
+         onclick="toggleLamp()" title="Bật/Tắt đèn">
+      <!-- Bóng đèn -->
+      <div id="lamp-bulb" style="width:44px;height:44px;border-radius:50%;
+           background:radial-gradient(circle at 40% 35%, #fffde0, #f9c74f);
+           box-shadow:0 0 20px 8px rgba(249,199,79,0.7);
+           border:2px solid #f4a100;transition:all 0.4s;cursor:pointer;">
+      </div>
+      <!-- Dây đèn -->
+      <div style="width:2px;height:20px;background:rgba(120,120,120,0.4);"></div>
+      <!-- Đế đèn -->
+      <div style="width:28px;height:6px;background:rgba(120,120,120,0.3);border-radius:3px;"></div>
+      <div style="color:rgba(255,255,255,0.5);font-size:0.65rem;margin-top:4px;font-weight:600;">
+        Đèn (click)
+      </div>
+    </div>
+
+    <!-- Overlay tối khi tắt đèn -->
+    <div id="lamp-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.93);
+         z-index:9990;transition:opacity 0.4s;"></div>
+
     <script th:src="@{/js/jquery-1.11.0.min.js}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
     <script type="text/javascript" th:src="@{/js/script.js}"></script>
+    <script>
+    // ===== CHATBOT =====
+    function toggleChatbot() {
+      var box = document.getElementById('chatbot-box');
+      box.style.display = box.style.display === 'none' ? 'block' : 'none';
+    }
+
+    var chatResponses = {
+      'xin chào': 'Xin chào bạn! Tôi có thể giúp gì cho bạn về truyện manga? 😊',
+      'hello': 'Hello! Chào mừng bạn đến MangaOne! 📚',
+      'truyện': 'MangaOne có hơn 1000+ bộ truyện từ nhiều thể loại: Shonen, Seinen, Romance, Isekai... Bạn muốn tìm thể loại nào?',
+      'giá': 'Giá truyện tại MangaOne từ 22.000đ đến 50.000đ/cuốn. Thành viên mới được giảm 30%!',
+      'đăng ký': 'Bạn có thể đăng ký tài khoản miễn phí tại trang Đăng ký. Chỉ cần email và mật khẩu!',
+      'đăng nhập': 'Bạn bấm vào icon người ở góc trên phải để đăng nhập nhé!',
+      'liên hệ': 'Bạn có thể liên hệ MangaOne qua số: 112233344455 hoặc trang Liên Hệ!',
+      'vận chuyển': 'MangaOne giao hàng toàn quốc trong 2-3 ngày làm việc. Miễn phí vận chuyển!',
+      'conan': 'Thám Tử Lừng Danh Conan có tại MangaOne với giá 22.000đ/cuốn! 🔍',
+      'one piece': 'One Piece (Đảo Hải Tặc) có tại MangaOne với giá 25.000đ/cuốn! ⚓',
+      'default': 'Xin lỗi, tôi chưa hiểu câu hỏi của bạn. Bạn có thể hỏi về: truyện, giá cả, đăng ký, vận chuyển... 😊'
+    };
+
+    function sendChatMessage() {
+      var input = document.getElementById('chatbot-input');
+      var msg = input.value.trim();
+      if (!msg) return;
+
+      var messages = document.getElementById('chatbot-messages');
+
+      // Hiện tin nhắn người dùng
+      var userMsg = document.createElement('div');
+      userMsg.style.cssText = 'background:#1a1a2e;color:white;padding:10px 14px;border-radius:12px 12px 0 12px;font-size:0.85rem;max-width:80%;align-self:flex-end;';
+      userMsg.textContent = msg;
+      messages.appendChild(userMsg);
+
+      // Tìm phản hồi
+      var response = chatResponses['default'];
+      var msgLower = msg.toLowerCase();
+      for (var key in chatResponses) {
+        if (msgLower.includes(key)) {
+          response = chatResponses[key];
+          break;
+        }
+      }
+
+      // Hiện phản hồi bot sau 0.5s
+      setTimeout(function() {
+        var botMsg = document.createElement('div');
+        botMsg.style.cssText = 'background:#e94560;color:white;padding:10px 14px;border-radius:12px 12px 12px 0;font-size:0.85rem;max-width:80%;align-self:flex-start;';
+        botMsg.textContent = response;
+        messages.appendChild(botMsg);
+        messages.scrollTop = messages.scrollHeight;
+      }, 500);
+
+      input.value = '';
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    // ===== ĐÈN BẬT/TẮT =====
+    var lampOn = true;
+    function toggleLamp() {
+      lampOn = !lampOn;
+      var bulb   = document.getElementById('lamp-bulb');
+      var overlay = document.getElementById('lamp-overlay');
+      if (lampOn) {
+        bulb.style.background = 'radial-gradient(circle at 40% 35%, #fffde0, #f9c74f)';
+        bulb.style.boxShadow = '0 0 20px 8px rgba(249,199,79,0.7)';
+        overlay.style.display = 'none';
+      } else {
+        bulb.style.background = '#333';
+        bulb.style.boxShadow = 'none';
+        overlay.style.display = 'block';
+      }
+    }
+    </script>
   </body>
 </html>
