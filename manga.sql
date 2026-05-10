@@ -1,11 +1,8 @@
--- 1. Xóa Database cũ (nếu có) để làm lại từ đầu cho sạch
+-- Xóa Database cũ (nếu có) để làm lại từ đầu cho sạch
 DROP DATABASE IF EXISTS mangaone;
 CREATE DATABASE mangaone CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE mangaone;
 
--- ==========================================
--- PHẦN 1: TẠO BẢNG CHUẨN KHỚP 100% VỚI SPRING BOOT
--- ==========================================
 CREATE TABLE USERS (
     user_id INT PRIMARY KEY AUTO_INCREMENT,
     email VARCHAR(255) NOT NULL UNIQUE,
@@ -28,7 +25,6 @@ CREATE TABLE PUBLISHERS (
     publisher_name VARCHAR(150) NOT NULL
 );
 
--- Cột id (BIGINT) khớp với Entity Java
 CREATE TABLE MANGAS (
     manga_id BIGINT PRIMARY KEY AUTO_INCREMENT,
     title VARCHAR(255) NOT NULL,
@@ -55,7 +51,6 @@ CREATE TABLE ORDERS (
     FOREIGN KEY (user_id) REFERENCES USERS(user_id)
 );
 
--- Khóa ngoại trỏ đến id (BIGINT) của bảng MANGAS
 CREATE TABLE CART_ITEMS (
     cart_id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,
@@ -65,7 +60,6 @@ CREATE TABLE CART_ITEMS (
     FOREIGN KEY (manga_id) REFERENCES MANGAS(manga_id)
 );
 
--- Khóa ngoại trỏ đến id (BIGINT) của bảng MANGAS và price kiểu FLOAT
 CREATE TABLE ORDER_DETAILS (
     order_detail_id INT PRIMARY KEY AUTO_INCREMENT,
     order_id INT NOT NULL,
@@ -76,11 +70,6 @@ CREATE TABLE ORDER_DETAILS (
     FOREIGN KEY (manga_id) REFERENCES MANGAS(manga_id)
 );
 
--- ==========================================
--- PHẦN 2: THÊM DỮ LIỆU ĐỒNG BỘ
--- ==========================================
-
--- 2.1 THÊM THỂ LOẠI
 INSERT INTO CATEGORIES (category_name, description) VALUES
 ('Shonen (Thiếu niên)', 'Truyện tranh hành động, phiêu lưu, đề cao tình bạn và nỗ lực.'),
 ('Seinen (Trưởng thành)', 'Nội dung sâu sắc, tâm lý, kịch tính dành cho người trưởng thành.'),
@@ -94,7 +83,6 @@ INSERT INTO CATEGORIES (category_name, description) VALUES
 ('Tâm lý (Psychological)', 'Khai thác sâu vào nội tâm và diễn biến tâm lý nhân vật.'),
 ('Phiêu lưu (Adventure)', 'Những chuyến hành trình dài đến các vùng đất mới.');
 
--- 2.2 THÊM NHÀ XUẤT BẢN
 INSERT INTO PUBLISHERS (publisher_name) VALUES
 ('NXB Kim Đồng'),
 ('NXB Trẻ'),
@@ -104,7 +92,6 @@ INSERT INTO PUBLISHERS (publisher_name) VALUES
 ('Skybooks Tsubasa'),
 ('NXB Hà Nội');
 
--- 2.3 THÊM TRUYỆN (Đầy đủ 19 bộ truyện)
 INSERT INTO MANGAS (title, author, description, price, stock_quantity, image_url, category_id, publisher_id) VALUES
 ('Chú Thuật Hồi Chiến (Jujutsu Kaisen)', 'Gege Akutami', 'Hành trình của Yuji Itadori bước vào thế giới Chú Thuật Sư.', 30000, 150, 'images/manga/jujutsu-kaisen-tap1.jpg', 
     (SELECT category_id FROM CATEGORIES WHERE category_name LIKE '%Shonen%'), (SELECT publisher_id FROM PUBLISHERS WHERE publisher_name = 'NXB Kim Đồng')),
@@ -163,7 +150,6 @@ INSERT INTO MANGAS (title, author, description, price, stock_quantity, image_url
 ('Kaguya-sama: Love Is War', 'Aka Akasaka', 'Cuộc chiến tỏ tình giữa hai thiên tài trường học.', 36000, 100, 'images/manga/kaguya-sama-tap1.jpg', 
     (SELECT category_id FROM CATEGORIES WHERE category_name LIKE '%Romance%'), (SELECT publisher_id FROM PUBLISHERS WHERE publisher_name = 'IPM'));
 
--- 2.4 THÊM TÀI KHOẢN (Đảm bảo tài khoản được thêm vào trước khi gán dữ liệu test)
 INSERT INTO USERS (email, password, full_name, phone_number, address, role) VALUES
 ('admin@mangaone.com', '123456', 'Quản Trị Viên', '0987654321', 'Trụ sở chính', 'ADMIN'),
 ('duyson@gmail.com', '123456', 'Đào Duy Sơn', '0912345678', 'Hà Nội', 'USER'),
@@ -177,7 +163,6 @@ INSERT INTO USERS (email, password, full_name, phone_number, address, role) VALU
 ('user1@mangaone.com', '123456', 'Nguoi Dung 1', '0902000001', 'Ha Noi', 'USER'),
 ('user2@mangaone.com', '123456', 'Nguoi Dung 2', '0902000002', 'Ha Noi', 'USER');
 
--- 2.5 THÊM GIỎ HÀNG VÀ ĐƠN HÀNG MẪU ĐỂ TEST
 INSERT INTO CART_ITEMS (user_id, manga_id, quantity) VALUES
 ((SELECT user_id FROM USERS WHERE email = 'duyson@gmail.com'), (SELECT manga_id FROM MANGAS WHERE title LIKE '%Chú Thuật Hồi Chiến%' LIMIT 1), 2),
 ((SELECT user_id FROM USERS WHERE email = 'duyson@gmail.com'), (SELECT manga_id FROM MANGAS WHERE title LIKE '%Chainsaw Man%' LIMIT 1), 1);
@@ -189,7 +174,6 @@ INSERT INTO ORDER_DETAILS (order_id, manga_id, quantity, price) VALUES
 ((SELECT order_id FROM ORDERS WHERE receiver_name = 'Nguyễn Thị Bích Ngọc' LIMIT 1), (SELECT manga_id FROM MANGAS WHERE title LIKE '%Spy x Family%' LIMIT 1), 1, 25000),
 ((SELECT order_id FROM ORDERS WHERE receiver_name = 'Nguyễn Thị Bích Ngọc' LIMIT 1), (SELECT manga_id FROM MANGAS WHERE title LIKE '%Conan%' LIMIT 1), 2, 22000);
 
--- 3. KIỂM TRA DỮ LIỆU ĐÃ TẠO
 SELECT * FROM MANGAS;
 SELECT * FROM CATEGORIES;
 SELECT * FROM PUBLISHERS;

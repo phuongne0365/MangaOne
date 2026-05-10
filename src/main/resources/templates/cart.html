@@ -1,210 +1,278 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Giỏ hàng - MangaOne</title>
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <style>
-        body { background-color: #f8f9fa; }
-        .cart-img { width: 80px; height: 110px; object-fit: cover; border-radius: 4px; }
-        .quantity-input { width: 70px; text-align: center; }
-        .section-title { border-left: 4px solid #0d6efd; padding-left: 12px; }
-        .total-box { background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,.08); }
-    </style>
+<head th:replace="~{fragments/head :: head}">
 </head>
 <body>
+	<div th:replace="~{fragments/search-popup :: search-popup}"></div>
+	<div th:replace="~{fragments/header :: header(activePage='cart')}"></div>
 
-<!--  NAVBAR  -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
-    <div class="container">
-        <a class="navbar-brand fw-bold" th:href="@{/}">📚 MangaOne</a>
-        <div>
-            <a th:href="@{/mangas}" class="btn btn-outline-light btn-sm me-2">
-                <i class="bi bi-shop"></i> Kho truyện
-            </a>
-            <a th:href="@{/cart}" class="btn btn-warning btn-sm">
-                <i class="bi bi-cart3"></i> Giỏ hàng
-            </a>
-        </div>
+    <section class="site-banner padding-small" 
+         style="background: linear-gradient(135deg, #fff0f3 0%, #e3f2fd 100%); 
+                border-bottom: 2px solid #eee; margin-bottom: 4rem; padding: 60px 0;">
+                
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12 text-center">
+        <h1 class="display-3 fw-bold mb-2" 
+            style="color: #1a1a1a !important; text-shadow: 2px 2px 4px rgba(0,0,0,0.05); letter-spacing: -1px;">
+            Giỏ Hàng
+        </h1>
+        
+        <nav class="breadcrumb-container d-flex justify-content-center">
+          <div class="breadcrumb-inner px-4 py-2 bg-white shadow-sm rounded-pill border">
+            <a class="text-decoration-none fw-bold" th:href="@{/}" style="color: #ff4545 !important;">Home</a>
+            <span class="mx-3" style="color: #333; font-weight: bold;">/</span>
+            <span class="fw-bold" style="color: #1a1a1a !important;">Giỏ hàng</span>
+          </div>
+        </nav>
+      </div>
     </div>
-</nav>
+  </div>
+</section>
 
-<div class="container pb-5">
+<style>
+  /* ── Quantity stepper ── */
+  .qty-wrap {
+    display: inline-flex; align-items: center;
+    border: 1px solid #ddd; border-radius: 4px; overflow: hidden;
+  }
+  .qty-btn {
+    width: 36px; height: 36px; background: #fff; border: none;
+    font-size: 18px; font-weight: 300; color: #555;
+    cursor: pointer; transition: background .15s; line-height: 1;
+  }
+  .qty-btn:hover { background: #f5f5f5; }
+  .qty-input {
+    width: 48px; height: 36px;
+    border: none; border-left: 1px solid #ddd; border-right: 1px solid #ddd;
+    text-align: center; font-size: 15px; font-weight: 500; outline: none;
+    -moz-appearance: textfield;
+  }
+  .qty-input::-webkit-inner-spin-button,
+  .qty-input::-webkit-outer-spin-button { -webkit-appearance: none; }
+ 
+  /* ── Table ── */
+  .cart-table { border-collapse: collapse; width: 100%; }
+  .cart-table th {
+    font-size: 12px; font-weight: 400; letter-spacing: .1em;
+    text-transform: uppercase; color: #999;
+    padding: 10px 16px; border-bottom: 1px solid #e8e8e8;
+  }
+  .cart-table td {
+    padding: 22px 16px; border-bottom: 1px solid #efefef; vertical-align: middle;
+  }
+  .cart-table tbody tr:last-child td { border-bottom: none; }
+  .cart-img {
+    width: 80px; height: 108px; object-fit: cover;
+    border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,.1);
+  }
+  .subtotal-price { color: #F86D72; font-size: 17px; font-weight: 500; }
+ 
+  /* ── Delete button ── */
+  .btn-delete {
+    background: none; border: none; cursor: pointer;
+    color: #bbb; transition: color .2s; padding: 6px;
+  }
+  .btn-delete:hover { color: #F86D72; }
+  .btn-delete svg { width: 22px; height: 22px; }
+ 
+  /* ── Cart Totals ── */
+  .cart-totals { border: 1px solid #efefef; border-radius: 6px; padding: 28px 32px; }
+  .cart-totals h4 { font-size: 1.15rem; font-weight: 600; margin-bottom: 18px; }
+  .totals-row {
+    display: flex; justify-content: space-between;
+    padding: 12px 0; border-bottom: 1px solid #efefef; font-size: 15px;
+  }
+  .totals-row:last-of-type { border-bottom: none; }
+  .totals-label { color: #555; }
+  .totals-value { font-weight: 500; }
+  .totals-value.total-val { color: #F86D72; font-size: 17px; }
+ 
+  /* ── Action buttons (override style.css .btn) ── */
+  .cart-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 24px; }
+  .btn-cart {
+    padding: .7rem 1.6rem !important; font-size: 13px !important;
+    border-radius: 200px !important; font-weight: 600 !important;
+    letter-spacing: .05em !important; cursor: pointer;
+    transition: background .2s, color .2s !important;
+  }
+  .btn-cart-fill {
+    background: #F86D72 !important; color: #fff !important; border: none !important;
+  }
+  .btn-cart-fill:hover { background: #272727 !important; color: #fff !important; }
+  .btn-cart-border {
+    background: transparent !important; color: #333 !important;
+    border: 2px solid #ddd !important;
+  }
+  .btn-cart-border:hover {
+    border-color: #F86D72 !important; color: #F86D72 !important;
+    background: transparent !important;
+  }
+</style>
+ 
+	<div class="container pb-5">
+	 
+	  <!-- Flash messages -->
+	  <div th:if="${successMsg}" class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+	    <span th:text="${successMsg}"></span>
+	    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+	  </div>
+	  <div th:if="${errorMsg}" class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+	    <span th:text="${errorMsg}"></span>
+	    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+	  </div>
+	 
+	  <!-- ════════ GIỎ TRỐNG ════════ -->
+	  <div th:if="${cartItems == null or cartItems.empty}" class="text-center py-5">
+	    <i class="bi bi-cart-x" style="font-size:72px; color:#e0e0e0;"></i>
+	    <p class="mt-4 text-muted fs-5">Giỏ hàng của bạn đang trống!</p>
+	    <a th:href="@{/mangas}" class="btn btn-cart btn-cart-fill mt-2">Tiếp tục mua sắm</a>
+	  </div>
+	 
+	  <!-- ════════ CÓ SẢN PHẨM ════════ -->
+	  <div th:if="${cartItems != null and !cartItems.empty}">
+	 
+	    <form th:action="@{/cart/update-all}" method="post" id="cartForm">
+	 
+	      <table class="cart-table mb-5">
+	        <thead>
+	          <tr>
+	            <th>Product</th>
+	            <th class="text-center">Quantity</th>
+	            <th class="text-center">Subtotal</th>
+	            <th></th>
+	          </tr>
+	        </thead>
+	        <tbody>
+	          <tr th:each="item : ${cartItems}">
+	 
+	            <!-- Ảnh + tên + giá -->
+	            <td>
+	              <div class="d-flex align-items-center gap-3">
+	                <img th:src="@{'/' + ${item.manga.image}}"
+	                     th:alt="${item.manga.title}"
+	                     class="cart-img"
+	                     onerror="this.src='/images/no-image.png'">
+	                <div>
+	                  <p class="mb-1 fw-semibold" style="font-size:15px; color:#1a1a1a;"
+	                     th:text="${item.manga.title}">Tên truyện</p>
+	                  <small class="text-muted d-block" th:text="${item.manga.author}">Tác giả</small>
+	                  <span style="color:#F86D72; font-size:14px; font-weight:600;"
+	                        th:text="${#numbers.formatDecimal(item.manga.price, 0, 'COMMA', 0, 'POINT')} + ' đ'">
+	                  </span>
+	                </div>
+	              </div>
+	            </td>
+	 
+	            <!-- Stepper số lượng -->
+	            <td class="text-center">
+	              <input type="hidden" name="cartIds" th:value="${item.cartId}"/>
+	 
+	              <div class="qty-wrap">
+	                <button type="button" class="qty-btn" onclick="changeQty(this,-1)">−</button>
+	                <input type="number" name="quantities"
+	                       class="qty-input"
+	                       th:value="${item.quantity}"
+	                       min="1" max="99"/>
+	                <button type="button" class="qty-btn" onclick="changeQty(this,+1)">+</button>
+	              </div>
+	            </td>
+	 
+	            <!-- Thành tiền -->
+	            <td class="text-center">
+	              <span class="subtotal-price"
+	                    th:text="${#numbers.formatDecimal(item.subtotal, 0, 'COMMA', 0, 'POINT')} + ' đ'">
+	              </span>
+	            </td>
 
-    <h3 class="section-title mb-4">🛒 Giỏ hàng của bạn</h3>
-
-    <!-- Thông báo thành công / lỗi -->
-    <div th:if="${successMsg}" class="alert alert-success alert-dismissible fade show" role="alert">
-        <i class="bi bi-check-circle-fill me-2"></i>
-        <span th:text="${successMsg}"></span>
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-    <div th:if="${errorMsg}" class="alert alert-danger alert-dismissible fade show" role="alert">
-        <i class="bi bi-exclamation-triangle-fill me-2"></i>
-        <span th:text="${errorMsg}"></span>
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-
-    <!--  TRƯỜNG HỢP: GIỎ HÀNG TRỐNG  -->
-    <div th:if="${cartItems == null or cartItems.empty}" class="text-center py-5">
-        <i class="bi bi-cart-x" style="font-size: 5rem; color: #ccc;"></i>
-        <p class="mt-3 text-muted fs-5">Giỏ hàng của bạn đang trống!</p>
-        <a th:href="@{/mangas}" class="btn btn-primary mt-2">
-            <i class="bi bi-arrow-left"></i> Tiếp tục mua sắm
-        </a>
-    </div>
-
-    <!--  TRƯỜNG HỢP: CÓ SẢN PHẨM TRONG GIỎ  -->
-    <div th:if="${cartItems != null and !cartItems.empty}" class="row g-4">
-
-        <!-- CỘT TRÁI: Bảng danh sách sản phẩm -->
-        <div class="col-lg-8">
-            <div class="card shadow-sm">
-                <div class="card-body p-0">
-                    <table class="table table-hover align-middle mb-0">
-                        <thead class="table-light">
-                            <tr>
-                                <th class="ps-3">Truyện</th>
-                                <th class="text-center">Đơn giá</th>
-                                <th class="text-center">Số lượng</th>
-                                <th class="text-center">Thành tiền</th>
-                                <th class="text-center">Xóa</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!--
-                                th:each="item : ${cartItems}"
-                                → Thymeleaf vòng lặp qua từng CartItem trong List
-                                → Mỗi lần lặp, biến "item" đại diện cho 1 CartItem
-                            -->
-                            <tr th:each="item : ${cartItems}">
-
-                                <!-- Ảnh bìa + Tên truyện -->
-                                <td class="ps-3">
-                                    <div class="d-flex align-items-center gap-3">
-                                        <img th:src="@{'/' + ${item.manga.image}}"
-                                             th:alt="${item.manga.title}"
-                                             class="cart-img"
-                                             onerror="this.src='/images/no-image.png'">
-                                        <div>
-                                            <p class="mb-1 fw-semibold" th:text="${item.manga.title}">Tên truyện</p>
-                                            <small class="text-muted" th:text="${item.manga.author}">Tác giả</small>
-                                        </div>
-                                    </div>
-                                </td>
-
-                                <!-- Đơn giá -->
-                                <td class="text-center">
-                                    <span class="text-primary fw-bold"
-                                          th:text="${#numbers.formatDecimal(item.manga.price, 0, 'COMMA', 0, 'POINT')} + ' đ'">
-                                    </span>
-                                </td>
-
-                                <!-- Ô nhập số lượng + nút Cập nhật -->
-                                <td class="text-center">
-                                    <!--
-                                        Form cập nhật số lượng.
-                                        th:action → URL gửi POST request đến /cart/update
-                                        th:value  → điền sẵn giá trị hiện tại vào ô input
-                                    -->
-                                    <form th:action="@{/cart/update}" method="post"
-                                          class="d-flex align-items-center justify-content-center gap-1">
-                                        <input type="hidden" name="cartId" th:value="${item.cartId}"/>
-                                        <input type="number"
-                                               name="quantity"
-                                               class="form-control quantity-input"
-                                               th:value="${item.quantity}"
-                                               min="1" max="99"/>
-                                        <button type="submit" class="btn btn-outline-secondary btn-sm"
-                                                title="Cập nhật">
-                                            <i class="bi bi-arrow-clockwise"></i>
-                                        </button>
-                                    </form>
-                                </td>
-
-                                <!-- Thành tiền (Đơn giá × Số lượng) -->
-                                <td class="text-center">
-                                    <span class="fw-bold text-danger"
-                                          th:text="${#numbers.formatDecimal(item.subtotal, 0, 'COMMA', 0, 'POINT')} + ' đ'">
-                                    </span>
-                                </td>
-
-                                <!-- Nút Xóa -->
-                                <td class="text-center">
-                                    <!--
-                                        th:action="@{/cart/remove/{id}(id=${item.cartId})}"
-                                        → Thymeleaf tự điền cartId vào URL động
-                                    -->
-                                    <form th:action="@{/cart/remove/{id}(id=${item.cartId})}"
-                                          method="post"
-                                          onsubmit="return confirm('Xóa truyện này khỏi giỏ?')">
-                                        <button type="submit" class="btn btn-outline-danger btn-sm">
-                                            <i class="bi bi-trash3"></i>
-                                        </button>
-                                    </form>
-                                </td>
-
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Nút tiếp tục mua sắm -->
-            <a th:href="@{/mangas}" class="btn btn-outline-secondary mt-3">
-                <i class="bi bi-arrow-left"></i> Tiếp tục mua sắm
-            </a>
-        </div>
-
-        <!-- CỘT PHẢI: Tổng tiền & Thanh toán -->
-        <div class="col-lg-4">
-            <div class="total-box p-4">
-                <h5 class="fw-bold mb-3">📋 Tóm tắt đơn hàng</h5>
-                <hr>
-
-                <!-- Số lượng sản phẩm -->
-                <div class="d-flex justify-content-between mb-2">
-                    <span class="text-muted">Số loại truyện:</span>
-                    <!-- ${cartItems.size()} → đếm số phần tử trong List -->
-                    <span th:text="${cartItems.size()} + ' cuốn'">0 cuốn</span>
-                </div>
-
-                <!-- Tạm tính -->
-                <div class="d-flex justify-content-between mb-2">
-                    <span class="text-muted">Tạm tính:</span>
-                    <span th:text="${#numbers.formatDecimal(tongTien, 0, 'COMMA', 0, 'POINT')} + ' đ'">
-                    </span>
-                </div>
-
-                <!-- Phí ship -->
-                <div class="d-flex justify-content-between mb-2">
-                    <span class="text-muted">Phí vận chuyển:</span>
-                    <span class="text-success fw-bold">Miễn phí</span>
-                </div>
-
-                <hr>
-
-                <!-- TỔNG CỘNG -->
-                <div class="d-flex justify-content-between mb-3">
-                    <strong class="fs-5">Tổng cộng:</strong>
-                    <strong class="fs-5 text-danger"
-                            th:text="${#numbers.formatDecimal(tongTien, 0, 'COMMA', 0, 'POINT')} + ' đ'">
-                    </strong>
-                </div>
-
-                <!-- Nút Đặt hàng -->
-                <a th:href="@{/checkout}" class="btn btn-primary w-100 py-2">
-                    <i class="bi bi-bag-check-fill me-2"></i>Tiến hành đặt hàng
-                </a>
-            </div>
-        </div>
-
-    </div><!-- end row -->
-</div><!-- end container -->
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+	            <td class="text-center">
+  					<button type="button" class="btn-delete"
+          				th:attr="data-url=@{/cart/remove/{id}(id=${item.cartId})}"
+          				onclick="removeItem(this)" title="Xóa">
+    				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      					<path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+    				</svg>
+				  </button>
+				</td>
+	 
+	          </tr>
+	        </tbody>
+	      </table>
+	 
+	      <!-- Cart Totals + Buttons -->
+	      <div class="row">
+	        <div class="col-lg-6 mx-auto">
+	          <div class="cart-totals">
+	            <h4>Tổng giỏ hàng</h4>
+	            <div class="totals-row">
+	              <span class="totals-label">Subtotal</span>
+	              <span class="totals-value"
+	                    th:text="${#numbers.formatDecimal(tongTien, 0, 'COMMA', 0, 'POINT')} + ' đ'">
+	              </span>
+	            </div>
+	            <div class="totals-row">
+	              <span class="totals-label">Phí vận chuyển</span>
+	              <span style="color:#18b86e; font-weight:500;">Miễn phí</span>
+	            </div>
+	            <div class="totals-row">
+	              <span class="totals-label fw-semibold">Tổng</span>
+	              <span class="totals-value total-val"
+	                    th:text="${#numbers.formatDecimal(tongTien, 0, 'COMMA', 0, 'POINT')} + ' đ'">
+	              </span>
+	            </div>
+	          </div>
+	 
+	          <div class="cart-actions justify-content-center">
+	            <!-- Submit form → cập nhật tất cả số lượng cùng lúc -->
+	            <button type="submit" class="btn btn-cart btn-cart-fill">Cập nhật giỏ hàng</button>
+	            <a th:href="@{/mangas}" class="btn btn-cart btn-cart-border">Tiếp tục mua sắm</a>
+	            <a th:href="@{/checkout}" class="btn btn-cart btn-cart-fill">Proceed To Checkout</a>
+	          </div>
+	        </div>
+	      </div>
+	 
+	    </form>
+	 
+	    <!-- Form ẩn để xóa 1 item  -->
+	    <form id="removeForm" method="post" style="display:none;"></form>
+	 
+	  </div>
+	</div>
+	<script>
+	  /** Tăng/giảm số lượng bằng nút +/- (chỉ thay đổi UI, chưa gửi server) */
+	  function changeQty(btn, delta) {
+	    const input = btn.closest('.qty-wrap').querySelector('input.qty-input');
+	    let val = parseInt(input.value) || 1;
+	    input.value = Math.max(1, Math.min(99, val + delta));
+	  }
+	 
+	  /** Xóa 1 item: dùng SweetAlert2 để làm thông báo xịn xò */
+	  function removeItem(btn) {
+	    Swal.fire({
+	      title: 'Bạn có chắc chắn?',
+	      text: "Xóa truyện này khỏi giỏ hàng?",
+	      icon: 'warning',
+	      showCancelButton: true,
+	      confirmButtonColor: '#F86D72', // Màu hồng tông xuyệt tông với nút của bạn
+	      cancelButtonColor: '#a8a8a8',
+	      confirmButtonText: 'Đồng ý, xóa luôn!',
+	      cancelButtonText: 'Hủy'
+	    }).then((result) => {
+	      if (result.isConfirmed) {
+	        // Nếu người dùng bấm Đồng ý, form sẽ tự động chạy
+	        const form = document.getElementById('removeForm');
+	        form.action = btn.getAttribute('data-url');
+	        form.submit();
+	      }
+	    })
+	  }
+	</script>
+	
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	
+	<div th:replace="~{fragments/customer-review :: customer-review}"></div>
+	<div th:replace="~{fragments/instagram :: instagram}"></div>
+	<div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>

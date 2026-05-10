@@ -126,8 +126,8 @@ public class AdminMangaController {
         } else {
 
             // giữ ảnh cũ khi edit
-        	if (manga.getMangaId() != null) { // Chỗ này nè Bố Duy
-        	    Manga oldManga = mangaRepository.findById(manga.getMangaId()).orElse(null);
+        	if (manga.getId() != null) { // Chỗ này nè Bố Duy
+        	    Manga oldManga = mangaRepository.findById(manga.getId()).orElse(null);
 
                 if (oldManga != null) {
 

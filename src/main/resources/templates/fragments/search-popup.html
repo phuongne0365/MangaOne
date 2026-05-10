@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div th:fragment="search-popup">
+		<div class="search-popup">
+      <div class="search-popup-container">
+        <form role="search" method="get" class="search-form" action="">
+          <input type="search" id="search-form" class="search-field" placeholder="Type and press enter" value=""
+            name="s" />
+          <button type="submit" class="search-submit">
+          	<svg class="search">
+              <use xlink:href="#search"></use>
+            </svg></button>
+        </form>
+
+        <h5 class="cat-list-title">Browse Categories</h5>
+
+        <ul class="cat-list">
+          <li class="cat-list-item"><a href="#" title="Hành Động">Hành Động (Action)</a></li>
+          <li class="cat-list-item"><a href="#" title="Phiêu Lưu">Phiêu Lưu (Adventure)</a></li>
+          <li class="cat-list-item"><a href="#" title="Hài Hước">Hài Hước (Comedy)</a></li>
+          <li class="cat-list-item"><a href="#" title="Học Đường">Học Đường (School Life)</a></li>
+          <li class="cat-list-item"><a href="#" title="Đời Thường">Đời Thường (Slice of Life)</a></li>
+          <li class="cat-list-item"><a href="#" title="Kinh Dị">Kinh Dị (Horror)</a></li>
+        </ul>
+
+      </div>
+    </div>
+	</div>
+</body>
+</html>

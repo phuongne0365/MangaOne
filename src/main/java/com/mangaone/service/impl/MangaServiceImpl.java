@@ -37,10 +37,18 @@ public class MangaServiceImpl implements MangaService {
         // Xóa truyện dựa trên ID
         mangaRepository.deleteById(id);
     }
+
     
     //best seller
     @Override
     public List<Manga> getBestSellers() {
         return mangaRepository.findTopBestSellers();
+    }
+
+    @Override
+    public List<Manga> getMangasByCategory(Long categoryId) {
+        // Lọc danh sách truyện theo categoryId, ủy quyền xuống Repository
+        return mangaRepository.findByCategory_CategoryId(categoryId);
+
     }
 }

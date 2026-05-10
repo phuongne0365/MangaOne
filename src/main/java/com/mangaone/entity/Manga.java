@@ -38,7 +38,7 @@ public class Manga {
 
     // --- GETTER & SETTER ---
     public Long getId() { return id; }
-    public void setId(Long mangaId) { this.id = id; }
+    public void setId(Long mangaId) { this.id = mangaId; }
 
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }
