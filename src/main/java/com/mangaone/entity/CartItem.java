@@ -2,10 +2,6 @@ package com.mangaone.entity;
 
 import jakarta.persistence.*;
 
-/**
- * Entity ánh xạ bảng CART_ITEMS trong database.
- * Mỗi CartItem = 1 dòng trong giỏ hàng (1 User + 1 Manga + số lượng).
- */
 @Entity
 @Table(name = "CART_ITEMS")
 public class CartItem {
@@ -25,7 +21,7 @@ public class CartItem {
 
     /**
      * Quan hệ N-1 với Manga: nhiều CartItem có thể trỏ đến 1 Manga.
-     * FetchType.EAGER = tải luôn Manga khi load CartItem (cần để hiển thị tên, giá).
+     * FetchType.EAGER = tải luôn Manga khi load CartItem.
      */
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "manga_id", nullable = false)
@@ -35,8 +31,7 @@ public class CartItem {
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
 
-    // ===================== Getter & Setter =====================
-
+    
     public Integer getCartId() { return cartId; }
     public void setCartId(Integer cartId) { this.cartId = cartId; }
 

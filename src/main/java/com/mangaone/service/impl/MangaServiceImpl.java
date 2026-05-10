@@ -37,4 +37,10 @@ public class MangaServiceImpl implements MangaService {
         // Xóa truyện dựa trên ID
         mangaRepository.deleteById(id);
     }
+    
+    //best seller
+    @Override
+    public List<Manga> getBestSellers() {
+        return mangaRepository.findTopBestSellers();
+    }
 }

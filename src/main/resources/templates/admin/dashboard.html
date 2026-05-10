@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<!--
+  FILE: dashboard.html
+  Đường dẫn: src/main/resources/templates/admin/dashboard.html
+
+  Cách hoạt động:
+  - th:replace="~{admin/admin-layout :: layout(~{::title}, ~{::section#content})}"
+    → Lấy fragment "layout" từ admin-layout.html
+    → Truyền vào 2 tham số: <title> và <section id="content">
+-->
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{admin/admin-layout :: layout(~{::title}, ~{::section#content})}">
+<head>
+  <title>Dashboard - MangaOne Admin</title>
+</head>
+<body>
+
+<!-- Nội dung trang Dashboard sẽ được nhúng vào #main-content của layout -->
+<section id="content">
+
+  <!-- Tiêu đề trang -->
+  <div class="d-flex align-items-start justify-content-between mb-4">
+    <div>
+      <h1 class="page-title">Tổng quan 📊</h1>
+      <p class="page-subtitle">Chào mừng trở lại! Đây là tình trạng hôm nay.</p>
+    </div>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item"><a th:href="@{/}" class="text-decoration-none">Trang chủ</a></li>
+        <li class="breadcrumb-item active">Dashboard</li>
+      </ol>
+    </nav>
+  </div>
+
+  <!--  3 THẺ THỐNG KÊ  -->
+  <div class="row g-3 mb-4">
+
+    <!-- Thẻ 1: Tổng số đầu truyện -->
+    <div class="col-xl-4 col-md-6">
+      <div class="stat-card">
+        <div class="stat-icon pink">
+          <i class="bi bi-book-half"></i>
+        </div>
+        <div>
+          <!-- tongSoTruyen được Controller đưa vào Model -->
+          <div class="stat-value" th:text="${tongSoTruyen}">0</div>
+          <div class="stat-label">Tổng đầu truyện</div>
+          <div class="stat-change up">
+            <i class="bi bi-arrow-up-short"></i> Đang kinh doanh
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Thẻ 2: Số đầu truyện sắp hết (0 < stock < 5) -->
+    <div class="col-xl-4 col-md-6">
+      <div class="stat-card">
+        <div class="stat-icon orange">
+          <i class="bi bi-exclamation-triangle"></i>
+        </div>
+        <div>
+          <!-- soSapHetHang được Controller đưa vào Model -->
+          <div class="stat-value" th:text="${soSapHetHang}">0</div>
+          <div class="stat-label">Đầu truyện sắp hết hàng</div>
+          <div class="stat-change warn"
+               th:if="${soSapHetHang > 0}">
+            <i class="bi bi-exclamation-circle"></i> Cần nhập thêm sớm!
+          </div>
+          <div class="stat-change up" th:unless="${soSapHetHang > 0}">
+            <i class="bi bi-check-circle"></i> Đủ hàng
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Thẻ 3: Số đầu truyện hết hàng hoàn toàn -->
+    <div class="col-xl-4 col-md-6">
+      <div class="stat-card">
+        <div class="stat-icon red">
+          <i class="bi bi-x-circle"></i>
+        </div>
+        <div>
+          <!-- soHetHang được Controller đưa vào Model -->
+          <div class="stat-value" th:text="${soHetHang}">0</div>
+          <div class="stat-label">Đầu truyện hết hàng</div>
+          <div class="stat-change danger"
+               th:if="${soHetHang > 0}">
+            <i class="bi bi-dash-circle"></i> Ngừng bán tạm thời
+          </div>
+          <div class="stat-change up" th:unless="${soHetHang > 0}">
+            <i class="bi bi-check-circle"></i> Tốt, không hết hàng
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--  BẢNG CẢNH BÁO SẮP HẾT HÀNG  -->
+  <div class="content-card">
+    <div class="content-card-header">
+      <h5>
+        <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>
+        Cảnh báo truyện sắp hết hàng
+        <span class="badge ms-2"
+              style="background:#fff5ec; color:#f07830; font-size:12px; border-radius:20px;"
+              th:text="${danhSachSapHet.size()} + ' đầu truyện'">
+        </span>
+      </h5>
+      <a th:href="@{/admin/inventory}" class="btn btn-sm"
+         style="background:var(--primary); color:#fff; border-radius:8px; font-weight:700; font-size:13px;">
+        <i class="bi bi-boxes me-1"></i>Quản lý kho
+      </a>
+    </div>
+
+    <!-- Trường hợp: Không có truyện nào sắp hết -->
+    <div th:unless="${danhSachSapHet != null and !danhSachSapHet.empty}"
+         class="text-center py-5">
+      <i class="bi bi-check-circle-fill text-success" style="font-size:3rem;"></i>
+      <p class="mt-3 text-muted">Tất cả đầu truyện đều còn đủ hàng! 🎉</p>
+    </div>
+
+    <!-- Trường hợp: Có truyện sắp hết → hiện bảng -->
+    <div th:if="${danhSachSapHet != null and !danhSachSapHet.empty}">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Tên truyện</th>
+            <th>Tác giả</th>
+            <th>Thể loại</th>
+            <th class="text-center">Tồn kho</th>
+            <th class="text-center">Trạng thái</th>
+            <th class="text-center">Thao tác</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!--
+            th:each="manga : ${danhSachSapHet}"
+            → Duyệt qua từng Manga trong danh sách sắp hết hàng
+          -->
+          <tr th:each="manga : ${danhSachSapHet}">
+            <td class="fw-600" th:text="${manga.title}">Tên truyện</td>
+            <td class="text-muted" th:text="${manga.author}">Tác giả</td>
+            <td>
+              <span th:if="${manga.category != null}"
+                    style="background:#f4f6fb; padding:3px 10px; border-radius:20px; font-size:12px; font-weight:700;"
+                    th:text="${manga.category.categoryName}">Thể loại</span>
+            </td>
+            <td class="text-center">
+              <strong th:text="${manga.stockQuantity}"
+                      th:style="${manga.stockQuantity == 0} ? 'color:#e03' : 'color:#f07830'">
+              </strong>
+            </td>
+            <td class="text-center">
+              <!-- stockQuantity = 0 → Hết hàng (đỏ) -->
+              <span th:if="${manga.stockQuantity == 0}"
+                    class="stock-badge out">
+                <i class="bi bi-x-circle-fill"></i> Hết hàng
+              </span>
+              <!-- stockQuantity > 0 nhưng < 5 → Sắp hết (cam) -->
+              <span th:unless="${manga.stockQuantity == 0}"
+                    class="stock-badge low">
+                <i class="bi bi-exclamation-circle-fill"></i> Sắp hết
+              </span>
+            </td>
+            <td class="text-center">
+              <a th:href="@{/admin/inventory}" class="btn btn-sm"
+                 style="background:var(--primary-soft); color:var(--primary);
+                        border-radius:8px; font-weight:700; font-size:12px;">
+                <i class="bi bi-plus-lg"></i> Nhập hàng
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</section>
+</body>
+</html>

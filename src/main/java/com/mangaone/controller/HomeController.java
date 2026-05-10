@@ -2,12 +2,11 @@ package com.mangaone.controller;
 
 import com.mangaone.entity.CartItem;
 import com.mangaone.entity.User;
-import com.mangaone.repository.MangaRepository; // Mang từ file cũ sang
+import com.mangaone.repository.MangaRepository;
 import com.mangaone.service.CartService;
 import com.mangaone.service.CategoryService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -19,26 +18,26 @@ public class HomeController {
 
     private final CategoryService categoryService;
     private final CartService cartService;
-    private final MangaRepository mangaRepository; // Thêm kho truyện vào đây
+    private final MangaRepository mangaRepository; 
 
-    // Kết nối các Service và Repository
+    // Constructor injection - Kết nối các Service và Repository
     public HomeController(CategoryService categoryService, CartService cartService, MangaRepository mangaRepository) {
         this.categoryService = categoryService;
         this.cartService = cartService;
         this.mangaRepository = mangaRepository;
     }
 
+    // 1. TRANG CHỦ
     @GetMapping("/")
     public String home(Model model, HttpSession session,
                        @RequestParam(value = "openLogin", required = false) String openLogin,
                        @RequestParam(value = "openRegister", required = false) String openRegister) {
-        // 1. Lấy danh sách Thể loại để làm Menu Navbar
-        model.addAttribute("categories", categoryService.getAllCategories());
         
-        // 2. Lấy danh sách Truyện để hiển thị
+        model.addAttribute("categories", categoryService.getAllCategories());
         model.addAttribute("listManga", mangaRepository.findAll());
+        model.addAttribute("bestSellers", mangaRepository.findTopBestSellers());
 
-        // 3. Lấy thông báo lỗi/thành công từ Session rồi xóa đi (chỉ hiện 1 lần)
+        // Xử lý thông báo từ Session (Login/Register)
         if (session.getAttribute("loginError") != null) {
             model.addAttribute("loginError", session.getAttribute("loginError"));
             session.removeAttribute("loginError");
@@ -52,7 +51,7 @@ public class HomeController {
             session.removeAttribute("registerSuccess");
         }
 
-        // 4. Tự động mở modal nếu có param openLogin hoặc openRegister
+        // Tự động mở modal nếu có yêu cầu
         if (openLogin != null) model.addAttribute("openLogin", true);
         if (openRegister != null) model.addAttribute("openRegister", true);
         
@@ -60,38 +59,53 @@ public class HomeController {
     }
 
     // ----------------------------------------------------------------
-    //  GIỎ HÀNG — UC06 (Giữ nguyên của AI)
+    // 2. GIỎ HÀNG (Đã mở khóa và tối ưu)
     // ----------------------------------------------------------------
 
-//    @GetMapping("/cart")
-//    public String viewCart(@AuthenticationPrincipal User currentUser, Model model) {
-//        List<CartItem> items = cartService.getCartItems(currentUser);
-//        Double total = cartService.calculateTotal(items);
-//
-//        model.addAttribute("cartItems", items);
-//        model.addAttribute("total", total);
-//        model.addAttribute("categories", categoryService.getAllCategories()); 
-//        return "cart";
-//    }
-//
-//    @PostMapping("/cart/add")
-//    public String addToCart(@AuthenticationPrincipal User currentUser,
-//                            @RequestParam Long mangaId,
-//                            @RequestParam(defaultValue = "1") int quantity) {
-//        cartService.addToCart(currentUser, mangaId, quantity);
-//        return "redirect:/cart";
-//    }
-//
-//    @PostMapping("/cart/update")
-//    public String updateQuantity(@RequestParam Integer cartId,
-//                                 @RequestParam int quantity) {
-//        cartService.updateQuantity(cartId, quantity);
-//        return "redirect:/cart";
-//    }
-//
-//    @PostMapping("/cart/remove")
-//    public String removeFromCart(@RequestParam Integer cartId) {
-//        cartService.removeFromCart(cartId);
-//        return "redirect:/cart";
-//    }
+  /* 
+
+    @PostMapping("/cart/add")
+    public String addToCart(@AuthenticationPrincipal User currentUser,
+                            @RequestParam Long mangaId,
+                            @RequestParam(defaultValue = "1") int quantity) {
+        if (currentUser == null) return "redirect:/?openLogin=true";
+        
+        cartService.addToCart(currentUser, mangaId, quantity);
+        return "redirect:/cart";
+    }
+
+   // @PostMapping("/cart/update")
+   // public String updateQuantity(@RequestParam Integer cartId,
+      //                           @RequestParam int quantity) {
+      //  cartService.updateQuantity(cartId, quantity);
+      //  return "redirect:/cart";
+    //}
+
+    @PostMapping("/cart/remove")
+    public String removeFromCart(@RequestParam Integer cartId) {
+        cartService.removeFromCart(cartId);
+        return "redirect:/cart";
+    }
+*/
+    // ----------------------------------------------------------------
+    // 3. CÁC TRANG PHỤ
+    // ----------------------------------------------------------------
+
+    @GetMapping("/about")
+    public String about(Model model) {
+        model.addAttribute("categories", categoryService.getAllCategories());
+        return "about";
+    }
+
+    @GetMapping("/news")
+    public String news(Model model) {
+        model.addAttribute("categories", categoryService.getAllCategories());
+        return "news";
+    }
+
+    @GetMapping("/contact")
+    public String contact(Model model) {
+        model.addAttribute("categories", categoryService.getAllCategories());
+        return "contact";
+    }
 }

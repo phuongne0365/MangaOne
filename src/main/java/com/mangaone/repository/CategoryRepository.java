@@ -6,6 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Integer> {
-    // JpaRepository cung cấp sẵn: findAll(), findById(), save(), deleteById()...
-    // Không cần khai báo thêm vì CategoryService chỉ cần lấy toàn bộ danh sách.
+	
 }

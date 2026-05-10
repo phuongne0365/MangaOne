@@ -12,7 +12,7 @@
         body {
             font-family: 'Nunito', sans-serif;
             min-height: 100vh;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            background: #f4f6f9;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -25,7 +25,7 @@
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
             font-size: 2rem;
-            opacity: 0.04;
+            opacity: 0.03;
             display: flex;
             flex-wrap: wrap;
             align-content: flex-start;
@@ -43,14 +43,14 @@
             min-height: 540px;
             border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.08);
             position: relative;
             z-index: 1;
         }
         /* Cột trái - ảnh manga */
         .login-banner {
             flex: 1;
-            background: linear-gradient(160deg, #e94560 0%, #c73652 40%, #0f3460 100%);
+            background: linear-gradient(160deg, #f07830 0%, #e94560 100%);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -185,7 +185,7 @@
             position: fixed;
             top: 20px;
             left: 20px;
-            color: rgba(255,255,255,0.7);
+            color: #495057;
             text-decoration: none;
             font-size: 0.9rem;
             font-weight: 600;
@@ -213,9 +213,13 @@
 <div class="login-wrapper">
     <!-- CỘT TRÁI - Banner Manga -->
     <div class="login-banner">
-        <div class="logo">📚</div>
-        <h2>MangaOne</h2>
-        <p>Thế giới truyện tranh<br>không giới hạn dành cho bạn</p>
+        
+        <div class="logo mb-3">
+            <img th:src="@{/images/logo-trang.png}" alt="MangaOne" style="height: 100px; object-fit: contain; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.2));">
+        </div>
+        
+        <p class="mt-2 fs-5">Thế giới truyện tranh<br>không giới hạn dành cho bạn</p>
+        
         <div class="manga-icons">
             <span title="Hành động">⚔️</span>
             <span title="Lãng mạn">🌸</span>
@@ -232,7 +236,7 @@
         <!-- Hiển thị lỗi nếu có -->
         <div th:if="${error}" class="alert alert-danger py-2 mb-3" th:text="${error}"></div>
 
-        <!-- FORM ĐĂNG NHẬP - giữ nguyên action /login -->
+        <!-- FORM ĐĂNG NHẬP  -->
         <form th:action="@{/login}" method="post">
             <div class="mb-3">
                 <label class="form-label">📧 Địa chỉ Email</label>
