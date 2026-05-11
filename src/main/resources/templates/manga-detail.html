@@ -1,286 +1,265 @@
 <!DOCTYPE html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/head :: head}">
-    </head>
+<head th:replace="~{fragments/head :: head}"></head>
 
 <style>
     :root {
-        --primary-pink: #ff477e; /* Chỉ dùng cho giá tiền và nút bấm chính */
-        --navy-dark: #1e293b;    /* Màu chữ chính - Navy đậm cực rõ */
-        --slate-gray: #64748b;   /* Màu xám cho breadcrumb và nhãn phụ */
-        --bg-body: #f1f5f9;      /* Nền xám nhạt nhẹ để làm nổi bật card trắng */
-        --border-soft: #e2e8f0;
+        --primary-pink: #ff2d55; 
+        --navy-dark: #0f172a; 
+        --slate-gray: #334155; 
+        --bg-body: #ffffff;
+        --border-color: #f1f5f9;
+        --soft-bg: #f8fafc;
     }
 
     body {
         font-family: 'Plus Jakarta Sans', sans-serif;
         background-color: var(--bg-body);
         color: var(--navy-dark);
-        line-height: 1.6;
+        line-height: 1.5;
     }
 
-    /* ===== BREADCRUMB ===== */
-    .breadcrumb-wrapper {
-        padding: 20px 0;
-        background-color: #ffffff;
-        border-bottom: 1px solid var(--border-soft);
+    /* BREADCRUMB */
+    .site-banner {
+        background: linear-gradient(135deg, #fff0f3 0%, #f8fafc 100%);
+        padding: 40px 0;
+        border-bottom: 1px solid var(--border-color);
+        margin-bottom: 50px;
+    }
+    .breadcrumb-inner {
+        background: white;
+        display: inline-flex;
+        padding: 8px 22px;
+        border-radius: 50px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.03);
     }
 
-    .breadcrumb-item a {
-        color: var(--slate-gray) !important;
-        text-decoration: none;
-        font-weight: 600;
-        transition: 0.3s;
-    }
-
-    .breadcrumb-item a:hover {
-        color: var(--navy-dark) !important;
-    }
-
-    .breadcrumb-item.active {
-        color: var(--navy-dark) !important;
-        font-weight: 700;
-    }
-
-    /* ===== MANGA CARD CONTAINER ===== */
-    .manga-container {
-        background: #ffffff;
-        border-radius: 24px;
-        padding: 45px;
-        box-shadow: 0 10px 40px rgba(30, 41, 59, 0.05);
-        border: 1px solid var(--border-soft);
-        margin-top: 40px;
-    }
-
-   
-    .manga-image-wrapper {
-        text-align: center;
-    }
-
-    .manga-image-wrapper img {
-        border-radius: 16px;
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-        border: 1px solid var(--border-soft);
+    /* KHUNG ẢNH & HIỆU ỨNG HOVER NÚT */
+    .main-img-box {
+        background: var(--soft-bg);
+        border-radius: 32px;
+        border: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 650px; 
         width: 100%;
-        max-width: 480px; /* Tăng kích thước ảnh bìa */
-        height: auto;
+        overflow: hidden; 
+        position: relative;
     }
 
-    /* ===== NÚT YÊU THÍCH & CHIA SẺ KIỂU MỚI (TỐI GIẢN) ===== */
-    /* NÚT YÊU THÍCH & CHIA SẺ GỌN GÀNG */
-.action-modern-row {
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
-    gap: 12px; /* Thu hẹp khoảng cách giữa 2 nút */
-}
+    .main-img-box img {
+        width: 100%; height: 100%;
+        object-fit: contain; 
+        transform: scale(1.1);
+        filter: drop-shadow(0 20px 40px rgba(0,0,0,0.12));
+        transition: transform 0.5s ease;
+    }
 
-.btn-modern-action {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 18px; /* Giảm padding cho nút nhỏ lại */
-    background: #ffffff;
-    color: #1e293b; 
-    font-weight: 700;
-    font-size: 0.9rem; /* Giảm size chữ */
-    border-radius: 8px; /* Bo góc nhẹ hơn */
-    border: 1.5px solid #cbd5e1; /* Viền thanh mảnh hơn */
-    transition: all 0.2s ease;
-    cursor: pointer;
-    line-height: 1;
-}
+    /* Lớp phủ tối hơn khi hover để làm nền cho nút có chữ */
+    .main-img-box::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(15, 23, 42, 0.35); 
+        z-index: 2;
+        opacity: 0;
+        transition: 0.4s;
+    }
 
-/* Hover Yêu Thích */
-.btn-modern-action.heart-btn:hover {
-    background: #fff1f2;
-    color: #ff477e;
-    border-color: #ff477e;
-    transform: translateY(-2px);
-}
+    .main-img-box:hover::before { opacity: 1; }
+    .main-img-box:hover img { transform: scale(1.15); }
 
-/* Hover Chia Sẻ */
-.btn-modern-action.share-btn:hover {
-    background: #f0f9ff;
-    color: #0ea5e9;
-    border-color: #0ea5e9;
-    transform: translateY(-2px);
-}
+    /* NHÓM NÚT CÓ CHỮ TRÊN ẢNH */
+    .img-action-buttons {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -40%);
+        z-index: 10;
+        display: flex;
+        flex-direction: column; /* Xếp hàng dọc cho rõ chữ */
+        gap: 15px;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
 
-.btn-modern-action i {
-    font-size: 1rem; /* Icon vừa phải */
-}
+    .main-img-box:hover .img-action-buttons {
+        opacity: 1;
+        visibility: visible;
+        transform: translate(-50%, -50%);
+    }
 
-    /* ===== CHI TIẾT VĂN BẢN ===== */
-    .manga-title {
+    /* NÚT DẠNG VIÊN THUỐC (PILL) */
+    .btn-img-action {
+        background: #ffffff;
+        color: var(--navy-dark) !important;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 50px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
         font-weight: 800;
-        font-size: 2.8rem;
-        color: var(--navy-dark);
-        letter-spacing: -1px;
-        margin-bottom: 10px;
-    }
-
-    .price-tag {
-        font-size: 3rem;
-        color: var(--primary-pink);
-        font-weight: 800;
-        margin: 15px 0;
-    }
-
-    .info-label {
-        color: var(--slate-gray);
-        font-weight: 700;
+        font-size: 0.95rem;
         text-transform: uppercase;
-        font-size: 0.85rem;
-        display: block;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        transition: 0.3s;
+        white-space: nowrap;
+        cursor: pointer;
     }
 
-    .info-value {
-        color: var(--navy-dark);
-        font-weight: 700;
-        font-size: 1.1rem;
+    .btn-img-action i {
+        font-size: 1.3rem;
+        color: var(--primary-pink); /* Icon màu hồng tạo điểm nhấn */
     }
 
-    /* Box tóm tắt nội dung */
-    .summary-box {
-        background: #f8fafc;
-        border-left: 6px solid var(--navy-dark);
-        padding: 25px;
-        border-radius: 4px 12px 12px 4px;
-        margin: 30px 0;
+    .btn-img-action:hover {
+        background: var(--primary-pink);
+        color: #ffffff !important;
+        transform: scale(1.08);
     }
 
-    .summary-box p {
-        color: var(--navy-dark);
-        font-size: 1.15rem;
-        font-weight: 500;
-        margin-bottom: 0;
+    .btn-img-action:hover i {
+        color: #ffffff;
     }
 
-    /* Nút thêm vào giỏ hàng */
-    .btn-buy-now {
+    .badge-trending {
+        z-index: 10;
+        position: absolute;
+        top: 25px;
+        left: 25px;
         background: var(--primary-pink);
         color: white;
-        border-radius: 12px;
-        padding: 18px;
+        padding: 8px 18px;
+        border-radius: 10px;
+        font-size: 0.75rem;
         font-weight: 800;
-        font-size: 1.1rem;
-        border: none;
-        transition: 0.3s;
-        box-shadow: 0 10px 20px rgba(255, 71, 126, 0.2);
+        text-transform: uppercase;
     }
 
-    .btn-buy-now:hover {
-        background: #f43f5e;
-        transform: translateY(-2px);
-        color: white;
-    }
+    /* NỘI DUNG CHI TIẾT */
+    .manga-title { font-weight: 850; font-size: 3.2rem; color: var(--navy-dark); letter-spacing: -1.5px; line-height: 1.1; margin-bottom: 20px; }
+    .price-large { font-size: 2.8rem; color: var(--primary-pink); font-weight: 800; }
+    .price-old { font-size: 1.2rem; color: #94a3b8; text-decoration: line-through; margin-left: 15px; font-weight: 500; }
+    .manga-description { color: var(--slate-gray); font-size: 1.15rem; line-height: 1.8; margin-bottom: 30px; }
 
-    .quantity-select {
-        height: 60px;
-        border: 2px solid var(--navy-dark);
-        border-radius: 12px;
-        font-weight: 800;
-        color: var(--navy-dark);
-        text-align: center;
-        font-size: 1.2rem;
+    /* GRID THÔNG TIN */
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 30px 0; }
+    .info-item { background: var(--soft-bg); padding: 15px 20px; border-radius: 16px; border: 1px solid var(--border-color); }
+    .info-item label { display: block; font-size: 0.75rem; font-weight: 800; color: #64748b; text-transform: uppercase; margin-bottom: 4px; }
+    .info-item span { font-weight: 700; font-size: 1rem; color: var(--navy-dark); }
+
+    /* ACTION BOX */
+    .action-container { background: #ffffff; padding: 30px; border-radius: 24px; border: 2px solid var(--border-color); margin-top: 35px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); }
+    .qty-selector { display: flex; align-items: center; background: var(--soft-bg); border: 1px solid #e2e8f0; border-radius: 14px; padding: 6px; }
+    .qty-selector button { background: none; border: none; color: var(--navy-dark); padding: 5px 15px; font-weight: 800; font-size: 1.2rem; }
+    .qty-selector input { width: 50px; background: transparent; border: none; color: var(--navy-dark); text-align: center; font-weight: 800; font-size: 1.1rem; }
+
+    .btn-cart-main {
+        background: var(--primary-pink); color: white; border: none; border-radius: 18px; padding: 18px; font-weight: 800; width: 100%; transition: 0.3s;
+        text-transform: uppercase; letter-spacing: 1px; font-size: 1.1rem;
     }
+    .btn-cart-main:hover { background: #e31b44; transform: translateY(-4px); box-shadow: 0 10px 20px rgba(255, 45, 85, 0.2); }
+
+    /* TRUST BADGES */
+    .trust-badges { display: flex; justify-content: space-around; margin-top: 35px; padding-top: 25px; border-top: 1px solid var(--border-color); }
+    .trust-badges span { font-size: 0.85rem; font-weight: 700; color: #94a3b8; display: flex; align-items: center; gap: 8px; }
+    .trust-badges i { color: var(--primary-pink); font-size: 1.1rem; }
 </style>
 
 <body>
-
-    <div th:replace="~{fragments/search-popup :: search-popup}"></div>
     <div th:replace="~{fragments/header :: header(activePage='shop')}"></div>
 
-    <div class="breadcrumb-wrapper">
-        <div class="container">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb mb-0">
-                    <li class="breadcrumb-item"><a th:href="@{/}" class="text-muted">Trang chủ</a></li>
-                    <li class="breadcrumb-item"><a th:href="@{/mangas}" class="text-muted">Cửa hàng</a></li>
-                    <li class="breadcrumb-item active" aria-current="page" th:text="${manga.title}">Chi tiết</li>
-                </ol>
-            </nav>
+    <section class="site-banner">
+        <div class="container text-center">
+            <h1 class="display-6 fw-bold mb-3" style="color: var(--navy-dark);">Chi tiết tác phẩm</h1>
+            <div class="breadcrumb-inner">
+                <a th:href="@{/}" class="text-decoration-none fw-bold" style="color: var(--primary-pink);">Home</a>
+                <span class="mx-2 text-muted">/</span>
+                <span class="fw-bold" th:text="${manga.title}">Thanh Gươm Diệt Quỷ</span>
+            </div>
         </div>
-    </div>
+    </section>
 
-    <div class="container pb-5">
-        <div class="manga-container">
-            <div class="row g-5">
-                <div class="col-md-5">
-                    <div class="manga-image-wrapper">
-                        <img th:src="@{'/' + ${manga.image}}" alt="Manga Cover">
-                    </div>
+    <div class="container mb-5">
+        <div class="row g-5 align-items-start">
+            <div class="col-lg-6">
+                <div class="main-img-box">
+                    <span class="badge-trending">Bán chạy</span>
                     
-                    <div class="action-modern-row">
-                        <button class="btn-modern-action heart-btn">
+                    <img th:src="@{'/' + ${manga.image}}" src="/images/manga/demon-slayer-tap1.jpg" alt="Manga Cover">
+                    
+                    <div class="img-action-buttons">
+                        <button type="button" class="btn-img-action">
                             <i class="bi bi-heart-fill"></i>
                             <span>Yêu thích</span>
                         </button>
-                        <button class="btn-modern-action share-btn">
+                        <button type="button" class="btn-img-action">
                             <i class="bi bi-share-fill"></i>
                             <span>Chia sẻ</span>
                         </button>
                     </div>
                 </div>
+            </div>
 
-                <div class="col-md-7">
-                    <div class="mb-2">
-                        <span class="badge bg-dark px-3 py-2" th:text="${manga.category.categoryName}">Thể loại</span>
-                    </div>
+            <div class="col-lg-6 ps-lg-5">
+                <div class="d-flex align-items-center gap-2 mb-3">
+                    <span class="badge" style="background: #fff1f2; color: var(--primary-pink); border: 1px solid #ffe4e6; padding: 7px 15px; border-radius: 8px; font-weight: 700;" th:text="${manga.category.categoryName}">Shonen</span>
+                    <div class="text-warning small"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i></div>
+                    <small class="text-muted ms-1" style="font-weight: 600;">(1.2k đánh giá)</small>
+                </div>
 
-                    <h1 class="manga-title" th:text="${manga.title}">Tên Truyện</h1>
-                    
-                    <div class="row mb-4">
-                        <div class="col-6 border-end">
-                            <span class="info-label">Tác giả</span>
-                            <span class="info-value" th:text="${manga.author}">Duy Trần</span>
-                        </div>
-                        <div class="col-6 ps-4">
-                            <span class="info-label">Nhà XB</span>
-                            <span class="info-value" th:text="${manga.publisher.publisherName}">Kim Đồng</span>
-                        </div>
-                    </div>
+                <h1 class="manga-title" th:text="${manga.title}">Tên truyện</h1>
+                
+                <div class="mb-4 d-flex align-items-baseline">
+                    <span class="price-large" th:text="${#numbers.formatInteger(manga.price, 0, 'COMMA') + ' đ'}">25,000 đ</span>
+                    <span class="price-old">250,000 đ</span>
+                </div>
 
-                    <div class="price-tag" th:text="${#numbers.formatInteger(manga.price, 0, 'COMMA') + ' đ'}">30,000 đ</div>
+                <p class="manga-description" th:text="${manga.description}">Mô tả truyện...</p>
 
-                    <div class="d-flex gap-4 mb-4">
-                        <div class="p-3 border rounded-3 text-center bg-light" style="flex: 1;">
-                            <span class="info-label">Trạng thái</span>
-                            <span class="text-success fw-bold">Sẵn hàng</span>
-                        </div>
-                        <div class="p-3 border rounded-3 text-center bg-light" style="flex: 1;">
-                            <span class="info-label">Trong kho</span>
-                            <span class="info-value"><span th:text="${manga.stockQuantity}">120</span> cuốn</span>
-                        </div>
-                    </div>
+                <div class="info-grid">
+                    <div class="info-item"><label>Tác giả</label><span th:text="${manga.author}">Tác giả</span></div>
+                    <div class="info-item"><label>Trạng thái</label><span class="text-success fw-bold">Còn hàng</span></div>
+                    <div class="info-item"><label>Mã sản phẩm</label><span th:text="${'#MN-' + manga.id}">#MN-00</span></div>
+                    <div class="info-item"><label>Giao hàng</label><span>Miễn phí nội thành</span></div>
+                </div>
 
-                    <div class="summary-box">
-                        <span class="info-label mb-2">Tóm tắt nội dung</span>
-                        <p th:text="${manga.description}">Thông tin mô tả rõ ràng, không lo lóa mắt.</p>
-                    </div>
-
+                <div class="action-container">
                     <form th:action="@{/cart/add}" method="post">
-                        <input type="hidden" name="mangaId" th:value="${manga.id}" />
-                        <div class="row g-3">
-                            <div class="col-3">
-                                <span class="info-label text-center mb-2">Số lượng</span>
-                                <input type="number" name="quantity" class="form-control quantity-select" value="1" min="1" th:max="${manga.stockQuantity}">
+                        <input type="hidden" name="mangaId" th:value="${manga.id}">
+                        
+                        <div class="d-flex align-items-center justify-content-between mb-4">
+                            <span class="fw-bold text-uppercase small" style="color: #64748b;">Số lượng mua:</span>
+                            <div class="qty-selector">
+                                <button type="button" onclick="this.parentNode.querySelector('input').stepDown()">-</button>
+                                <input type="number" name="quantity" value="1" min="1" th:max="${manga.stockQuantity}">
+                                <button type="button" onclick="this.parentNode.querySelector('input').stepUp()">+</button>
                             </div>
-                            <div class="col-9 d-flex align-items-end">
-                                <button type="submit" class="btn btn-buy-now w-100">
-                                    <i class="bi bi-cart-check-fill me-2 fs-5"></i> THÊM VÀO GIỎ HÀNG
-                                </button>
-                            </div>
+                        </div>
+
+                        <div class="d-flex gap-3">
+                            <button type="submit" class="btn-cart-main">
+                                <i class="bi bi-cart-fill me-2"></i> Thêm vào giỏ hàng
+                            </button>
                         </div>
                     </form>
+                </div>
+
+                <div class="trust-badges">
+                    <span><i class="bi bi-shield-check"></i> Chính hãng 100%</span>
+                    <span><i class="bi bi-arrow-repeat"></i> Đổi trả 7 ngày</span>
+                    <span><i class="bi bi-lightning-charge"></i> Giao siêu tốc</span>
                 </div>
             </div>
         </div>
     </div>
 
-    <div th:replace="~{fragments/footer :: footer}"></div>
+    <div th:replace="~{fragments/customer-review :: customer-review}"></div>
+    <footer id="footer" th:replace="~{fragments/footer :: footer}"></footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
