@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{admin/admin-layout :: layout('Quản lý thể loại', ~{::#main-category-content})}">
+<head>
+    <title>Quản lý thể loại</title>
+</head>
+<body>
+
+<div id="main-category-content">
+    
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="page-title">Quản lý thể loại</h2>
+            <p class="page-subtitle">Thêm, sửa, xóa các danh mục truyện tranh</p>
+        </div>
+    </div>
+
+    <div th:if="${error}" class="alert alert-danger shadow-sm border-0" th:text="${error}"></div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="content-card mb-4">
+                <div class="content-card-header">
+                    <h5 th:text="${category.categoryId == null ? 'Thêm thể loại mới' : 'Cập nhật thể loại'}"></h5>
+                </div>
+                <div class="p-4">
+                    <form th:action="@{/admin/categories/save}" th:object="${category}" method="post">
+                        <input type="hidden" th:field="*{categoryId}">
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Tên thể loại <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" th:field="*{categoryName}" placeholder="VD: Shonen, Isekai..." required>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Mô tả</label>
+                            <textarea class="form-control" th:field="*{description}" rows="4" placeholder="Nhập mô tả thể loại..."></textarea>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn text-white fw-bold" style="background-color: var(--primary);">
+                                <i class="bi bi-save me-1"></i> Lưu thể loại
+                            </button>
+                            <a th:if="${category.categoryId != null}" th:href="@{/admin/categories}" class="btn btn-light fw-bold">Hủy cập nhật</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="content-card">
+                <div class="content-card-header">
+                    <h5>Danh sách thể loại</h5>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th width="10%">ID</th>
+                                <th>Tên thể loại</th>
+                                <th>Mô tả</th>
+                                <th class="text-center">Số truyện</th>
+                                <th class="text-end">Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="c : ${categories}">
+                                <td th:text="${c.categoryId}"></td>
+                                <td class="fw-bold text-dark" th:text="${c.categoryName}"></td>
+                                <td th:text="${c.description}"></td>
+                                <td class="text-center">
+                                    <span class="badge bg-secondary" th:text="${c.mangas != null ? c.mangas.size() : 0}"></span>
+                                </td>
+                                <td class="text-end">
+                                    <a th:href="@{/admin/categories/edit/{id}(id=${c.categoryId})}" class="btn btn-sm btn-light text-primary me-1">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    <a th:href="@{/admin/categories/delete/{id}(id=${c.categoryId})}" class="btn btn-sm btn-light text-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa thể loại này?');">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(categories)}">
+                                <td colspan="5" class="text-center py-4 text-muted">Chưa có thể loại nào.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

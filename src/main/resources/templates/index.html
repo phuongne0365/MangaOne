@@ -34,10 +34,19 @@
       </div>
     </div>
 
+	<!-- ====== fragment search -->
     <div th:replace="~{fragments/search-popup :: search-popup}"></div>
 
     <!-- ====== fragment header -->
     <div th:replace="~{fragments/header :: header(activePage='home')}"></div>
+
+    <!--
+      FLAG TỰ ĐỘNG MỞ MODAL: JS sẽ tìm element này để quyết định mở modal.
+      th:if="${openLogin}" → element chỉ render ra HTML khi server set openLogin=true
+    -->
+    <div id="flag-open-login"    th:if="${openLogin}"    style="display:none;"></div>
+    <div id="flag-open-register" th:if="${openRegister}" style="display:none;"></div>
+
 
     <section id="billboard" class="position-relative d-flex align-items-center py-5 bg-light-gray"
       style="background-image: url(images/banner-image-bg.jpg); background-size: cover; background-repeat: no-repeat; background-position: center; height: 800px;">
@@ -858,6 +867,28 @@
             1024: { slidesPerView: 4 }
           }
         });
+
+        // ===== TỰ ĐỘNG MỞ MODAL KHI CÓ LỖI ĐĂNG NHẬP / ĐĂNG KÝ =====
+        // Thymeleaf đặt flag vào hidden element, JS đọc và mở modal tương ứng
+        var shouldOpenLogin    = document.getElementById('flag-open-login');
+        var shouldOpenRegister = document.getElementById('flag-open-register');
+        var loginModal         = document.getElementById('exampleModal');
+
+        if (loginModal) {
+          var bsModal = new bootstrap.Modal(loginModal);
+
+          if (shouldOpenLogin) {
+            // Mở modal và chuyển sang tab Sign In
+            bsModal.show();
+            var signInTab = document.getElementById('nav-sign-in-tab');
+            if (signInTab) signInTab.click();
+          } else if (shouldOpenRegister) {
+            // Mở modal và chuyển sang tab Register
+            bsModal.show();
+            var registerTab = document.getElementById('nav-register-tab');
+            if (registerTab) registerTab.click();
+          }
+        }
       });
     </script>
 

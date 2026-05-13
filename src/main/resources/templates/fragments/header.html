@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+  <meta charset="UTF-8">
+  <title>Insert title here</title>
 </head>
+
 <body>
-	<div th:fragment="header(activePage)">
-	<!-- sticky giúp dính header trên cùng khi cuộn trang -->
-	<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <div th:fragment="header(activePage)">
+    <!-- sticky giúp dính header trên cùng khi cuộn trang -->
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
       <symbol id="search" xmlns="http://www.w3.org/2000/symbolsvg" viewBox="0 0 24 24">
         <path fill="currentColor" fill-rule="evenodd"
           d="M11.5 2.75a8.75 8.75 0 1 0 0 17.5a8.75 8.75 0 0 0 0-17.5M1.25 11.5c0-5.66 4.59-10.25 10.25-10.25S21.75 5.84 21.75 11.5c0 2.56-.939 4.902-2.491 6.698l3.271 3.272a.75.75 0 1 1-1.06 1.06l-3.272-3.271A10.21 10.21 0 0 1 11.5 21.75c-5.66 0-10.25-4.59-10.25-10.25"
@@ -106,9 +108,9 @@
           d="M14 10.5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 .5-.5zm0-3a.5.5 0 0 0-.5-.5h-7a.5.5 0 0 0 0 1h7a.5.5 0 0 0 .5-.5zm0-3a.5.5 0 0 0-.5-.5h-11a.5.5 0 0 0 0 1h11a.5.5 0 0 0 .5-.5z" />
       </symbol>
     </svg>
-    
-        <header id="header" class="site-header sticky-top shadow-sm">
-	
+
+    <header id="header" class="site-header sticky-top shadow-sm">
+
       <div class="top-info border-bottom d-none d-md-block ">
         <div class="container-fluid">
           <div class="row g-0">
@@ -129,8 +131,9 @@
       <nav id="header-nav" class="navbar navbar-expand-lg py-3">
         <div class="container">
           <a class="navbar-brand" href="/">
-          <!-- =======================logo================= -->
-            <img th:src="@{/images/logo-trang.png}" src="images/logo-trang.png" alt="MangaOne" style="height:52px; width:auto; object-fit:contain;">
+            <!-- =======================logo================= -->
+            <img th:src="@{/images/logo-trang.png}" src="images/logo-trang.png" alt="MangaOne"
+              style="height:52px; width:auto; object-fit:contain;">
           </a>
           <button class="navbar-toggler d-flex d-lg-none order-3 p-2" type="button" data-bs-toggle="offcanvas"
             data-bs-target="#bdNavbar" aria-controls="bdNavbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -141,7 +144,8 @@
           <div class="offcanvas offcanvas-end" tabindex="-1" id="bdNavbar" aria-labelledby="bdNavbarOffcanvasLabel">
             <div class="offcanvas-header px-4 pb-0">
               <a class="navbar-brand" href="/">
-                <img th:src="@{/images/logo.jpg}" src="images/logo.jpg" alt="MangaOne" style="height:52px; width:auto; object-fit:contain;">
+                <img th:src="@{/images/logo.jpg}" src="images/logo.jpg" alt="MangaOne"
+                  style="height:52px; width:auto; object-fit:contain;">
               </a>
               <button type="button" class="btn-close btn-close-black" data-bs-dismiss="offcanvas" aria-label="Close"
                 data-bs-target="#bdNavbar"></button>
@@ -150,44 +154,52 @@
               <ul id="navbar"
                 class="navbar-nav text-uppercase justify-content-start justify-content-lg-center align-items-start align-items-lg-center flex-grow-1">
                 <li class="nav-item">
-                  <a class="nav-link me-4" th:classappend="${activePage == 'home'} ? 'active' : ''" href="/">Trang Chủ</a>
+                  <a class="nav-link me-4" th:classappend="${activePage == 'home'} ? 'active' : ''" href="/">Trang
+                    Chủ</a>
                 </li>
                 <li class="nav-item">
-    				<a class="nav-link me-4" th:classappend="${activePage == 'about'} ? 'active' : ''" th:href="@{/about}">Giới Thiệu</a>
-				</li>
-				<li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle d-flex align-items-center" th:classappend="${activePage == 'mangas'} ? 'active' : ''" href="#" id="khoTruyenDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    KHO TRUYỆN 
-    <i class="fas fa-chevron-down ms-1 transition-icon"></i>
-</a>
-    <ul class="dropdown-menu border-0 shadow" aria-labelledby="khoTruyenDropdown">
-        <li>
-            <a class="dropdown-item fw-bold text-danger" th:href="@{/mangas}">
-                <i class="fas fa-list me-2"></i> Tất cả
-            </a>
-        </li>
-        <li><hr class="dropdown-divider"></li>
-        <div class="scrollable-menu">
-            <li><a class="dropdown-item" th:href="@{/mangas(category_id=1)}">Shonen</a></li>
-            <li><a class="dropdown-item" th:href="@{/mangas(category_id=2)}">Seinen</a></li>
-            <li><a class="dropdown-item" th:href="@{/mangas(category_id=3)}">Comedy</a></li>
-            <li><a class="dropdown-item" th:href="@{/mangas(category_id=4)}">Slice of Life</a></li>
-            <li><a class="dropdown-item" th:href="@{/mangas(category_id=5)}">Isekai</a></li>
-            <li><a class="dropdown-item" th:href="@{/mangas(category_id=6)}">Sports</a></li>
-            <li><a class="dropdown-item" th:href="@{/mangas(category_id=7)}">Romance</a></li>
-            <li><a class="dropdown-item" th:href="@{/mangas(category_id=8)}">Kinh dị</a></li>
-            <li><a class="dropdown-item" th:href="@{/mangas(category_id=9)}">Bí ẩn</a></li>
-            <li><a class="dropdown-item" th:href="@{/mangas(category_id=10)}">Tâm lý</a></li>
-            <li><a class="dropdown-item" th:href="@{/mangas(category_id=11)}">Phiêu lưu</a></li>
-        </div>
-    </ul>
-</li>
+                  <a class="nav-link me-4" th:classappend="${activePage == 'about'} ? 'active' : ''"
+                    th:href="@{/about}">Giới Thiệu</a>
+                </li>
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle d-flex align-items-center"
+                    th:classappend="${activePage == 'mangas'} ? 'active' : ''" href="#" id="khoTruyenDropdown"
+                    role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    KHO TRUYỆN
+                    <i class="fas fa-chevron-down ms-1 transition-icon"></i>
+                  </a>
+                  <ul class="dropdown-menu border-0 shadow" aria-labelledby="khoTruyenDropdown">
+                    <li>
+                      <a class="dropdown-item fw-bold text-danger" th:href="@{/mangas}">
+                        <i class="fas fa-list me-2"></i> Tất cả
+                      </a>
+                    </li>
+                    <li>
+                      <hr class="dropdown-divider">
+                    </li>
+                    <div class="scrollable-menu">
+                      <li><a class="dropdown-item" th:href="@{/mangas(category_id=1)}">Shonen</a></li>
+                      <li><a class="dropdown-item" th:href="@{/mangas(category_id=2)}">Seinen</a></li>
+                      <li><a class="dropdown-item" th:href="@{/mangas(category_id=3)}">Comedy</a></li>
+                      <li><a class="dropdown-item" th:href="@{/mangas(category_id=4)}">Slice of Life</a></li>
+                      <li><a class="dropdown-item" th:href="@{/mangas(category_id=5)}">Isekai</a></li>
+                      <li><a class="dropdown-item" th:href="@{/mangas(category_id=6)}">Sports</a></li>
+                      <li><a class="dropdown-item" th:href="@{/mangas(category_id=7)}">Romance</a></li>
+                      <li><a class="dropdown-item" th:href="@{/mangas(category_id=8)}">Kinh dị</a></li>
+                      <li><a class="dropdown-item" th:href="@{/mangas(category_id=9)}">Bí ẩn</a></li>
+                      <li><a class="dropdown-item" th:href="@{/mangas(category_id=10)}">Tâm lý</a></li>
+                      <li><a class="dropdown-item" th:href="@{/mangas(category_id=11)}">Phiêu lưu</a></li>
+                    </div>
+                  </ul>
+                </li>
                 <li class="nav-item">
-    				<a class="nav-link me-4" th:classappend="${activePage == 'news'} ? 'active' : ''" th:href="@{/news}">Tin Tức</a>
-				</li>
+                  <a class="nav-link me-4" th:classappend="${activePage == 'news'} ? 'active' : ''"
+                    th:href="@{/news}">Tin Tức</a>
+                </li>
                 <li class="nav-item">
-    				<a class="nav-link me-4" th:classappend="${activePage == 'contact'} ? 'active' : ''" th:href="@{/contact}">Liên Hệ</a>
-				</li>
+                  <a class="nav-link me-4" th:classappend="${activePage == 'contact'} ? 'active' : ''"
+                    th:href="@{/contact}">Liên Hệ</a>
+                </li>
               </ul>
               <div class="user-items d-flex">
                 <ul class="d-flex justify-content-end align-items-center list-unstyled mb-0">
@@ -201,20 +213,21 @@
                   <li class="pe-3">
                     <!-- Nếu đã đăng nhập: hiện tên + nút đăng xuất -->
                     <span th:if="${session.loggedInUser != null}" class="d-flex align-items-center gap-2">
-                      <span class="fw-semibold" style="font-size:0.9rem;color:#333;" 
-                            th:text="'Xin chào, ' + ${session.loggedInUser.fullName}"></span>
+                      <span class="fw-semibold" style="font-size:0.9rem;color:#333;"
+                        th:text="'Xin chào, ' + ${session.loggedInUser.fullName}"></span>
                       <a href="/logout" class="btn btn-outline-dark" style="padding: 6px 14px; 
                       font-size: 13px; min-width: unset; height: auto; line-height: normal; 
                       border-radius: 6px;">Đăng xuất</a>
                     </span>
                     <!-- Nếu chưa đăng nhập: mở modal -->
-                    <a th:if="${session.loggedInUser == null}" href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    <a th:if="${session.loggedInUser == null}" href="#" data-bs-toggle="modal"
+                      data-bs-target="#exampleModal">
                       <svg class="user">
                         <use xlink:href="#user"></use>
                       </svg>
                     </a>
                     <!-- Modal -->
-                    
+
                   </li>
                   <li class="wishlist-dropdown dropdown pe-3">
                     <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">
@@ -308,82 +321,82 @@
         </div>
       </nav>
     </header>
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                      aria-hidden="true">
-                      <div class="modal-dialog">
-                        <div class="modal-content">
-                          <div class="modal-header border-bottom-0">
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                          </div>
-                          <div class="modal-body">
-                            <div class="tabs-listing">
-                              <nav>
-                                <div class="nav nav-tabs d-flex justify-content-center" id="nav-tab" role="tablist">
-                                  <button class="nav-link text-capitalize active" id="nav-sign-in-tab" data-bs-toggle="tab"
-                                    data-bs-target="#nav-sign-in" type="button" role="tab" aria-controls="nav-sign-in"
-                                    aria-selected="true">Sign In</button>
-                                  <button class="nav-link text-capitalize" id="nav-register-tab" data-bs-toggle="tab"
-                                    data-bs-target="#nav-register" type="button" role="tab" aria-controls="nav-register"
-                                    aria-selected="false">Register</button>
-                                </div>
-                              </nav>
-                              <div class="tab-content" id="nav-tabContent">
-                                <!-- ===== TAB ĐĂNG NHẬP ===== -->
-                                <div class="tab-pane fade active show" id="nav-sign-in" role="tabpanel"
-                                  aria-labelledby="nav-sign-in-tab">
-                                  <div th:if="${loginError}" class="alert alert-danger mt-3 py-2" th:text="${loginError}"></div>
-                                  <div th:if="${registerSuccess}" class="alert alert-success mt-3 py-2" th:text="${registerSuccess}"></div>
-                                  <form th:action="@{/login}" method="post">
-                                    <div class="form-group py-3">
-                                      <label class="mb-2">Email *</label>
-                                      <input type="email" name="email" placeholder="Nhập địa chỉ Email"
-                                        class="form-control w-100 rounded-3 p-3" required>
-                                    </div>
-                                    <div class="form-group pb-3">
-                                      <label class="mb-2">Mật khẩu *</label>
-                                      <input type="password" name="password" placeholder="Nhập mật khẩu"
-                                        class="form-control w-100 rounded-3 p-3" required>
-                                    </div>
-                                    <label class="py-3">
-                                      <input type="checkbox" class="d-inline">
-                                      <span class="label-body">Ghi nhớ đăng nhập</span>
-                                    </label>
-                                    <button type="submit" class="btn btn-dark w-100 my-3">Đăng Nhập</button>
-                                  </form>
-                                </div>
-                                <!-- ===== TAB ĐĂNG KÝ ===== -->
-                                <div class="tab-pane fade" id="nav-register" role="tabpanel"
-                                  aria-labelledby="nav-register-tab">
-                                  <div th:if="${registerError}" class="alert alert-danger mt-3 py-2" th:text="${registerError}"></div>
-                                  <form th:action="@{/register}" method="post">
-                                    <div class="form-group py-3">
-                                      <label class="mb-2">Họ và tên *</label>
-                                      <input type="text" name="fullName" placeholder="Nhập họ và tên"
-                                        class="form-control w-100 rounded-3 p-3" required>
-                                    </div>
-                                    <div class="form-group pb-3">
-                                      <label class="mb-2">Email *</label>
-                                      <input type="email" name="email" placeholder="Nhập địa chỉ Email"
-                                        class="form-control w-100 rounded-3 p-3" required>
-                                    </div>
-                                    <div class="form-group pb-3">
-                                      <label class="mb-2">Mật khẩu *</label>
-                                      <input type="password" name="password" placeholder="Nhập mật khẩu"
-                                        class="form-control w-100 rounded-3 p-3" required>
-                                    </div>
-                                    <label class="py-3">
-                                      <input type="checkbox" required class="d-inline">
-                                      <span class="label-body">Tôi đồng ý với <a href="#" class="fw-bold">Chính sách bảo mật</a></span>
-                                    </label>
-                                    <button type="submit" class="btn btn-dark w-100 my-3">Đăng Ký</button>
-                                  </form>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header border-bottom-0">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="tabs-listing">
+              <nav>
+                <div class="nav nav-tabs d-flex justify-content-center" id="nav-tab" role="tablist">
+                  <button class="nav-link text-capitalize active" id="nav-sign-in-tab" data-bs-toggle="tab"
+                    data-bs-target="#nav-sign-in" type="button" role="tab" aria-controls="nav-sign-in"
+                    aria-selected="true">Sign In</button>
+                  <button class="nav-link text-capitalize" id="nav-register-tab" data-bs-toggle="tab"
+                    data-bs-target="#nav-register" type="button" role="tab" aria-controls="nav-register"
+                    aria-selected="false">Register</button>
+                </div>
+              </nav>
+              <div class="tab-content" id="nav-tabContent">
+                <!-- ===== TAB ĐĂNG NHẬP ===== -->
+                <div class="tab-pane fade active show" id="nav-sign-in" role="tabpanel"
+                  aria-labelledby="nav-sign-in-tab">
+                  <div th:if="${loginError}" class="alert alert-danger mt-3 py-2" th:text="${loginError}"></div>
+                  <div th:if="${registerSuccess}" class="alert alert-success mt-3 py-2" th:text="${registerSuccess}">
+                  </div>
+                  <form th:action="@{/login}" method="post">
+                    <div class="form-group py-3">
+                      <label class="mb-2">Email *</label>
+                      <input type="email" name="email" placeholder="Nhập địa chỉ Email"
+                        class="form-control w-100 rounded-3 p-3" required>
                     </div>
+                    <div class="form-group pb-3">
+                      <label class="mb-2">Mật khẩu *</label>
+                      <input type="password" name="password" placeholder="Nhập mật khẩu"
+                        class="form-control w-100 rounded-3 p-3" required>
+                    </div>
+                    <label class="py-3">
+                      <input type="checkbox" class="d-inline">
+                      <span class="label-body">Ghi nhớ đăng nhập</span>
+                    </label>
+                    <button type="submit" class="btn btn-dark w-100 my-3">Đăng Nhập</button>
+                  </form>
+                </div>
+                <!-- ===== TAB ĐĂNG KÝ ===== -->
+                <div class="tab-pane fade" id="nav-register" role="tabpanel" aria-labelledby="nav-register-tab">
+                  <div th:if="${registerError}" class="alert alert-danger mt-3 py-2" th:text="${registerError}"></div>
+                  <form th:action="@{/register}" method="post">
+                    <div class="form-group py-3">
+                      <label class="mb-2">Họ và tên *</label>
+                      <input type="text" name="fullName" placeholder="Nhập họ và tên"
+                        class="form-control w-100 rounded-3 p-3" required>
+                    </div>
+                    <div class="form-group pb-3">
+                      <label class="mb-2">Email *</label>
+                      <input type="email" name="email" placeholder="Nhập địa chỉ Email"
+                        class="form-control w-100 rounded-3 p-3" required>
+                    </div>
+                    <div class="form-group pb-3">
+                      <label class="mb-2">Mật khẩu *</label>
+                      <input type="password" name="password" placeholder="Nhập mật khẩu"
+                        class="form-control w-100 rounded-3 p-3" required>
+                    </div>
+                    <label class="py-3">
+                      <input type="checkbox" required class="d-inline">
+                      <span class="label-body">Tôi đồng ý với <a href="#" class="fw-bold">Chính sách bảo mật</a></span>
+                    </label>
+                    <button type="submit" class="btn btn-dark w-100 my-3">Đăng Ký</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </body>
+
 </html>

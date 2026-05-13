@@ -151,7 +151,7 @@ INSERT INTO MANGAS (title, author, description, price, stock_quantity, image_url
     (SELECT category_id FROM CATEGORIES WHERE category_name LIKE '%Romance%'), (SELECT publisher_id FROM PUBLISHERS WHERE publisher_name = 'IPM'));
 
 INSERT INTO USERS (email, password, full_name, phone_number, address, role) VALUES
-('admin@mangaone.com', '123456', 'Quản Trị Viên', '0987654321', 'Trụ sở chính', 'ADMIN'),
+
 ('duyson@gmail.com', '123456', 'Đào Duy Sơn', '0912345678', 'Hà Nội', 'USER'),
 ('bichngoc@gmail.com', '123456', 'Nguyễn Thị Bích Ngọc', '0909090909', 'Hải Phòng', 'USER'),
 ('phuong@gmail.com', '123456', 'Trưởng Nhóm Phượng', '0988888888', 'Đà Nẵng', 'USER'),
@@ -178,3 +178,6 @@ SELECT * FROM MANGAS;
 SELECT * FROM CATEGORIES;
 SELECT * FROM PUBLISHERS;
 SELECT * FROM USERS;
+USE mangaone;
+INSERT INTO USERS (email, password, full_name, phone_number, address, role, is_active) 
+VALUES ('admin@mangaone.com', '$2a$12$Vt2558rCJVZb6kfq55YGWeYUjl3MHcHwI3KZg.MRd.02O.7dXdrfK', 'Quản Trị Viên', '0123456789', 'Hà Nội', 'ADMIN',true);

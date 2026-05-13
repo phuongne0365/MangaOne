@@ -22,6 +22,7 @@ public class AdminController {
         return user != null && "ADMIN".equals(user.getRole());
     }
 
+
     // ===== TRANG DANH SÁCH THÀNH VIÊN =====
     @GetMapping("/admin/users")
     public String listUsers(HttpSession session, Model model) {
