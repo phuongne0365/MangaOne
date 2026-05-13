@@ -275,6 +275,13 @@
 		    <span>Quản lý thể loại</span>
 		</a>
     </div>
+      <div class="nav-item">
+          <a th:href="@{/admin/publishers}" class="nav-link"
+             th:classappend="${currentPage == 'publishers'} ? 'active' : ''">
+              <i class="bi bi-buildings"></i>
+              <span>Quản lý nhà xuất bản</span>
+          </a>
+      </div>
     <div class="nav-item">
       <a th:href="@{/admin/inventory}" class="nav-link"
 		   th:classappend="${currentPage == 'inventory'} ? 'active' : ''">

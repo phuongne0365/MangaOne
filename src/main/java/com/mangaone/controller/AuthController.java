@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -15,25 +16,28 @@ public class AuthController {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;  // ✨ INJECT PasswordEncoder
 
     // ================= MỞ TRANG ĐĂNG KÝ =================
     @GetMapping("/register")
     public String showRegisterForm(Model model) {
         model.addAttribute("user", new User());
-        return "redirect:/?openLogin=true\"";
+        return "redirect:/?openLogin=true";
     }
 
     // ================= XỬ LÝ LƯU ĐĂNG KÝ =================
     @PostMapping("/register")
     public String processRegister(@ModelAttribute("user") User user, Model model, HttpSession session) {
-        // Kiểm tra email trùng
         if (userRepository.findByEmail(user.getEmail()) != null) {
             session.setAttribute("registerError", "Email này đã được sử dụng!");
             return "redirect:/?openRegister=true";
         }
 
-        // Lưu mật khẩu plain text (nhất quán với DB hiện tại)
-        // DelegatingPasswordEncoder trong SecurityConfig sẽ tự so sánh đúng cách
+        // ✨ MÃ HÓA MẬT KHẨU TRƯỚC KHI LƯU
+        String hashedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(hashedPassword);
+
         userRepository.save(user);
         session.setAttribute("registerSuccess", "Đăng ký thành công! Hãy đăng nhập.");
         return "redirect:/?openLogin=true";
