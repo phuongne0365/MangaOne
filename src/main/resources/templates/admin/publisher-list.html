@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{admin/admin-layout :: layout('Quản lý nhà xuất bản', ~{::#main-publisher-content})}">
+<head>
+    <title>Quản lý nhà xuất bản</title>
+</head>
+<body>
+
+<div id="main-publisher-content">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="page-title">Quản lý nhà xuất bản</h2>
+            <p class="page-subtitle">Thêm, sửa, xóa các nhà xuất bản truyện tranh</p>
+        </div>
+    </div>
+
+    <div th:if="${error}" class="alert alert-danger shadow-sm border-0" th:text="${error}"></div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="content-card mb-4">
+                <div class="content-card-header">
+                    <h5 th:text="${publisher.publisherId == null ? 'Thêm nhà xuất bản mới' : 'Cập nhật nhà xuất bản'}"></h5>
+                </div>
+                <div class="p-4">
+                    <form th:action="@{/admin/publishers/save}" th:object="${publisher}" method="post">
+                        <input type="hidden" th:field="*{publisherId}">
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Tên nhà xuất bản <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" th:field="*{publisherName}" placeholder="VD: Shueisha, Kadokawa..." required>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn text-white fw-bold" style="background-color: var(--primary);">
+                                <i class="bi bi-save me-1"></i> Lưu nhà xuất bản
+                            </button>
+                            <a th:if="${publisher.publisherId != null}" th:href="@{/admin/publishers}" class="btn btn-light fw-bold">Hủy cập nhật</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="content-card">
+                <div class="content-card-header">
+                    <h5>Danh sách nhà xuất bản</h5>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                        <tr>
+                            <th width="10%">ID</th>
+                            <th>Tên nhà xuất bản</th>
+                            <th class="text-center">Số truyện</th>
+                            <th class="text-end">Hành động</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="p : ${publishers}">
+                            <td th:text="${p.publisherId}"></td>
+                            <td class="fw-bold text-dark" th:text="${p.publisherName}"></td>
+                            <td class="text-center">
+                                <span class="badge bg-secondary" th:text="${p.mangas != null ? p.mangas.size() : 0}"></span>
+                            </td>
+                            <td class="text-end">
+                                <div class="d-flex justify-content-end gap-2">
+                                    <a th:href="@{/admin/publishers/edit/{id}(id=${p.publisherId})}" class="btn btn-sm btn-light text-primary">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    <a th:href="@{/admin/publishers/delete/{id}(id=${p.publisherId})}" class="btn btn-sm btn-light text-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa nhà xuất bản này?');">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(publishers)}">
+                            <td colspan="4" class="text-center py-4 text-muted">Chưa có nhà xuất bản nào.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

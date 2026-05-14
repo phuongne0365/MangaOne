@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Nhà Xuất Bản</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <h2 th:if="${publisher.publisherId == null}">📚 Thêm Nhà Xuất Bản Mới</h2>
+            <h2 th:if="${publisher.publisherId != null}">✏️ Chỉnh Sửa Nhà Xuất Bản</h2>
+
+            <!-- Form -->
+            <form th:action="${publisher.publisherId == null} ? '/admin/publishers/add' : '/admin/publishers/edit/' + ${publisher.publisherId}"
+                  method="post" class="mt-4">
+
+                <div class="mb-3">
+                    <label for="publisherName" class="form-label">Tên Nhà Xuất Bản</label>
+                    <input type="text" class="form-control" id="publisherName" name="publisherName"
+                           th:value="${publisher.publisherName}" required>
+                </div>
+
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <a href="/admin/publishers" class="btn btn-secondary">❌ Hủy</a>
+                    <button type="submit" class="btn btn-primary">💾 Lưu</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

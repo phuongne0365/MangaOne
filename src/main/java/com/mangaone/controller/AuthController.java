@@ -2,9 +2,11 @@ package com.mangaone.controller;
 
 import com.mangaone.entity.User;
 import com.mangaone.repository.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -14,60 +16,71 @@ public class AuthController {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;  // ✨ INJECT PasswordEncoder
 
     // ================= MỞ TRANG ĐĂNG KÝ =================
     @GetMapping("/register")
     public String showRegisterForm(Model model) {
         model.addAttribute("user", new User());
-        return "register";
+        return "redirect:/?openLogin=true";
     }
 
     // ================= XỬ LÝ LƯU ĐĂNG KÝ =================
     @PostMapping("/register")
     public String processRegister(@ModelAttribute("user") User user, Model model, HttpSession session) {
-        // Kiểm tra email trùng
         if (userRepository.findByEmail(user.getEmail()) != null) {
             session.setAttribute("registerError", "Email này đã được sử dụng!");
             return "redirect:/?openRegister=true";
         }
-        
-        // Băm mật khẩu (Mã hóa) trước khi lưu
-        String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt());
+
+        // ✨ MÃ HÓA MẬT KHẨU TRƯỚC KHI LƯU
+        String hashedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(hashedPassword);
-        
-        userRepository.save(user); // Lưu xuống Database
+
+        userRepository.save(user);
         session.setAttribute("registerSuccess", "Đăng ký thành công! Hãy đăng nhập.");
-        return "redirect:/?openLogin=true"; 
+        return "redirect:/?openLogin=true";
     }
 
     // ================= MỞ TRANG ĐĂNG NHẬP =================
+    // LƯU Ý: POST /login được Spring Security handle tự động.
+    // GET /login chỉ hiển thị trang và lưu lại trang trước đó vào session.
     @GetMapping("/login")
-    public String showLoginForm() {
-        return "login";
-    }
+    public String showLoginForm(HttpServletRequest request,
+            HttpSession session,
+            Model model,
+            @RequestParam(value = "loginError", required = false) String loginErrorParam) {
 
-    // ================= XỬ LÝ KIỂM TRA ĐĂNG NHẬP =================
-    @PostMapping("/login")
-    public String processLogin(@RequestParam("email") String email, 
-                               @RequestParam("password") String password, 
-                               HttpSession session, Model model) {
-        User user = userRepository.findByEmail(email);
-
-        // So sánh mật khẩu người dùng nhập với mật khẩu đã mã hóa trong DB
-        if (user != null && password.equals(user.getPassword())) {
-            session.setAttribute("loggedInUser", user); // Cấp thẻ phiên làm việc (Session)
-            return "redirect:/"; 
+        // Lưu Referer để sau khi login có thể quay lại trang cũ
+        String referer = request.getHeader("Referer");
+        if (referer != null && !referer.isBlank() && !referer.contains("/login")) {
+            session.setAttribute("PREVIOUS_URL", referer);
         }
 
-        // Sai mật khẩu -> redirect về trang chủ, mở modal, hiển thị lỗi
-        session.setAttribute("loginError", "Sai email hoặc mật khẩu!");
-        return "redirect:/?openLogin=true";
+        // Đọc thông báo lỗi từ CustomAuthenticationFailureHandler
+        // (trường hợp failureHandler redirect về /?loginError=... nhưng browser vào
+        // /login trực tiếp)
+        if (loginErrorParam != null && !loginErrorParam.isBlank()) {
+            model.addAttribute("loginError", loginErrorParam);
+        }
+
+        // Đọc thông báo đăng ký thành công từ session (nếu có)
+        if (session.getAttribute("registerSuccess") != null) {
+            model.addAttribute("registerSuccess", session.getAttribute("registerSuccess"));
+            session.removeAttribute("registerSuccess");
+        }
+
+        return "redirect:/?openRegister=true";
     }
 
     // ================= XỬ LÝ ĐĂNG XUẤT =================
     @GetMapping("/logout")
     public String logout(HttpSession session) {
-        session.removeAttribute("loggedInUser"); // Xóa thẻ phiên làm việc
+        session.removeAttribute("loggedInUser"); // Xóa user khỏi session của dự án
+        session.removeAttribute("PREVIOUS_URL"); // Dọn dẹp
+        SecurityContextHolder.clearContext(); // Xóa context của Spring Security
+        session.invalidate(); // Hủy toàn bộ session
         return "redirect:/";
     }
 }

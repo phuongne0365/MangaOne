@@ -30,18 +30,26 @@ public class HomeController {
     // 1. TRANG CHỦ
     @GetMapping("/")
     public String home(Model model, HttpSession session,
-                       @RequestParam(value = "openLogin", required = false) String openLogin,
-                       @RequestParam(value = "openRegister", required = false) String openRegister) {
-        
-        model.addAttribute("categories", categoryService.getAllCategories());
-        model.addAttribute("listManga", mangaRepository.findAll());
+                       @RequestParam(value = "openLogin",    required = false) String openLogin,
+                       @RequestParam(value = "openRegister", required = false) String openRegister,
+                       @RequestParam(value = "loginError",   required = false) String loginErrorParam) {
+
+        model.addAttribute("categories",  categoryService.getAllCategories());
+        model.addAttribute("listManga",   mangaRepository.findAll());
         model.addAttribute("bestSellers", mangaRepository.findTopBestSellers());
 
-        // Xử lý thông báo từ Session (Login/Register)
-        if (session.getAttribute("loginError") != null) {
+        // Lỗi đăng nhập: ưu tiên từ request param (Spring Security failureUrl)
+        // sau đó kiểm tra session (fallback cũ)
+        if (loginErrorParam != null && !loginErrorParam.isBlank()) {
+            model.addAttribute("loginError", loginErrorParam);
+            model.addAttribute("openLogin", true);
+        } else if (session.getAttribute("loginError") != null) {
             model.addAttribute("loginError", session.getAttribute("loginError"));
             session.removeAttribute("loginError");
+            model.addAttribute("openLogin", true);
         }
+
+        // Thông báo đăng ký lỗi / thành công
         if (session.getAttribute("registerError") != null) {
             model.addAttribute("registerError", session.getAttribute("registerError"));
             session.removeAttribute("registerError");
@@ -52,9 +60,9 @@ public class HomeController {
         }
 
         // Tự động mở modal nếu có yêu cầu
-        if (openLogin != null) model.addAttribute("openLogin", true);
+        if (openLogin    != null) model.addAttribute("openLogin",    true);
         if (openRegister != null) model.addAttribute("openRegister", true);
-        
+
         return "index";
     }
 

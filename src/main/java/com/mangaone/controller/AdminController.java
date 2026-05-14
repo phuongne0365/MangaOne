@@ -22,6 +22,7 @@ public class AdminController {
         return user != null && "ADMIN".equals(user.getRole());
     }
 
+
     // ===== TRANG DANH SÁCH THÀNH VIÊN =====
     @GetMapping("/admin/users")
     public String listUsers(HttpSession session, Model model) {
@@ -90,5 +91,22 @@ public class AdminController {
         }
         return "redirect:/admin/users";
     }
-    
+    @GetMapping("/dashboard")
+    public String dashboard(HttpSession session, Model model) {
+        if (!isAdmin(session)) return "redirect:/";
+
+        User user = (User) session.getAttribute("loggedInUser");
+        model.addAttribute("currentUser", user);
+
+        // Thêm các link menu admin
+        model.addAttribute("adminMenus", new String[][]{
+                {"/admin/users", "👥 Quản Lý Người Dùng"},
+                {"/admin/publishers", "📚 Quản Lý Nhà Xuất Bản"},
+                {"/admin/categories", "📂 Quản Lý Thể Loại"},
+                {"/admin/mangas", "🎨 Quản Lý Manga"},
+                {"/admin/inventory", "📦 Quản Lý Kho"}
+        });
+
+        return "admin/dashboard";
+    }
 }

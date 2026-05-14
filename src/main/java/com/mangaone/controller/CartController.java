@@ -29,9 +29,9 @@ public class CartController {
         // Lấy user đang đăng nhập từ Session
         User user = (User) session.getAttribute("loggedInUser");
 
-        // Chưa đăng nhập → chuyển về trang login
+        // Chưa đăng nhập → về trang chủ, mở modal đăng nhập
         if (user == null) {
-            return "redirect:/login";
+            return "redirect:/?openLogin=true";
         }
         
         // Gọi Service lấy danh sách giỏ hàng
@@ -56,7 +56,7 @@ public class CartController {
         User user = (User) session.getAttribute("loggedInUser");
 
         if (user == null) {
-            return "redirect:/login";
+            return "redirect:/?openLogin=true";
         }
         
         try {
@@ -79,7 +79,7 @@ public class CartController {
         User user = (User) session.getAttribute("loggedInUser");
 
         if (user == null) {
-            return "redirect:/login";
+            return "redirect:/?openLogin=true";
         }
 
         try {
@@ -99,7 +99,7 @@ public class CartController {
         User user = (User) session.getAttribute("loggedInUser");
 
         if (user == null) {
-            return "redirect:/login";
+            return "redirect:/?openLogin=true";
         }
 
         cartService.removeFromCart(cartId);
@@ -114,7 +114,7 @@ public class CartController {
             RedirectAttributes redirectAttributes) {
      
         User user = (User) session.getAttribute("loggedInUser");
-        if (user == null) return "redirect:/login";
+        if (user == null) return "redirect:/?openLogin=true";
      
         // Duyệt song song 2 mảng theo index
         try {
