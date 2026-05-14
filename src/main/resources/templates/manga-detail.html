@@ -2,264 +2,465 @@
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/head :: head}"></head>
 
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
 <style>
+    /* ===== ĐỒNG BỘ VỚI KHO TRUYỆN ===== */
     :root {
-        --primary-pink: #ff2d55; 
-        --navy-dark: #0f172a; 
-        --slate-gray: #334155; 
-        --bg-body: #ffffff;
-        --border-color: #f1f5f9;
-        --soft-bg: #f8fafc;
+        --primary-red:   #e94560;   /* màu đỏ chủ đạo từ kho-truyen */
+        --primary-dark:  #1a1a2e;   /* navy dark từ kho-truyen       */
+        --slate-gray:    #334155;
+        --bg-body:       #f8f9fa;   /* nền giống kho-truyen           */
+        --border-color:  #dee2e6;
+        --soft-bg:       #f8fafc;
     }
 
     body {
-        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-family: 'Nunito', sans-serif; /* đồng bộ font Nunito */
         background-color: var(--bg-body);
-        color: var(--navy-dark);
+        color: var(--primary-dark);
         line-height: 1.5;
     }
 
-    /* BREADCRUMB */
+    /* ===== BANNER / BREADCRUMB ===== */
     .site-banner {
-        background: linear-gradient(135deg, #fff0f3 0%, #f8fafc 100%);
-        padding: 40px 0;
-        border-bottom: 1px solid var(--border-color);
-        margin-bottom: 50px;
+        background: linear-gradient(135deg, #fff0f3 0%, #e3f2fd 100%);
+        border-bottom: 2px solid #eee;
+        margin-bottom: 4rem;
+        padding: 60px 0;
+    }
+    .site-banner h1 {
+        font-family: 'Nunito', sans-serif;
+        font-weight: 800;
+        font-size: 2.8rem;
+        color: #1a1a1a !important;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.05);
+        letter-spacing: -1px;
     }
     .breadcrumb-inner {
         background: white;
         display: inline-flex;
+        align-items: center;
         padding: 8px 22px;
         border-radius: 50px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        border: 1px solid #eee;
+    }
+    .breadcrumb-inner a {
+        color: #e94560 !important;
+        font-weight: 700;
+        text-decoration: none;
+    }
+    .breadcrumb-inner .sep {
+        color: #333;
+        font-weight: 700;
+        margin: 0 12px;
+    }
+    .breadcrumb-inner span.current {
+        font-weight: 700;
+        color: #1a1a1a !important;
     }
 
-    /* KHUNG ẢNH & HIỆU ỨNG HOVER NÚT */
+    /* ===== KHUNG ẢNH ===== */
     .main-img-box {
-        background: var(--soft-bg);
-        border-radius: 32px;
-        border: 1px solid var(--border-color);
+        background: #ffffff;
+        border-radius: 16px;
+        border: 1.5px solid var(--border-color);
         display: flex;
         align-items: center;
         justify-content: center;
-        height: 650px; 
+        height: 520px;
         width: 100%;
-        overflow: hidden; 
+        overflow: hidden;
         position: relative;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.07);
     }
-
     .main-img-box img {
         width: 100%; height: 100%;
-        object-fit: contain; 
-        transform: scale(1.1);
-        filter: drop-shadow(0 20px 40px rgba(0,0,0,0.12));
-        transition: transform 0.5s ease;
+        object-fit: contain;
+        transition: transform 0.4s ease;
     }
-
-    /* Lớp phủ tối hơn khi hover để làm nền cho nút có chữ */
     .main-img-box::before {
         content: '';
         position: absolute;
-        top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(15, 23, 42, 0.35); 
+        inset: 0;
+        background: rgba(26, 26, 46, 0.40);
         z-index: 2;
         opacity: 0;
-        transition: 0.4s;
+        transition: 0.35s;
     }
-
     .main-img-box:hover::before { opacity: 1; }
-    .main-img-box:hover img { transform: scale(1.15); }
+    .main-img-box:hover img { transform: scale(1.06); }
 
-    /* NHÓM NÚT CÓ CHỮ TRÊN ẢNH */
+    /* Nút hover trên ảnh */
     .img-action-buttons {
         position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -40%);
+        top: 50%; left: 50%;
+        transform: translate(-50%, -35%);
         z-index: 10;
         display: flex;
-        flex-direction: column; /* Xếp hàng dọc cho rõ chữ */
-        gap: 15px;
+        flex-direction: column;
+        gap: 12px;
         opacity: 0;
         visibility: hidden;
-        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
-
     .main-img-box:hover .img-action-buttons {
         opacity: 1;
         visibility: visible;
         transform: translate(-50%, -50%);
     }
-
-    /* NÚT DẠNG VIÊN THUỐC (PILL) */
     .btn-img-action {
         background: #ffffff;
-        color: var(--navy-dark) !important;
+        color: var(--primary-dark) !important;
         border: none;
-        padding: 12px 25px;
+        padding: 11px 24px;
         border-radius: 50px;
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: 10px;
+        font-family: 'Nunito', sans-serif;
         font-weight: 800;
-        font-size: 0.95rem;
+        font-size: 0.88rem;
         text-transform: uppercase;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        letter-spacing: 0.5px;
+        box-shadow: 0 8px 22px rgba(0,0,0,0.25);
         transition: 0.3s;
         white-space: nowrap;
         cursor: pointer;
     }
-
-    .btn-img-action i {
-        font-size: 1.3rem;
-        color: var(--primary-pink); /* Icon màu hồng tạo điểm nhấn */
-    }
-
+    .btn-img-action i { font-size: 1.1rem; color: var(--primary-red); }
     .btn-img-action:hover {
-        background: var(--primary-pink);
-        color: #ffffff !important;
-        transform: scale(1.08);
+        background: var(--primary-red);
+        color: #fff !important;
+        transform: scale(1.06);
     }
+    .btn-img-action:hover i { color: #fff; }
 
-    .btn-img-action:hover i {
-        color: #ffffff;
-    }
-
+    /* Badge "Bán chạy" */
     .badge-trending {
-        z-index: 10;
         position: absolute;
-        top: 25px;
-        left: 25px;
-        background: var(--primary-pink);
+        top: 16px; left: 16px;
+        z-index: 10;
+        background: var(--primary-red);
         color: white;
-        padding: 8px 18px;
-        border-radius: 10px;
-        font-size: 0.75rem;
+        padding: 5px 14px;
+        border-radius: 8px;
+        font-family: 'Nunito', sans-serif;
+        font-size: 0.72rem;
         font-weight: 800;
         text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
 
-    /* NỘI DUNG CHI TIẾT */
-    .manga-title { font-weight: 850; font-size: 3.2rem; color: var(--navy-dark); letter-spacing: -1.5px; line-height: 1.1; margin-bottom: 20px; }
-    .price-large { font-size: 2.8rem; color: var(--primary-pink); font-weight: 800; }
-    .price-old { font-size: 1.2rem; color: #94a3b8; text-decoration: line-through; margin-left: 15px; font-weight: 500; }
-    .manga-description { color: var(--slate-gray); font-size: 1.15rem; line-height: 1.8; margin-bottom: 30px; }
+    /* ===== NỘI DUNG CHI TIẾT ===== */
+    .category-badge {
+        background: #fff1f2;
+        color: var(--primary-red);
+        border: 1px solid #ffe4e6;
+        padding: 5px 14px;
+        border-radius: 8px;
+        font-family: 'Nunito', sans-serif;
+        font-weight: 700;
+        font-size: 0.85rem;
+    }
 
-    /* GRID THÔNG TIN */
-    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 30px 0; }
-    .info-item { background: var(--soft-bg); padding: 15px 20px; border-radius: 16px; border: 1px solid var(--border-color); }
-    .info-item label { display: block; font-size: 0.75rem; font-weight: 800; color: #64748b; text-transform: uppercase; margin-bottom: 4px; }
-    .info-item span { font-weight: 700; font-size: 1rem; color: var(--navy-dark); }
+    .manga-title {
+        font-family: 'Nunito', sans-serif;
+        font-weight: 800;
+        font-size: 2.2rem;
+        color: var(--primary-dark);
+        letter-spacing: -0.5px;
+        line-height: 1.2;
+        margin-bottom: 16px;
+    }
 
-    /* ACTION BOX */
-    .action-container { background: #ffffff; padding: 30px; border-radius: 24px; border: 2px solid var(--border-color); margin-top: 35px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); }
-    .qty-selector { display: flex; align-items: center; background: var(--soft-bg); border: 1px solid #e2e8f0; border-radius: 14px; padding: 6px; }
-    .qty-selector button { background: none; border: none; color: var(--navy-dark); padding: 5px 15px; font-weight: 800; font-size: 1.2rem; }
-    .qty-selector input { width: 50px; background: transparent; border: none; color: var(--navy-dark); text-align: center; font-weight: 800; font-size: 1.1rem; }
+    .price-large {
+        font-family: 'Nunito', sans-serif;
+        font-size: 2.2rem;
+        color: var(--primary-red);
+        font-weight: 800;
+    }
+    .price-old {
+        font-size: 1.1rem;
+        color: #94a3b8;
+        text-decoration: line-through;
+        margin-left: 12px;
+        font-weight: 500;
+    }
+
+    .manga-description {
+        color: var(--slate-gray);
+        font-family: 'Nunito', sans-serif;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.75;
+        margin-bottom: 24px;
+    }
+
+    /* Info grid */
+    .info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin: 24px 0;
+    }
+    .info-item {
+        background: var(--soft-bg);
+        padding: 14px 18px;
+        border-radius: 12px;
+        border: 1.5px solid var(--border-color);
+    }
+    .info-item label {
+        display: block;
+        font-family: 'Nunito', sans-serif;
+        font-size: 0.72rem;
+        font-weight: 800;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 4px;
+    }
+    .info-item span {
+        font-family: 'Nunito', sans-serif;
+        font-weight: 700;
+        font-size: 0.95rem;
+        color: var(--primary-dark);
+    }
+
+    /* Action box */
+    .action-container {
+        background: #ffffff;
+        padding: 26px;
+        border-radius: 16px;
+        border: 2px solid var(--border-color);
+        margin-top: 28px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+    }
+    .qty-label {
+        font-family: 'Nunito', sans-serif;
+        font-weight: 800;
+        font-size: 0.78rem;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+    }
+    .qty-selector {
+        display: flex;
+        align-items: center;
+        background: var(--soft-bg);
+        border: 1.5px solid var(--border-color);
+        border-radius: 10px;
+        padding: 4px;
+    }
+    .qty-selector button {
+        background: none;
+        border: none;
+        color: var(--primary-dark);
+        padding: 4px 14px;
+        font-family: 'Nunito', sans-serif;
+        font-weight: 800;
+        font-size: 1.1rem;
+        cursor: pointer;
+    }
+    .qty-selector input {
+        width: 48px;
+        background: transparent;
+        border: none;
+        color: var(--primary-dark);
+        text-align: center;
+        font-family: 'Nunito', sans-serif;
+        font-weight: 800;
+        font-size: 1rem;
+    }
 
     .btn-cart-main {
-        background: var(--primary-pink); color: white; border: none; border-radius: 18px; padding: 18px; font-weight: 800; width: 100%; transition: 0.3s;
-        text-transform: uppercase; letter-spacing: 1px; font-size: 1.1rem;
+        background: var(--primary-red);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        padding: 16px;
+        font-family: 'Nunito', sans-serif;
+        font-weight: 800;
+        font-size: 1rem;
+        width: 100%;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: 0.3s;
+        cursor: pointer;
     }
-    .btn-cart-main:hover { background: #e31b44; transform: translateY(-4px); box-shadow: 0 10px 20px rgba(255, 45, 85, 0.2); }
+    .btn-cart-main:hover {
+        background: #c73652;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 18px rgba(233, 69, 96, 0.25);
+        color: white;
+    }
 
-    /* TRUST BADGES */
-    .trust-badges { display: flex; justify-content: space-around; margin-top: 35px; padding-top: 25px; border-top: 1px solid var(--border-color); }
-    .trust-badges span { font-size: 0.85rem; font-weight: 700; color: #94a3b8; display: flex; align-items: center; gap: 8px; }
-    .trust-badges i { color: var(--primary-pink); font-size: 1.1rem; }
+    /* Trust badges */
+    .trust-badges {
+        display: flex;
+        justify-content: space-around;
+        margin-top: 28px;
+        padding-top: 22px;
+        border-top: 1.5px solid var(--border-color);
+    }
+    .trust-badges span {
+        font-family: 'Nunito', sans-serif;
+        font-size: 0.82rem;
+        font-weight: 700;
+        color: #94a3b8;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .trust-badges i { color: var(--primary-red); font-size: 1rem; }
+
+    /* Star rating */
+    .text-warning .bi { color: #f59e0b !important; font-size: 0.9rem; }
+    .review-count {
+        font-family: 'Nunito', sans-serif;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #e65100;
+    }
 </style>
 
 <body>
-    <div th:replace="~{fragments/header :: header(activePage='shop')}"></div>
+<div th:replace="~{fragments/header :: header(activePage='shop')}"></div>
 
-    <section class="site-banner">
-        <div class="container text-center">
-            <h1 class="display-6 fw-bold mb-3" style="color: var(--navy-dark);">Chi tiết tác phẩm</h1>
-            <div class="breadcrumb-inner">
-                <a th:href="@{/}" class="text-decoration-none fw-bold" style="color: var(--primary-pink);">Home</a>
-                <span class="mx-2 text-muted">/</span>
-                <span class="fw-bold" th:text="${manga.title}">Thanh Gươm Diệt Quỷ</span>
-            </div>
-        </div>
-    </section>
-
-    <div class="container mb-5">
-        <div class="row g-5 align-items-start">
-            <div class="col-lg-6">
-                <div class="main-img-box">
-                    <span class="badge-trending">Bán chạy</span>
-                    
-                    <img th:src="@{'/' + ${manga.image}}" src="/images/manga/demon-slayer-tap1.jpg" alt="Manga Cover">
-                    
-                    <div class="img-action-buttons">
-                        <button type="button" class="btn-img-action">
-                            <i class="bi bi-heart-fill"></i>
-                            <span>Yêu thích</span>
-                        </button>
-                        <button type="button" class="btn-img-action">
-                            <i class="bi bi-share-fill"></i>
-                            <span>Chia sẻ</span>
-                        </button>
+<!-- BANNER -->
+<section class="site-banner">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <h1 class="display-3 fw-bold mb-2">Chi Tiết Tác Phẩm</h1>
+                <nav class="breadcrumb-container d-flex justify-content-center">
+                    <div class="breadcrumb-inner">
+                        <a th:href="@{/}">Home</a>
+                        <span class="sep">/</span>
+                        <a th:href="@{/mangas}">Kho Truyện</a>
+                        <span class="sep">/</span>
+                        <span class="current" th:text="${manga.title}">Chi tiết</span>
                     </div>
-                </div>
-            </div>
-
-            <div class="col-lg-6 ps-lg-5">
-                <div class="d-flex align-items-center gap-2 mb-3">
-                    <span class="badge" style="background: #fff1f2; color: var(--primary-pink); border: 1px solid #ffe4e6; padding: 7px 15px; border-radius: 8px; font-weight: 700;" th:text="${manga.category.categoryName}">Shonen</span>
-                    <div class="text-warning small"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i></div>
-                    <small class="text-muted ms-1" style="font-weight: 600;">(1.2k đánh giá)</small>
-                </div>
-
-                <h1 class="manga-title" th:text="${manga.title}">Tên truyện</h1>
-                
-                <div class="mb-4 d-flex align-items-baseline">
-                    <span class="price-large" th:text="${#numbers.formatInteger(manga.price, 0, 'COMMA') + ' đ'}">25,000 đ</span>
-                    <span class="price-old">250,000 đ</span>
-                </div>
-
-                <p class="manga-description" th:text="${manga.description}">Mô tả truyện...</p>
-
-                <div class="info-grid">
-                    <div class="info-item"><label>Tác giả</label><span th:text="${manga.author}">Tác giả</span></div>
-                    <div class="info-item"><label>Trạng thái</label><span class="text-success fw-bold">Còn hàng</span></div>
-                    <div class="info-item"><label>Mã sản phẩm</label><span th:text="${'#MN-' + manga.id}">#MN-00</span></div>
-                    <div class="info-item"><label>Giao hàng</label><span>Miễn phí nội thành</span></div>
-                </div>
-
-                <div class="action-container">
-                    <form th:action="@{/cart/add}" method="post">
-                        <input type="hidden" name="mangaId" th:value="${manga.id}">
-                        
-                        <div class="d-flex align-items-center justify-content-between mb-4">
-                            <span class="fw-bold text-uppercase small" style="color: #64748b;">Số lượng mua:</span>
-                            <div class="qty-selector">
-                                <button type="button" onclick="this.parentNode.querySelector('input').stepDown()">-</button>
-                                <input type="number" name="quantity" value="1" min="1" th:max="${manga.stockQuantity}">
-                                <button type="button" onclick="this.parentNode.querySelector('input').stepUp()">+</button>
-                            </div>
-                        </div>
-
-                        <div class="d-flex gap-3">
-                            <button type="submit" class="btn-cart-main">
-                                <i class="bi bi-cart-fill me-2"></i> Thêm vào giỏ hàng
-                            </button>
-                        </div>
-                    </form>
-                </div>
-
-                <div class="trust-badges">
-                    <span><i class="bi bi-shield-check"></i> Chính hãng 100%</span>
-                    <span><i class="bi bi-arrow-repeat"></i> Đổi trả 7 ngày</span>
-                    <span><i class="bi bi-lightning-charge"></i> Giao siêu tốc</span>
-                </div>
+                </nav>
             </div>
         </div>
     </div>
+</section>
 
-    <div th:replace="~{fragments/customer-review :: customer-review}"></div>
-    <footer id="footer" th:replace="~{fragments/footer :: footer}"></footer>
+<!-- NỘI DUNG CHÍNH -->
+<div class="container mb-5">
+    <div class="row g-5 align-items-start">
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- CỘT ẢNH -->
+        <div class="col-lg-5">
+            <div class="main-img-box">
+                <span class="badge-trending">🔥 Bán chạy</span>
+
+                <img th:src="@{'/' + ${manga.image}}"
+                     src="/images/manga/demon-slayer-tap1.jpg"
+                     alt="Manga Cover">
+
+                <div class="img-action-buttons">
+                    <button type="button" class="btn-img-action">
+                        <i class="bi bi-heart-fill"></i>
+                        <span>Yêu thích</span>
+                    </button>
+                    <button type="button" class="btn-img-action">
+                        <i class="bi bi-share-fill"></i>
+                        <span>Chia sẻ</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- CỘT THÔNG TIN -->
+        <div class="col-lg-7 ps-lg-4">
+
+            <!-- Thể loại + Đánh giá -->
+            <div class="d-flex align-items-center gap-2 mb-3 flex-wrap">
+                <span class="category-badge" th:text="${manga.category.categoryName}">Shonen</span>
+                <div class="text-warning small">
+                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                </div>
+                <small class="review-count">(1.2k đánh giá)</small>
+            </div>
+
+            <!-- Tiêu đề -->
+            <h1 class="manga-title" th:text="${manga.title}">Tên truyện</h1>
+
+            <!-- Giá -->
+            <div class="mb-4 d-flex align-items-baseline">
+                    <span class="price-large"
+                          th:text="${#numbers.formatInteger(manga.price, 0, 'COMMA') + ' đ'}">
+                        25,000 đ
+                    </span>
+                <span class="price-old">250,000 đ</span>
+            </div>
+
+            <!-- Mô tả -->
+            <p class="manga-description" th:text="${manga.description}">Mô tả truyện...</p>
+
+            <!-- Grid thông tin -->
+            <div class="info-grid">
+                <div class="info-item">
+                    <label>Tác giả</label>
+                    <span th:text="${manga.author}">Tác giả</span>
+                </div>
+                <div class="info-item">
+                    <label>Trạng thái</label>
+                    <span class="text-success">✓ Còn hàng</span>
+                </div>
+                <div class="info-item">
+                    <label>Mã sản phẩm</label>
+                    <span th:text="${'#MN-' + manga.id}">#MN-00</span>
+                </div>
+                <div class="info-item">
+                    <label>Giao hàng</label>
+                    <span>Miễn phí nội thành</span>
+                </div>
+            </div>
+
+            <!-- Action box -->
+            <div class="action-container">
+                <form th:action="@{/cart/add}" method="post">
+                    <input type="hidden" name="mangaId" th:value="${manga.id}">
+
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <span class="qty-label">Số lượng mua:</span>
+                        <div class="qty-selector">
+                            <button type="button"
+                                    onclick="this.parentNode.querySelector('input').stepDown()">−</button>
+                            <input type="number" name="quantity" value="1" min="1"
+                                   th:max="${manga.stockQuantity}">
+                            <button type="button"
+                                    onclick="this.parentNode.querySelector('input').stepUp()">+</button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-cart-main">
+                        <i class="bi bi-cart-fill me-2"></i> Thêm vào giỏ hàng
+                    </button>
+                </form>
+            </div>
+
+            <!-- Trust badges -->
+            <div class="trust-badges">
+                <span><i class="bi bi-shield-check"></i> Chính hãng 100%</span>
+                <span><i class="bi bi-arrow-repeat"></i> Đổi trả 7 ngày</span>
+                <span><i class="bi bi-lightning-charge"></i> Giao siêu tốc</span>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/customer-review :: customer-review}"></div>
+<footer id="footer" th:replace="~{fragments/footer :: footer}"></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

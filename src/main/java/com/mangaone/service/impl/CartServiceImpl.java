@@ -76,6 +76,15 @@ public class CartServiceImpl implements CartService {
     }
 
     /**
+     * LẤY DANH SÁCH CART ITEMS THEO DANH SÁCH CART IDS
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public List<CartItem> getCartItemsByIds(List<Integer> cartIds) {
+        return cartItemRepository.findAllById(cartIds);
+    }
+
+    /**
      * CẬP NHẬT SỐ LƯỢNG
      */
     @Override

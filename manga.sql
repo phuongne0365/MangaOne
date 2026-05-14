@@ -151,17 +151,14 @@ INSERT INTO MANGAS (title, author, description, price, stock_quantity, image_url
     (SELECT category_id FROM CATEGORIES WHERE category_name LIKE '%Romance%'), (SELECT publisher_id FROM PUBLISHERS WHERE publisher_name = 'IPM'));
 
 INSERT INTO USERS (email, password, full_name, phone_number, address, role) VALUES
-
-('duyson@gmail.com', '123456', 'Đào Duy Sơn', '0912345678', 'Hà Nội', 'USER'),
-('bichngoc@gmail.com', '123456', 'Nguyễn Thị Bích Ngọc', '0909090909', 'Hải Phòng', 'USER'),
-('phuong@gmail.com', '123456', 'Trưởng Nhóm Phượng', '0988888888', 'Đà Nẵng', 'USER'),
-('admin1@mangaone.com', '123456', 'Vu Phuong', '0901000001', 'Ha Noi', 'ADMIN'),
-('admin2@mangaone.com', '123456', 'Dao Duy Son', '0901000002', 'Ha Noi', 'ADMIN'),
-('admin3@mangaone.com', '123456', 'Nguyen Thi Bich Ngoc', '0901000003', 'Ha Noi', 'ADMIN'),
-('admin4@mangaone.com', '123456', 'Tran Hoang Duy', '0901000004', 'Ha Noi', 'ADMIN'),
-('admin5@mangaone.com', '123456', 'Dam Minh Hieu', '0901000005', 'Ha Noi', 'ADMIN'),
-('user1@mangaone.com', '123456', 'Nguoi Dung 1', '0902000001', 'Ha Noi', 'USER'),
-('user2@mangaone.com', '123456', 'Nguoi Dung 2', '0902000002', 'Ha Noi', 'USER');
+('duyson@gmail.com', '$2a$12$cWLY0ngg2.Qt99p2HH9bTOzimfFVJQ0AOyNlD5HljIEY.A4jLlDQm', 'Đào Duy Sơn', '0912345678', 'Hà Nội', 'USER'),
+('bichngoc@gmail.com', '$2a$12$cWLY0ngg2.Qt99p2HH9bTOzimfFVJQ0AOyNlD5HljIEY.A4jLlDQm', 'Nguyễn Thị Bích Ngọc', '0909090909', 'Hải Phòng', 'USER'),
+('phuong@gmail.com', '$2a$12$cWLY0ngg2.Qt99p2HH9bTOzimfFVJQ0AOyNlD5HljIEY.A4jLlDQm', 'Trưởng Nhóm Phượng', '0988888888', 'Đà Nẵng', 'USER'),
+('admin1@mangaone.com', '$2a$12$cWLY0ngg2.Qt99p2HH9bTOzimfFVJQ0AOyNlD5HljIEY.A4jLlDQm', 'Vu Phuong', '0901000001', 'Ha Noi', 'ADMIN'),
+('admin2@mangaone.com', '$2a$12$cWLY0ngg2.Qt99p2HH9bTOzimfFVJQ0AOyNlD5HljIEY.A4jLlDQm', 'Dao Duy Son', '0901000002', 'Ha Noi', 'ADMIN'),
+('admin3@mangaone.com', '$2a$12$cWLY0ngg2.Qt99p2HH9bTOzimfFVJQ0AOyNlD5HljIEY.A4jLlDQm', 'Nguyen Thi Bich Ngoc', '0901000003', 'Ha Noi', 'ADMIN'),
+('admin4@mangaone.com', '$2a$12$cWLY0ngg2.Qt99p2HH9bTOzimfFVJQ0AOyNlD5HljIEY.A4jLlDQm', 'Tran Hoang Duy', '0901000004', 'Ha Noi', 'ADMIN'),
+('admin5@mangaone.com', '$2a$12$cWLY0ngg2.Qt99p2HH9bTOzimfFVJQ0AOyNlD5HljIEY.A4jLlDQm', 'Dam Minh Hieu', '0901000005', 'Ha Noi', 'ADMIN');
 
 INSERT INTO CART_ITEMS (user_id, manga_id, quantity) VALUES
 ((SELECT user_id FROM USERS WHERE email = 'duyson@gmail.com'), (SELECT manga_id FROM MANGAS WHERE title LIKE '%Chú Thuật Hồi Chiến%' LIMIT 1), 2),
@@ -178,6 +175,7 @@ SELECT * FROM MANGAS;
 SELECT * FROM CATEGORIES;
 SELECT * FROM PUBLISHERS;
 SELECT * FROM USERS;
-USE mangaone;
-INSERT INTO USERS (email, password, full_name, phone_number, address, role, is_active) 
-VALUES ('admin@mangaone.com', '$2a$12$Vt2558rCJVZb6kfq55YGWeYUjl3MHcHwI3KZg.MRd.02O.7dXdrfK', 'Quản Trị Viên', '0123456789', 'Hà Nội', 'ADMIN',true);
+
+
+
+

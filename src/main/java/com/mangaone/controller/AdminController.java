@@ -100,6 +100,7 @@ public class AdminController {
 
         // Thêm các link menu admin
         model.addAttribute("adminMenus", new String[][]{
+                {"/admin/orders", "📦 Quản Lý Đơn Hàng"},
                 {"/admin/users", "👥 Quản Lý Người Dùng"},
                 {"/admin/publishers", "📚 Quản Lý Nhà Xuất Bản"},
                 {"/admin/categories", "📂 Quản Lý Thể Loại"},

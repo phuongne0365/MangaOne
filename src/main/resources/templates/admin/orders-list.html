@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{admin/admin-layout :: layout(~{::title}, ~{::section#content})}">
+
+<head>
+    <title>Quản lý đơn hàng - MangaOne Admin</title>
+</head>
+
+<body>
+<section id="content">
+
+    <!-- PAGE HEADER -->
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h4 class="fw-bold mb-1">
+                <i class="bi bi-receipt text-danger me-2"></i>Quản lý đơn hàng
+            </h4>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0 small">
+                    <li class="breadcrumb-item">
+                        <a th:href="@{/admin/dashboard}" class="text-decoration-none text-muted">Trang chủ</a>
+                    </li>
+                    <li class="breadcrumb-item active text-muted">Quản lý đơn hàng</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Thông báo flash -->
+    <div th:if="${successMsg}" class="alert d-flex align-items-center mb-3"
+         style="background:#edfaf4; border:1px solid #b7f0d4; border-radius:10px; color:#18b86e;">
+        <i class="bi bi-check-circle-fill me-2"></i>
+        <span th:text="${successMsg}"></span>
+    </div>
+    <div th:if="${errorMsg}" class="alert d-flex align-items-center mb-3"
+         style="background:#fff0f0; border:1px solid #ffc5c5; border-radius:10px; color:#e03;">
+        <i class="bi bi-exclamation-circle-fill me-2"></i>
+        <span th:text="${errorMsg}"></span>
+    </div>
+
+    <!-- Bộ lọc và tìm kiếm -->
+    <div class="content-card mb-4">
+        <div class="content-card-header">
+            <h6 class="mb-0">
+                <i class="bi bi-funnel-fill me-2" style="color:var(--primary);"></i>
+                Bộ lọc đơn hàng
+            </h6>
+        </div>
+        <div class="p-4">
+            <form method="get" class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold small text-uppercase text-muted">
+                        Trạng thái đơn hàng
+                    </label>
+                    <select name="status" class="form-select">
+                        <option value="">-- Tất cả trạng thái --</option>
+                        <option value="PENDING" th:selected="${selectedStatus == 'PENDING'}">⏳ Chờ xác nhận</option>
+                        <option value="CONFIRMED" th:selected="${selectedStatus == 'CONFIRMED'}">✓ Đã xác nhận</option>
+                        <option value="SHIPPING" th:selected="${selectedStatus == 'SHIPPING'}">🚚 Đang giao</option>
+                        <option value="COMPLETED" th:selected="${selectedStatus == 'COMPLETED'}">✅ Hoàn thành</option>
+                        <option value="CANCELLED" th:selected="${selectedStatus == 'CANCELLED'}">❌ Đã hủy</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold small text-uppercase text-muted">
+                        Tìm kiếm (SĐT/Tên người nhận)
+                    </label>
+                    <input type="text" name="search" class="form-control"
+                           placeholder="Nhập số điện thoại hoặc tên người nhận..."
+                           th:value="${searchKeyword}">
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="submit" class="btn text-white w-100"
+                            style="background-color: var(--primary);">
+                        <i class="bi bi-search me-1"></i>Tìm kiếm
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Danh sách đơn hàng -->
+    <div class="content-card">
+        <div class="content-card-header d-flex align-items-center justify-content-between">
+            <h6 class="mb-0">
+                <i class="bi bi-list-ul me-2" style="color:var(--primary);"></i>
+                Danh sách đơn hàng
+                <span class="badge bg-danger bg-opacity-10 text-danger fw-semibold ms-2"
+                      th:text="${#lists.size(orders)} + ' đơn hàng'">
+                    0 đơn hàng
+                </span>
+            </h6>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                <tr>
+                    <th class="text-muted small fw-semibold text-uppercase">Mã đơn</th>
+                    <th class="text-muted small fw-semibold text-uppercase">Ngày đặt</th>
+                    <th class="text-muted small fw-semibold text-uppercase">Khách hàng</th>
+                    <th class="text-muted small fw-semibold text-uppercase">SĐT</th>
+                    <th class="text-muted small fw-semibold text-uppercase">Tổng tiền</th>
+                    <th class="text-muted small fw-semibold text-uppercase">Trạng thái</th>
+                    <th class="text-muted small fw-semibold text-uppercase text-center">Thao tác</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="order : ${orders}">
+                    <td>
+                            <span class="badge bg-light text-dark border fw-semibold">
+                                #ORD<span th:text="${order.orderId}"></span>
+                            </span>
+                    </td>
+                    <td class="text-muted small" th:text="${#temporals.format(order.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
+                    <td class="fw-semibold" th:text="${order.receiverName}"></td>
+                    <td class="text-muted" th:text="${order.receiverPhone}"></td>
+                    <td>
+                            <span class="fw-bold text-danger"
+                                  th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT')} + ' ₫'">
+                            </span>
+                    </td>
+                    <td>
+                            <span th:if="${order.status == 'PENDING'}" class="badge bg-warning text-dark">
+                                <i class="bi bi-clock me-1"></i>Chờ xác nhận
+                            </span>
+                        <span th:if="${order.status == 'CONFIRMED'}" class="badge bg-info text-white">
+                                <i class="bi bi-check-circle me-1"></i>Đã xác nhận
+                            </span>
+                        <span th:if="${order.status == 'SHIPPING'}" class="badge bg-primary text-white">
+                                <i class="bi bi-truck me-1"></i>Đang giao
+                            </span>
+                        <span th:if="${order.status == 'COMPLETED'}" class="badge bg-success text-white">
+                                <i class="bi bi-check-circle-fill me-1"></i>Hoàn thành
+                            </span>
+                        <span th:if="${order.status == 'CANCELLED'}" class="badge bg-danger text-white">
+                                <i class="bi bi-x-circle me-1"></i>Đã hủy
+                            </span>
+                    </td>
+                    <td class="text-center">
+                        <a th:href="@{/admin/orders/{id}(id=${order.orderId})}"
+                           class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-eye"></i> Xem
+                        </a>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(orders)}">
+                    <td colspan="7" class="text-center py-5 text-muted">
+                        <i class="bi bi-inbox-fill fs-1 text-muted mb-3"></i>
+                        <p class="mb-0">Không có đơn hàng nào phù hợp với tiêu chí tìm kiếm.</p>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Footer: số lượng kết quả -->
+        <div class="card-footer bg-white border-top py-3 px-4 d-flex align-items-center justify-content-between">
+            <small class="text-muted"
+                   th:text="'Hiển thị ' + ${#lists.size(orders)} + ' kết quả'">
+                Hiển thị 0 kết quả
+            </small>
+        </div>
+    </div>
+
+</section>
+</body>
+</html>

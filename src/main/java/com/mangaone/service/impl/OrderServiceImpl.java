@@ -15,7 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -35,14 +38,13 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public Order createOrder(Order order) {
-
-        // PHẦN 1: LƯU ĐƠN HÀNG 
+        // PHẦN 1: LƯU ĐƠN HÀNG
         Order savedOrder = orderRepository.save(order);
 
         if (savedOrder.getOrderDetails() != null) {
             for (OrderDetail detail : savedOrder.getOrderDetails()) {
                 detail.setOrder(savedOrder);
-                orderDetailRepository.save(detail); // Lưu hóa đơn chi tiết
+                orderDetailRepository.save(detail);
             }
         }
 
@@ -50,26 +52,298 @@ public class OrderServiceImpl implements OrderService {
         User user = order.getUser();
         List<CartItem> cartItems = cartItemRepository.findByUser(user);
 
-        // Duyệt qua từng cuốn truyện trong giỏ để trừ kho
         for (CartItem item : cartItems) {
             Manga manga = item.getManga();
             int soLuongMua = item.getQuantity();
 
-            // Kiểm tra an toàn: Nếu lỡ khách mua nhiều hơn số lượng trong kho
             if (manga.getStockQuantity() < soLuongMua) {
                 throw new IllegalStateException(
-                    "Rất tiếc! Truyện \"" + manga.getTitle() + "\" không đủ hàng. " +
-                    "Tồn kho chỉ còn: " + manga.getStockQuantity() + " cuốn.");
+                        "Rất tiếc! Truyện \"" + manga.getTitle() + "\" không đủ hàng. " +
+                                "Tồn kho chỉ còn: " + manga.getStockQuantity() + " cuốn.");
             }
 
-            // Trừ đi số lượng đã bán và lưu lại vào kho
             manga.setStockQuantity(manga.getStockQuantity() - soLuongMua);
             mangaRepository.save(manga);
         }
 
-        // Dọn dẹp: Xóa sạch giỏ hàng của khách sau khi đã chốt đơn thành công
         cartItemRepository.deleteByUser(user);
 
         return savedOrder;
+    }
+
+    @Override
+    @Transactional
+    public Order checkout(User user, String receiverName, String receiverPhone, String shippingAddress) {
+        // Bước 1: Validate input
+        if (user == null) {
+            throw new IllegalStateException("User không tồn tại!");
+        }
+        if (receiverName == null || receiverName.trim().isEmpty()) {
+            throw new IllegalStateException("Tên người nhận không được để trống!");
+        }
+        if (receiverPhone == null || receiverPhone.trim().isEmpty()) {
+            throw new IllegalStateException("Số điện thoại không được để trống!");
+        }
+        if (shippingAddress == null || shippingAddress.trim().isEmpty()) {
+            throw new IllegalStateException("Địa chỉ giao hàng không được để trống!");
+        }
+
+        // Bước 2: Lấy danh sách CartItem của user
+        List<CartItem> cartItems = cartItemRepository.findByUser(user);
+        if (cartItems == null || cartItems.isEmpty()) {
+            throw new IllegalStateException("Giỏ hàng trống!");
+        }
+
+        // Bước 3: Tính tổng tiền
+        double totalAmount = 0.0;
+        for (CartItem item : cartItems) {
+            if (item.getManga() == null) {
+                throw new IllegalStateException("Sản phẩm trong giỏ hàng không hợp lệ!");
+            }
+            Double price = item.getManga().getPrice();
+            if (price == null) {
+                throw new IllegalStateException("Giá sản phẩm không hợp lệ!");
+            }
+            Integer quantity = item.getQuantity();
+            if (quantity == null || quantity <= 0) {
+                throw new IllegalStateException("Số lượng sản phẩm không hợp lệ!");
+            }
+            totalAmount += price * quantity;
+        }
+
+        // Bước 4: Tạo Order mới
+        Order order = new Order();
+        order.setUser(user);
+        order.setReceiverName(receiverName.trim());
+        order.setReceiverPhone(receiverPhone.trim());
+        order.setShippingAddress(shippingAddress.trim());
+        order.setTotalAmount((int) Math.round(totalAmount));
+        order.setStatus("PENDING");
+        order.setCreatedAt(LocalDateTime.now());
+
+        // Bước 5: Lưu Order trước
+        Order savedOrder = orderRepository.save(order);
+
+        // Bước 6: Duyệt CartItems, kiểm tra stock, tạo OrderDetail, trừ stock
+        List<OrderDetail> orderDetails = new ArrayList<>();
+        for (CartItem item : cartItems) {
+            Manga manga = item.getManga();
+            int quantity = item.getQuantity();
+
+            // Lưu title trước để dùng trong lambda
+            String mangaTitle = manga.getTitle();
+            Long mangaId = manga.getId();
+
+            // Refresh manga từ DB để đảm bảo stock mới nhất
+            manga = mangaRepository.findById(mangaId)
+                    .orElseThrow(() -> new IllegalStateException("Sản phẩm không tồn tại: " + mangaTitle));
+
+            // Kiểm tra stock
+            if (manga.getStockQuantity() == null || manga.getStockQuantity() < quantity) {
+                throw new IllegalStateException("Truyện \"" + manga.getTitle() + "\" không đủ hàng. Tồn kho: " + (manga.getStockQuantity() != null ? manga.getStockQuantity() : 0));
+            }
+
+            // Tạo OrderDetail
+            OrderDetail detail = new OrderDetail();
+            detail.setOrder(savedOrder);
+            detail.setManga(manga);
+            detail.setQuantity(quantity);
+            detail.setPrice((int) Math.round(manga.getPrice()));
+            orderDetailRepository.save(detail);
+            orderDetails.add(detail);
+
+            // Trừ stock
+            manga.setStockQuantity(manga.getStockQuantity() - quantity);
+            mangaRepository.save(manga);
+        }
+
+        // Bước 7: Xóa CartItems
+        cartItemRepository.deleteByUser(user);
+
+        // Bước 8: Set orderDetails vào order
+        savedOrder.setOrderDetails(orderDetails);
+
+        return savedOrder;
+    }
+
+    @Override
+    @Transactional
+    public Order checkoutSelected(User user, String receiverName, String receiverPhone, String shippingAddress, List<Integer> cartIds) {
+        // Bước 1: Validate input
+        if (user == null) {
+            throw new IllegalStateException("User không tồn tại!");
+        }
+        if (receiverName == null || receiverName.trim().isEmpty()) {
+            throw new IllegalStateException("Tên người nhận không được để trống!");
+        }
+        if (receiverPhone == null || receiverPhone.trim().isEmpty()) {
+            throw new IllegalStateException("Số điện thoại không được để trống!");
+        }
+        if (shippingAddress == null || shippingAddress.trim().isEmpty()) {
+            throw new IllegalStateException("Địa chỉ giao hàng không được để trống!");
+        }
+
+        // Bước 2: Lấy danh sách CartItem được chọn
+        if (cartIds == null || cartIds.isEmpty()) {
+            throw new IllegalStateException("Vui lòng chọn ít nhất 1 sản phẩm!");
+        }
+
+        List<CartItem> cartItems = cartItemRepository.findAllById(cartIds);
+        if (cartItems == null || cartItems.isEmpty()) {
+            throw new IllegalStateException("Không tìm thấy sản phẩm được chọn!");
+        }
+
+        // Bước 3: Tính tổng tiền
+        double totalAmount = 0.0;
+        for (CartItem item : cartItems) {
+            if (item.getManga() == null) {
+                throw new IllegalStateException("Sản phẩm trong giỏ hàng không hợp lệ!");
+            }
+            Double price = item.getManga().getPrice();
+            if (price == null) {
+                throw new IllegalStateException("Giá sản phẩm không hợp lệ!");
+            }
+            Integer quantity = item.getQuantity();
+            if (quantity == null || quantity <= 0) {
+                throw new IllegalStateException("Số lượng sản phẩm không hợp lệ!");
+            }
+            totalAmount += price * quantity;
+        }
+
+        // Bước 4: Tạo Order mới
+        Order order = new Order();
+        order.setUser(user);
+        order.setReceiverName(receiverName.trim());
+        order.setReceiverPhone(receiverPhone.trim());
+        order.setShippingAddress(shippingAddress.trim());
+        order.setTotalAmount((int) Math.round(totalAmount));
+        order.setStatus("PENDING");
+        order.setCreatedAt(LocalDateTime.now());
+
+        // Bước 5: Lưu Order trước
+        Order savedOrder = orderRepository.save(order);
+
+        // Bước 6: Duyệt CartItems được chọn, kiểm tra stock, tạo OrderDetail, trừ stock
+        List<OrderDetail> orderDetails = new ArrayList<>();
+        for (CartItem item : cartItems) {
+            Manga manga = item.getManga();
+            int quantity = item.getQuantity();
+
+            // Lưu title và id trước để dùng trong lambda
+            String mangaTitle = manga.getTitle();
+            Long mangaId = manga.getId();
+
+            // Refresh manga từ DB để đảm bảo stock mới nhất
+            manga = mangaRepository.findById(mangaId)
+                    .orElseThrow(() -> new IllegalStateException("Sản phẩm không tồn tại: " + mangaTitle));
+
+            // Kiểm tra stock
+            if (manga.getStockQuantity() == null || manga.getStockQuantity() < quantity) {
+                throw new IllegalStateException("Truyện \"" + manga.getTitle() + "\" không đủ hàng. Tồn kho: " + (manga.getStockQuantity() != null ? manga.getStockQuantity() : 0));
+            }
+
+            // Tạo OrderDetail
+            OrderDetail detail = new OrderDetail();
+            detail.setOrder(savedOrder);
+            detail.setManga(manga);
+            detail.setQuantity(quantity);
+            detail.setPrice((int) Math.round(manga.getPrice()));
+            orderDetailRepository.save(detail);
+            orderDetails.add(detail);
+
+            // Trừ stock
+            manga.setStockQuantity(manga.getStockQuantity() - quantity);
+            mangaRepository.save(manga);
+        }
+
+        // Bước 7: Xóa chỉ những CartItems được chọn (không xóa toàn bộ)
+        for (Integer cartId : cartIds) {
+            cartItemRepository.deleteById(cartId);
+        }
+
+        // Bước 8: Set orderDetails vào order
+        savedOrder.setOrderDetails(orderDetails);
+
+        return savedOrder;
+    }
+    // ===== ADMIN CÓ THỂ LẤY TẤT CẢ ĐƠN HÀNG =====
+    @Override
+    public List<Order> getAllOrders() {
+        return orderRepository.findAllByOrderByCreatedAtDesc();
+    }
+
+    @Override
+    public Optional<Order> getOrderById(Long orderId) {
+        return orderRepository.findById(orderId);
+    }
+
+    @Override
+    public List<Order> getOrdersByStatus(String status) {
+        return orderRepository.findByStatusOrderByCreatedAtDesc(status);
+    }
+
+    @Override
+    public List<Order> searchOrderByPhone(String phone) {
+        return orderRepository.findByReceiverPhoneContainingOrderByCreatedAtDesc(phone);
+    }
+
+    @Override
+    public List<Order> searchOrderByReceiverName(String name) {
+        return orderRepository.findByReceiverNameContainingOrderByCreatedAtDesc(name);
+    }
+
+    @Override
+    public List<Order> filterOrdersByStatusAndPhone(String status, String phone) {
+        return orderRepository.findByStatusAndPhone(status, phone);
+    }
+
+    // ===== CẬP NHẬT TRẠNG THÁI ĐƠN HÀNG =====
+    @Override
+    @Transactional
+    public Order updateOrderStatus(Long orderId, String newStatus) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Đơn hàng không tồn tại!"));
+
+        // Kiểm tra trạng thái hợp lệ
+        String[] validStatuses = {"PENDING", "CONFIRMED", "SHIPPING", "COMPLETED", "CANCELLED"};
+        boolean isValid = false;
+        for (String status : validStatuses) {
+            if (status.equals(newStatus)) {
+                isValid = true;
+                break;
+            }
+        }
+
+        if (!isValid) {
+            throw new IllegalArgumentException("Trạng thái không hợp lệ: " + newStatus);
+        }
+
+        order.setStatus(newStatus);
+        return orderRepository.save(order);
+    }
+
+    // ===== HỦY ĐƠN HÀNG VÀ HỒI PHỤC KHO =====
+    @Override
+    @Transactional
+    public Order cancelOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Đơn hàng không tồn tại!"));
+
+        // Chỉ có thể hủy những đơn ở trạng thái PENDING hoặc CONFIRMED
+        if (!order.getStatus().equals("PENDING") && !order.getStatus().equals("CONFIRMED")) {
+            throw new IllegalStateException("Chỉ có thể hủy đơn hàng ở trạng thái PENDING hoặc CONFIRMED!");
+        }
+
+        // Hồi phục lại stock cho từng sản phẩm
+        List<OrderDetail> orderDetails = order.getOrderDetails();
+        for (OrderDetail detail : orderDetails) {
+            Manga manga = detail.getManga();
+            manga.setStockQuantity(manga.getStockQuantity() + detail.getQuantity());
+            mangaRepository.save(manga);
+        }
+
+        // Đánh dấu đơn hàng là CANCELLED
+        order.setStatus("CANCELLED");
+        return orderRepository.save(order);
     }
 }

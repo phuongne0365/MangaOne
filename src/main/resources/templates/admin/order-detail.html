@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{admin/admin-layout :: layout(~{::title}, ~{::section#content})}">
+
+<head>
+    <title>Chi tiết đơn hàng - MangaOne Admin</title>
+</head>
+
+<body>
+<section id="content">
+
+    <!-- PAGE HEADER -->
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h4 class="fw-bold mb-1">
+                <i class="bi bi-receipt-detail text-danger me-2"></i>Chi tiết đơn hàng
+                <span class="badge bg-light text-dark border fw-semibold ms-2">
+                    #ORD<span th:text="${order.orderId}"></span>
+                </span>
+            </h4>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0 small">
+                    <li class="breadcrumb-item">
+                        <a th:href="@{/admin/dashboard}" class="text-decoration-none text-muted">Trang chủ</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a th:href="@{/admin/orders}" class="text-decoration-none text-muted">Quản lý đơn hàng</a>
+                    </li>
+                    <li class="breadcrumb-item active text-muted">Chi tiết đơn hàng</li>
+                </ol>
+            </nav>
+        </div>
+        <a th:href="@{/admin/orders}" class="btn btn-light border">
+            <i class="bi bi-arrow-left me-1"></i>Quay lại danh sách
+        </a>
+    </div>
+
+    <!-- Thông báo flash -->
+    <div th:if="${successMsg}" class="alert d-flex align-items-center mb-3"
+         style="background:#edfaf4; border:1px solid #b7f0d4; border-radius:10px; color:#18b86e;">
+        <i class="bi bi-check-circle-fill me-2"></i>
+        <span th:text="${successMsg}"></span>
+    </div>
+    <div th:if="${errorMsg}" class="alert d-flex align-items-center mb-3"
+         style="background:#fff0f0; border:1px solid #ffc5c5; border-radius:10px; color:#e03;">
+        <i class="bi bi-exclamation-circle-fill me-2"></i>
+        <span th:text="${errorMsg}"></span>
+    </div>
+
+    <!-- Thông tin đơn hàng -->
+    <div class="row g-4 mb-4">
+        <!-- Thông tin cơ bản -->
+        <div class="col-lg-8">
+            <div class="content-card">
+                <div class="content-card-header">
+                    <h6 class="mb-0">
+                        <i class="bi bi-info-circle me-2" style="color:var(--primary);"></i>
+                        Thông tin đơn hàng
+                    </h6>
+                </div>
+                <div class="p-4">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="border-start border-primary border-4 ps-3">
+                                <label class="form-label fw-semibold small text-uppercase text-muted mb-1">
+                                    Trạng thái
+                                </label>
+                                <div>
+                                    <span th:if="${order.status == 'PENDING'}" class="badge bg-warning text-dark fs-6 px-3 py-2">
+                                        <i class="bi bi-clock me-1"></i>Chờ xác nhận
+                                    </span>
+                                    <span th:if="${order.status == 'CONFIRMED'}" class="badge bg-info text-white fs-6 px-3 py-2">
+                                        <i class="bi bi-check-circle me-1"></i>Đã xác nhận
+                                    </span>
+                                    <span th:if="${order.status == 'SHIPPING'}" class="badge bg-primary text-white fs-6 px-3 py-2">
+                                        <i class="bi bi-truck me-1"></i>Đang giao
+                                    </span>
+                                    <span th:if="${order.status == 'COMPLETED'}" class="badge bg-success text-white fs-6 px-3 py-2">
+                                        <i class="bi bi-check-circle-fill me-1"></i>Hoàn thành
+                                    </span>
+                                    <span th:if="${order.status == 'CANCELLED'}" class="badge bg-danger text-white fs-6 px-3 py-2">
+                                        <i class="bi bi-x-circle me-1"></i>Đã hủy
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="border-start border-success border-4 ps-3">
+                                <label class="form-label fw-semibold small text-uppercase text-muted mb-1">
+                                    Tổng tiền
+                                </label>
+                                <div class="fs-4 fw-bold text-danger">
+                                    <span th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT')}"></span> ₫
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="border-start border-info border-4 ps-3">
+                                <label class="form-label fw-semibold small text-uppercase text-muted mb-1">
+                                    Ngày tạo đơn
+                                </label>
+                                <div class="text-muted">
+                                    <i class="bi bi-calendar me-1"></i>
+                                    <span th:text="${#temporals.format(order.createdAt, 'EEEE, dd/MM/yyyy HH:mm')}"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Thông tin giao hàng -->
+        <div class="col-lg-4">
+            <div class="content-card">
+                <div class="content-card-header">
+                    <h6 class="mb-0">
+                        <i class="bi bi-geo-alt me-2" style="color:var(--primary);"></i>
+                        Thông tin giao hàng
+                    </h6>
+                </div>
+                <div class="p-4">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold small text-uppercase text-muted mb-1">
+                            <i class="bi bi-person me-1"></i>Tên người nhận
+                        </label>
+                        <div class="fw-semibold" th:text="${order.receiverName}"></div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold small text-uppercase text-muted mb-1">
+                            <i class="bi bi-telephone me-1"></i>Số điện thoại
+                        </label>
+                        <div class="fw-semibold" th:text="${order.receiverPhone}"></div>
+                    </div>
+                    <div class="mb-0">
+                        <label class="form-label fw-semibold small text-uppercase text-muted mb-1">
+                            <i class="bi bi-house me-1"></i>Địa chỉ giao hàng
+                        </label>
+                        <div class="text-muted small" th:text="${order.shippingAddress}"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chi tiết sản phẩm -->
+    <div class="content-card mb-4">
+        <div class="content-card-header">
+            <h6 class="mb-0">
+                <i class="bi bi-box-seam me-2" style="color:var(--primary);"></i>
+                Chi tiết sản phẩm
+                <span class="badge bg-secondary ms-2"
+                      th:text="${#lists.size(order.orderDetails)} + ' sản phẩm'">
+                </span>
+            </h6>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                <tr>
+                    <th class="text-muted small fw-semibold text-uppercase">Sản phẩm</th>
+                    <th class="text-muted small fw-semibold text-uppercase text-center">Số lượng</th>
+                    <th class="text-muted small fw-semibold text-uppercase text-center">Đơn giá</th>
+                    <th class="text-muted small fw-semibold text-uppercase text-center">Thành tiền</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="detail : ${order.orderDetails}">
+                    <td>
+                        <div class="d-flex align-items-center gap-3">
+                            <div>
+                                <div class="fw-semibold" th:text="${detail.manga.title}"></div>
+                                <div class="text-muted small" th:if="${detail.manga.author != null}" th:text="'Tác giả: ' + ${detail.manga.author}"></div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <span class="badge bg-light text-dark border fw-semibold" th:text="${detail.quantity}"></span>
+                    </td>
+                    <td class="text-center fw-semibold text-primary" th:text="${#numbers.formatDecimal(detail.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'"></td>
+                    <td class="text-center fw-bold text-danger" th:text="${#numbers.formatDecimal(detail.price * detail.quantity, 0, 'COMMA', 0, 'POINT')} + ' ₫'"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Cập nhật trạng thái -->
+    <div class="content-card">
+        <div class="content-card-header">
+            <h6 class="mb-0">
+                <i class="bi bi-gear me-2" style="color:var(--primary);"></i>
+                Cập nhật trạng thái đơn hàng
+            </h6>
+        </div>
+        <div class="p-4">
+            <form method="post" th:action="@{/admin/orders/{id}/update-status(id=${order.orderId})}"
+                  class="row g-3 align-items-end">
+                <div class="col-md-8">
+                    <label class="form-label fw-semibold small text-uppercase text-muted">
+                        Chọn trạng thái mới
+                    </label>
+                    <select name="newStatus" class="form-select" required>
+                        <option value="">-- Chọn trạng thái --</option>
+                        <option value="PENDING" th:selected="${order.status == 'PENDING'}">⏳ Chờ xác nhận (PENDING)</option>
+                        <option value="CONFIRMED" th:selected="${order.status == 'CONFIRMED'}">✓ Đã xác nhận (CONFIRMED)</option>
+                        <option value="SHIPPING" th:selected="${order.status == 'SHIPPING'}">🚚 Đang giao (SHIPPING)</option>
+                        <option value="COMPLETED" th:selected="${order.status == 'COMPLETED'}">✅ Hoàn thành (COMPLETED)</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn text-white w-100"
+                            style="background-color: var(--primary);">
+                        <i class="bi bi-save me-1"></i>Lưu thay đổi
+                    </button>
+                </div>
+            </form>
+
+            <!-- Nút hủy đơn (chỉ hiển thị khi ở trạng thái PENDING hoặc CONFIRMED) -->
+            <div th:if="${order.status == 'PENDING' || order.status == 'CONFIRMED'}" class="mt-4 pt-4 border-top">
+                <div class="alert alert-warning border-warning">
+                    <div class="d-flex align-items-start gap-3">
+                        <i class="bi bi-exclamation-triangle-fill text-warning fs-4 mt-1"></i>
+                        <div>
+                            <h6 class="alert-heading mb-2">Hủy đơn hàng</h6>
+                            <p class="mb-3 small">
+                                Khi hủy đơn hàng, số lượng sản phẩm sẽ được tự động cộng ngược lại vào kho.
+                                Hành động này không thể hoàn tác.
+                            </p>
+                            <form method="post" th:action="@{/admin/orders/{id}/cancel(id=${order.orderId})}"
+                                  onsubmit="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này? Kho hàng sẽ được cập nhật!');"
+                                  class="d-inline">
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="bi bi-x-circle me-1"></i>Hủy đơn hàng
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+</body>
+</html>

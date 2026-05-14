@@ -13,6 +13,9 @@ public interface CartService {
     /** Lấy toàn bộ danh sách giỏ hàng của user */
     List<CartItem> getCartItems(User user);
 
+    /** Lấy danh sách cart items theo danh sách cartIds */
+    List<CartItem> getCartItemsByIds(List<Integer> cartIds);
+
     /** Cập nhật số lượng (nếu quantity <= 0 thì tự xóa dòng đó) */
     void updateQuantity(Integer cartId, int quantity);
 

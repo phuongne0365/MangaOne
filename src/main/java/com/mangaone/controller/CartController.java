@@ -12,13 +12,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.List;
 
 @Controller
-@RequestMapping("/cart")  
+@RequestMapping("/cart")
 public class CartController {
 
     private final CartService cartService;
-    
 
-    // Inject Service qua Constructor
     public CartController(CartService cartService) {
         this.cartService = cartService;
     }
@@ -26,25 +24,19 @@ public class CartController {
     // HIỂN THỊ GIỎ HÀNG: GET /cart
     @GetMapping
     public String xemGioHang(HttpSession session, Model model) {
-        // Lấy user đang đăng nhập từ Session
         User user = (User) session.getAttribute("loggedInUser");
 
-        // Chưa đăng nhập → về trang chủ, mở modal đăng nhập
         if (user == null) {
             return "redirect:/?openLogin=true";
         }
-        
-        // Gọi Service lấy danh sách giỏ hàng
-        List<CartItem> cartItems = cartService.getCartItems(user);
 
-        // Tính tổng tiền
+        List<CartItem> cartItems = cartService.getCartItems(user);
         Double tongTien = cartService.calculateTotal(cartItems);
 
-        // Đưa dữ liệu vào Model để Thymeleaf đọc trong cart.html
         model.addAttribute("cartItems", cartItems);
         model.addAttribute("tongTien", tongTien);
 
-        return "cart";  
+        return "cart";
     }
 
     // THÊM VÀO GIỎ: POST /cart/add
@@ -58,16 +50,15 @@ public class CartController {
         if (user == null) {
             return "redirect:/?openLogin=true";
         }
-        
+
         try {
             cartService.addToCart(user, mangaId, quantity);
             redirectAttributes.addFlashAttribute("successMsg", "Đã thêm vào giỏ hàng!");
         } catch (IllegalStateException e) {
-            // Lỗi hết hàng
             redirectAttributes.addFlashAttribute("errorMsg", e.getMessage());
         }
 
-        return "redirect:/cart"; 
+        return "redirect:/cart";
     }
 
     // CẬP NHẬT SỐ LƯỢNG: POST /cart/update
@@ -81,16 +72,15 @@ public class CartController {
             return "redirect:/?openLogin=true";
         }
 
-        // Service tự xử lý: nếu quantity <= 0 thì xóa luôn
         cartService.updateQuantity(cartId, quantity);
 
-        return "redirect:/cart";  
+        return "redirect:/cart";
     }
 
     // XÓA KHỎI GIỎ: POST /cart/remove/{cartId}
     @PostMapping("/remove/{cartId}")
     public String xoaKhoiGio(@PathVariable Integer cartId,
-                              HttpSession session) {
+                             HttpSession session) {
         User user = (User) session.getAttribute("loggedInUser");
 
         if (user == null) {
@@ -101,23 +91,45 @@ public class CartController {
 
         return "redirect:/cart";
     }
+
+    // CẬP NHẬT TẤT CẢ: POST /cart/update-all
     @PostMapping("/update-all")
     public String capNhatTatCa(
             @RequestParam("cartIds")    List<Integer> cartIds,
             @RequestParam("quantities") List<Integer> quantities,
             HttpSession session,
             RedirectAttributes redirectAttributes) {
-     
+
         User user = (User) session.getAttribute("loggedInUser");
         if (user == null) return "redirect:/?openLogin=true";
-     
-        // Duyệt song song 2 mảng theo index
+
         for (int i = 0; i < cartIds.size(); i++) {
             int qty = (i < quantities.size()) ? quantities.get(i) : 1;
             cartService.updateQuantity(cartIds.get(i), qty);
         }
-     
+
         redirectAttributes.addFlashAttribute("successMsg", "✅ Đã cập nhật giỏ hàng!");
+        return "redirect:/cart";
+    }
+
+    // XÓA NHỮNG SẢN PHẨM ĐƯỢC CHỌN: POST /cart/remove-selected
+    @PostMapping("/remove-selected")
+    public String xoaLuaChon(
+            @RequestParam(value = "cartIds", required = false) List<Integer> cartIds,
+            HttpSession session,
+            RedirectAttributes redirectAttributes) {
+
+        User user = (User) session.getAttribute("loggedInUser");
+        if (user == null) return "redirect:/?openLogin=true";
+
+        if (cartIds != null && !cartIds.isEmpty()) {
+            for (Integer cartId : cartIds) {
+                cartService.removeFromCart(cartId);
+            }
+            redirectAttributes.addFlashAttribute("successMsg",
+                    "✅ Đã xóa " + cartIds.size() + " sản phẩm khỏi giỏ hàng!");
+        }
+
         return "redirect:/cart";
     }
 }
