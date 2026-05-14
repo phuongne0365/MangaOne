@@ -7,10 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.security.crypto.password.PasswordEncoder;
 @Controller
 public class UserController {
-
+	@Autowired
+	private PasswordEncoder passwordEncoder; // Thêm dòng này để dùng được BCrypt
     @Autowired
     private UserRepository userRepository;
 
@@ -67,8 +68,8 @@ public class UserController {
         model.addAttribute("user", user);
 
         // Kiểm tra mật khẩu cũ
-        if (!oldPassword.equals(user.getPassword())) {
-            model.addAttribute("pwError", "Mật khẩu cũ không đúng!");
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            model.addAttribute("pwError", "Mật khẩu cũ không chính xác!");
             return "profile";
         }
 
@@ -84,7 +85,7 @@ public class UserController {
             return "profile";
         }
 
-        user.setPassword(newPassword);
+        user.setPassword(passwordEncoder.encode(newPassword)); 
         userRepository.save(user);
         session.setAttribute("loggedInUser", user);
         model.addAttribute("pwSuccess", "Đổi mật khẩu thành công!");
