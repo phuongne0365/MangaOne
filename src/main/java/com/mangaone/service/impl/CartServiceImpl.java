@@ -31,32 +31,33 @@ public class CartServiceImpl implements CartService {
     @Override
     @Transactional
     public void addToCart(User user, Long mangaId, int quantity) {
-        // Validate đầu vào
         if (quantity <= 0) {
             throw new IllegalArgumentException("Số lượng phải lớn hơn 0.");
         }
 
-        // Lấy thông tin Manga từ DB
         Manga manga = mangaRepository.findById(mangaId)
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "Không tìm thấy truyện với ID: " + mangaId));
-
-        // Kiểm tra tồn kho
-        if (manga.getStockQuantity() <= 0) {
-            throw new IllegalStateException(
-                    "Truyện \"" + manga.getTitle() + "\" hiện đã hết hàng.");
-        }
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy truyện với ID: " + mangaId));
 
         // Tìm xem đã có trong giỏ chưa
         Optional<CartItem> existing = cartItemRepository.findByUserAndManga(user, manga);
 
+        // BƯỚC QUAN TRỌNG: Tính tổng số lượng dự kiến sau khi thêm
+        int currentInCart = existing.isPresent() ? existing.get().getQuantity() : 0;
+        int totalRequested = currentInCart + quantity;
+
+        // KIỂM TRA TỒN KHO THỰC TẾ
+        if (totalRequested > manga.getStockQuantity()) {
+            throw new IllegalStateException(
+                    "Không thể thêm. Kho còn " + manga.getStockQuantity() + " cuốn, " +
+                    "trong giỏ bạn đã có " + currentInCart + " cuốn. " +
+                    "Bạn không thể mua thêm " + quantity + " cuốn nữa.");
+        }
+
         if (existing.isPresent()) {
-            // ĐÃ CÓ → Cộng dồn số lượng
             CartItem item = existing.get();
-            item.setQuantity(item.getQuantity() + quantity);
+            item.setQuantity(totalRequested); // Cập nhật tổng mới
             cartItemRepository.save(item);
         } else {
-            // CHƯA CÓ → Tạo dòng mới
             CartItem newItem = new CartItem();
             newItem.setUser(user);
             newItem.setManga(manga);
@@ -64,7 +65,6 @@ public class CartServiceImpl implements CartService {
             cartItemRepository.save(newItem);
         }
     }
-
     /**
      * LẤY DANH SÁCH GIỎ HÀNG
      * readOnly = true không khóa bảng, chỉ đọc.
@@ -91,11 +91,16 @@ public class CartServiceImpl implements CartService {
     @Transactional
     public void updateQuantity(Integer cartId, int quantity) {
         CartItem item = cartItemRepository.findById(cartId)
-                .orElseThrow(() -> new IllegalArgumentException(
-                        "Không tìm thấy CartItem với ID: " + cartId));
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy dòng này trong giỏ."));
+
+        // KIỂM TRA TỒN KHO KHI NGƯỜI DÙNG SỬA SỐ LƯỢNG TRỰC TIẾP
+        if (quantity > item.getManga().getStockQuantity()) {
+            throw new IllegalStateException(
+                    "Số lượng yêu cầu cho truyện \"" + item.getManga().getTitle() + 
+                    "\" vượt quá tồn kho thực tế (" + item.getManga().getStockQuantity() + ").");
+        }
 
         if (quantity <= 0) {
-            // Số lượng = 0 → coi như người dùng muốn xóa
             cartItemRepository.delete(item);
         } else {
             item.setQuantity(quantity);
