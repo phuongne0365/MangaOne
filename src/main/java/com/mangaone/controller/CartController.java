@@ -74,15 +74,20 @@ public class CartController {
     @PostMapping("/update")
     public String capNhatSoLuong(@RequestParam Integer cartId,
                                  @RequestParam int quantity,
-                                 HttpSession session) {
+                                 HttpSession session,
+                                 RedirectAttributes redirectAttributes) {
         User user = (User) session.getAttribute("loggedInUser");
 
         if (user == null) {
             return "redirect:/login";
         }
 
-        // Service tự xử lý: nếu quantity <= 0 thì xóa luôn
-        cartService.updateQuantity(cartId, quantity);
+        try {
+            // Service tự xử lý: nếu quantity <= 0 thì xóa luôn
+            cartService.updateQuantity(cartId, quantity);
+        } catch (IllegalStateException e) {
+            redirectAttributes.addFlashAttribute("errorMsg", e.getMessage());
+        }
 
         return "redirect:/cart";  
     }
@@ -112,12 +117,16 @@ public class CartController {
         if (user == null) return "redirect:/login";
      
         // Duyệt song song 2 mảng theo index
-        for (int i = 0; i < cartIds.size(); i++) {
-            int qty = (i < quantities.size()) ? quantities.get(i) : 1;
-            cartService.updateQuantity(cartIds.get(i), qty);
+        try {
+            for (int i = 0; i < cartIds.size(); i++) {
+                int qty = (i < quantities.size()) ? quantities.get(i) : 1;
+                cartService.updateQuantity(cartIds.get(i), qty);
+            }
+            redirectAttributes.addFlashAttribute("successMsg", "✅ Đã cập nhật giỏ hàng!");
+        } catch (IllegalStateException e) {
+            redirectAttributes.addFlashAttribute("errorMsg", e.getMessage());
         }
-     
-        redirectAttributes.addFlashAttribute("successMsg", "✅ Đã cập nhật giỏ hàng!");
+        
         return "redirect:/cart";
     }
 }
