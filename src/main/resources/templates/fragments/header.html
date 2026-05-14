@@ -213,12 +213,14 @@
                   <li class="pe-3">
                     <!-- Nếu đã đăng nhập: hiện tên + nút đăng xuất -->
                     <span th:if="${session.loggedInUser != null}" class="d-flex align-items-center gap-2">
-                      <span class="fw-semibold" style="font-size:0.9rem;color:#333;"
-                        th:text="'Xin chào, ' + ${session.loggedInUser.fullName}"></span>
-                      <a href="/logout" class="btn btn-outline-dark" style="padding: 6px 14px; 
-                      font-size: 13px; min-width: unset; height: auto; line-height: normal; 
-                      border-radius: 6px;">Đăng xuất</a>
-                    </span>
+  <a th:href="@{/profile}" class="text-decoration-none">
+    <span class="fw-semibold" style="font-size:0.9rem;color:#d91a21;" 
+          th:text="'Xin chào, ' + ${session.loggedInUser.fullName}"></span>
+  </a>
+  <a href="/logout" class="btn btn-outline-dark" style="padding: 6px 14px; 
+  font-size: 13px; min-width: unset; height: auto; line-height: normal; 
+  border-radius: 6px;">Đăng xuất</a>
+</span>
                     <!-- Nếu chưa đăng nhập: mở modal -->
                     <a th:if="${session.loggedInUser == null}" href="#" data-bs-toggle="modal"
                       data-bs-target="#exampleModal">

@@ -1400,3 +1400,87 @@ select#input-sort {
 .dropdown.show .dropdown-toggle .transition-icon {
     transform: rotate(180deg);
 }
+/* Lớp phủ chứa 2 nút */
+.overlay-buttons {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(15px);
+    transition: all 0.3s ease-in-out;
+    z-index: 5;
+    padding: 0 10px; /* Thêm khoảng cách hai bên */
+}
+
+/* Khi di chuột vào card */
+.card:hover .overlay-buttons {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* Tùy chỉnh kích thước nút khi nằm ngang */
+.overlay-buttons .btn {
+    min-width: 85px; /* Giảm độ rộng tối thiểu để nằm vừa hàng ngang */
+    font-size: 0.75rem; /* Chỉnh font nhỏ lại một chút cho cân đối */
+    border: none;
+    white-space: nowrap; /* Giữ chữ trên 1 hàng */
+}
+
+.overlay-buttons .btn-danger {
+    background-color: #e94560;
+}
+
+.overlay-buttons .btn-light {
+    background-color: #ffffff;
+    color: #1a1a2e;
+}
+/* Tùy chỉnh lớp phủ để nút nằm thấp xuống đáy ảnh */
+.img-container {
+    position: relative;
+    cursor: pointer;
+}
+
+.overlay-buttons {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to top, rgba(0,0,0,0.5), transparent); /* Tạo bóng mờ ở đáy cho dễ nhìn nút */
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease-in-out;
+    z-index: 5;
+}
+
+/* Hiệu ứng khi di chuột vào card */
+.card:hover .overlay-buttons {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Zoom nhẹ ảnh */
+.card:hover .img-container img {
+    transform: scale(1.08);
+}
+
+/* Chỉnh nút nằm ngang nhỏ gọn */
+.overlay-buttons .btn {
+    min-width: 80px;
+    font-size: 0.75rem;
+    border: none;
+    padding: 6px 12px;
+}
+
+.overlay-buttons .btn-danger {
+    background-color: #e94560;
+}
+
+.overlay-buttons .btn-light {
+    color: #1a1a2e;
+}
