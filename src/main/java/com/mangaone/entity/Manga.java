@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 public class Manga {
 
     @Id
-
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "manga_id")
     private Long id;
 
