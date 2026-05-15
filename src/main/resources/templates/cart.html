@@ -31,13 +31,13 @@
 </section>
 
 <style>
-<<<<<<< HEAD
+
 	/* ── Checkbox styling ── */
 	.cart-checkbox {
 		width: 20px; height: 20px; cursor: pointer; margin-right: 10px;
 		accent-color: #F86D72;
 	}
-=======
+
   /* ── Quantity stepper ── */
   .qty-wrap {
     display: inline-flex; align-items: center;
@@ -115,84 +115,6 @@
     border-color: #F86D72 !important; color: #F86D72 !important;
     background: transparent !important;
   }
-</style>
- 
-	<div class="container pb-5">
-	 
-	  <!-- Flash messages -->
-	  <div th:if="${successMsg}" class="alert alert-success alert-dismissible fade show mb-4" role="alert">
-	    <span th:text="${successMsg}"></span>
-	    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-	  </div>
-	  <div th:if="${errorMsg}" class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
-	    <span th:text="${errorMsg}"></span>
-	    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-	  </div>
-	 
-	  <!-- ════════ GIỎ TRỐNG ════════ -->
-	  <div th:if="${cartItems == null or cartItems.empty}" class="text-center py-5">
-	    <i class="bi bi-cart-x" style="font-size:72px; color:#e0e0e0;"></i>
-	    <p class="mt-4 text-muted fs-5">Giỏ hàng của bạn đang trống!</p>
-	    <a th:href="@{/mangas}" class="btn btn-cart btn-cart-fill mt-2">Tiếp tục mua sắm</a>
-	  </div>
-	 
-	  <!-- ════════ CÓ SẢN PHẨM ════════ -->
-	  <div th:if="${cartItems != null and !cartItems.empty}">
-	 
-	    <form th:action="@{/cart/update-all}" method="post" id="cartForm">
-	 
-	      <table class="cart-table mb-5">
-	        <thead>
-	          <tr>
-	            <th>Product</th>
-	            <th class="text-center">Quantity</th>
-	            <th class="text-center">Subtotal</th>
-	            <th></th>
-	          </tr>
-	        </thead>
-	        <tbody>
-	          <tr th:each="item : ${cartItems}">
-	 
-	            <!-- Ảnh + tên + giá -->
-	            <td>
-	              <div class="d-flex align-items-center gap-3">
-	                <img th:src="@{'/' + ${item.manga.image}}"
-	                     th:alt="${item.manga.title}"
-	                     class="cart-img"
-	                     onerror="this.src='/images/no-image.png'">
-	                <div>
-	                  <p class="mb-1 fw-semibold" style="font-size:15px; color:#1a1a1a;"
-	                     th:text="${item.manga.title}">Tên truyện</p>
-	                  <small class="text-muted d-block" th:text="${item.manga.author}">Tác giả</small>
-	                  <span style="color:#F86D72; font-size:14px; font-weight:600;"
-	                        th:text="${#numbers.formatDecimal(item.manga.price, 0, 'COMMA', 0, 'POINT')} + ' đ'">
-	                  </span>
-	                </div>
-	              </div>
-	            </td>
-	 
-	            <!-- Stepper số lượng -->
-	            <td class="text-center">
-	              <input type="hidden" name="cartIds" th:value="${item.cartId}"/>
-	 
-	              <div class="qty-wrap">
-	                <button type="button" class="qty-btn" onclick="changeQty(this,-1)">−</button>
-	                <input type="number" name="quantities"
-	                       class="qty-input"
-	                       th:value="${item.quantity}"
-	                       min="1" th:max="${item.manga.stockQuantity}"/>
-	                <button type="button" class="qty-btn" onclick="changeQty(this,+1)">+</button>
-	              </div>
-	            </td>
-	 
-	            <!-- Thành tiền -->
-	            <td class="text-center">
-	              <span class="subtotal-price"
-	                    th:text="${#numbers.formatDecimal(item.subtotal, 0, 'COMMA', 0, 'POINT')} + ' đ'">
-	              </span>
-	            </td>
->>>>>>> facc087fd39fd483ecbf3c1e1cb4f9832b11530a
-
 	/* ── Quantity stepper ── */
 	.qty-wrap {
 		display: inline-flex; align-items: center;
@@ -277,8 +199,28 @@
 		background: #f9f9f9; padding: 12px 16px; border-radius: 6px; border-left: 3px solid #F86D72;
 	}
 	.select-all-check { cursor: pointer; }
-</style>
 
+</style>
+ 
+	<div class="container pb-5">
+	 
+	  <!-- Flash messages -->
+	  <div th:if="${successMsg}" class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+	    <span th:text="${successMsg}"></span>
+	    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+	  </div>
+	  <div th:if="${errorMsg}" class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+	    <span th:text="${errorMsg}"></span>
+	    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+	  </div>
+	 
+	  <!-- ════════ GIỎ TRỐNG ════════ -->
+	  <div th:if="${cartItems == null or cartItems.empty}" class="text-center py-5">
+	    <i class="bi bi-cart-x" style="font-size:72px; color:#e0e0e0;"></i>
+	    <p class="mt-4 text-muted fs-5">Giỏ hàng của bạn đang trống!</p>
+	    <a th:href="@{/mangas}" class="btn btn-cart btn-cart-fill mt-2">Tiếp tục mua sắm</a>
+	  </div>
+		
 <div class="container pb-5">
 
 	<!-- Flash messages -->
@@ -286,7 +228,7 @@
 		<span th:text="${successMsg}"></span>
 		<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
 	</div>
-<<<<<<< HEAD
+
 	<div th:if="${errorMsg}" class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
 		<span th:text="${errorMsg}"></span>
 		<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
@@ -563,7 +505,7 @@
 <div th:replace="~{fragments/customer-review :: customer-review}"></div>
 <div th:replace="~{fragments/instagram :: instagram}"></div>
 <div th:replace="~{fragments/footer :: footer}"></div>
-=======
+
 	<script>
 	  /** Tăng/giảm số lượng bằng nút +/- (chỉ thay đổi UI, chưa gửi server) */
 	  function changeQty(btn, delta) {
@@ -601,6 +543,6 @@
 	<div th:replace="~{fragments/customer-review :: customer-review}"></div>
 	<div th:replace="~{fragments/instagram :: instagram}"></div>
 	<div th:replace="~{fragments/footer :: footer}"></div>
->>>>>>> facc087fd39fd483ecbf3c1e1cb4f9832b11530a
+
 </body>
 </html>
