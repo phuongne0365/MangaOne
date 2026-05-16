@@ -42,7 +42,7 @@ public class MangaServiceImpl implements MangaService {
     //best seller
     @Override
     public List<Manga> getBestSellers() {
-        return mangaRepository.findTopBestSellers();
+        return mangaRepository.findTop5ByOrderByStockQuantityAsc();
     }
 
     @Override

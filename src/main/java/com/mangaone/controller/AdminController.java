@@ -3,162 +3,111 @@ package com.mangaone.controller;
 import com.mangaone.entity.User;
 import com.mangaone.repository.UserRepository;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 @Controller
+@RequestMapping("/admin")
 public class AdminController {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    // ===== KIỂM TRA QUYỀN ADMIN =====
+    public AdminController(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
     private boolean isAdmin(HttpSession session) {
         User user = (User) session.getAttribute("loggedInUser");
         return user != null && "ADMIN".equals(user.getRole());
     }
 
-
-    // ===== TRANG DANH SÁCH THÀNH VIÊN =====
-    @GetMapping("/admin/users")
+    // 👥 TRANG RIÊNG BIỆT: GET /admin/users
+    @GetMapping("/users")
     public String listUsers(HttpSession session, Model model) {
         if (!isAdmin(session)) return "redirect:/";
 
-        List<User> users = userRepository.findAll();
-        model.addAttribute("users", users);
+        model.addAttribute("currentPage", "users"); // Sáng riêng đèn "Quản lý thành viên"
         model.addAttribute("currentUser", session.getAttribute("loggedInUser"));
-        return "admin-users";
+
+        List<User> allUsers = userRepository.findAll();
+        long hoatDong  = allUsers.stream().filter(u -> Boolean.TRUE.equals(u.getIsActive())).count();
+        long biBiKhoa  = allUsers.stream().filter(u -> !Boolean.TRUE.equals(u.getIsActive())).count();
+        long adminCount = allUsers.stream().filter(u -> "ADMIN".equals(u.getRole())).count();
+        
+        model.addAttribute("danhSachThanhVien", allUsers);
+        model.addAttribute("tongThanhVien",     allUsers.size());
+        model.addAttribute("thanhVienHoatDong", hoatDong);
+        model.addAttribute("thanhVienBiKhoa",   biBiKhoa);
+        model.addAttribute("soQuanTriVien",     adminCount);
+
+        return "admin/admin-users"; // Trả về file giao diện riêng của nhóm Duy
     }
 
-    // ===== KHÓA / MỞ KHÓA TÀI KHOẢN =====
-    @PostMapping("/admin/users/toggle-active")
-    public String toggleActive(@RequestParam("userId") Long userId,
-                               HttpSession session) {
+    @PostMapping("/users/toggle-active")
+    public String toggleActive(@RequestParam("userId") Long userId, HttpSession session) {
         if (!isAdmin(session)) return "redirect:/";
-
         User user = userRepository.findById(userId).orElse(null);
         if (user != null) {
-            // Không cho khóa chính mình
             User me = (User) session.getAttribute("loggedInUser");
             if (!user.getUserId().equals(me.getUserId())) {
                 user.setIsActive(!user.getIsActive());
                 userRepository.save(user);
             }
         }
-        return "redirect:/admin/dashboard#section-thanh-vien";
+        return "redirect:/admin/users";
     }
 
-    // ===== THAY ĐỔI VAI TRÒ USER / ADMIN =====
-    @PostMapping("/admin/users/toggle-role")
-    public String toggleRole(@RequestParam("userId") Long userId,
-                             HttpSession session) {
+    @PostMapping("/users/toggle-role")
+    public String toggleRole(@RequestParam("userId") Long userId, HttpSession session) {
         if (!isAdmin(session)) return "redirect:/";
-
         User user = userRepository.findById(userId).orElse(null);
         if (user != null) {
-            // Không cho đổi role của chính mình
             User me = (User) session.getAttribute("loggedInUser");
             if (!user.getUserId().equals(me.getUserId())) {
-                if ("ADMIN".equals(user.getRole())) {
-                    user.setRole("USER");
-                } else {
-                    user.setRole("ADMIN");
-                }
+                user.setRole("ADMIN".equals(user.getRole()) ? "USER" : "ADMIN");
                 userRepository.save(user);
             }
         }
-        return "redirect:/admin/dashboard#section-thanh-vien";
+        return "redirect:/admin/users";
     }
 
-    // ===== XÓA MỀM TÀI KHOẢN =====
-    @PostMapping("/admin/users/delete")
-    public String softDelete(@RequestParam("userId") Long userId,
-                             HttpSession session) {
+    @PostMapping("/users/delete")
+    public String softDelete(@RequestParam("userId") Long userId, HttpSession session) {
         if (!isAdmin(session)) return "redirect:/";
-
         User user = userRepository.findById(userId).orElse(null);
         if (user != null) {
             User me = (User) session.getAttribute("loggedInUser");
             if (!user.getUserId().equals(me.getUserId())) {
-                // Xóa mềm = khóa tài khoản và đánh dấu bị xóa
                 user.setIsActive(false);
                 userRepository.save(user);
             }
         }
-        return "redirect:/admin/dashboard#section-thanh-vien";
+        return "redirect:/admin/users";
     }
-    // ===== CẬP NHẬT TỔNG HỢP (AJAX) =====
-    @PostMapping("/admin/users/update")
+
+    @PostMapping("/users/update")
     @ResponseBody
-    public java.util.Map<String, Object> updateUser(
-            @RequestParam("userId") Long userId,
-            @RequestParam("role") String role,
-            @RequestParam("isActive") boolean isActive,
-            HttpSession session) {
-
-        java.util.Map<String, Object> result = new java.util.HashMap<>();
-        User me = (User) session.getAttribute("loggedInUser");
-
-        if (me == null || !"ADMIN".equals(me.getRole())) {
-            result.put("success", false);
-            result.put("message", "Bạn không có quyền thực hiện thao tác này.");
-            return result;
-        }
-
-        // Chặn self-demotion: không cho tự hạ quyền hoặc tự khóa chính mình
-        if (me.getUserId().equals(userId)) {
-            if (!isActive) {
-                result.put("success", false);
-                result.put("message", "Bạn không thể tự khóa tài khoản của chính mình!");
-                return result;
-            }
-            if (!"ADMIN".equals(role)) {
-                result.put("success", false);
-                result.put("message", "Bạn không thể tự hạ quyền của chính mình!");
-                return result;
-            }
-        }
+    public Map<String, Object> apiUpdateUser(@RequestParam("userId") Long userId, @RequestParam("role") String role, @RequestParam("isActive") boolean isActive, HttpSession session) {
+        Map<String, Object> response = new HashMap<>();
+        if (!isAdmin(session)) { response.put("success", false); return response; }
 
         User user = userRepository.findById(userId).orElse(null);
-        if (user == null) {
-            result.put("success", false);
-            result.put("message", "Không tìm thấy tài khoản.");
-            return result;
+        if (user == null) { response.put("success", false); return response; }
+
+        User me = (User) session.getAttribute("loggedInUser");
+        if (user.getUserId().equals(me.getUserId()) && (!isActive || !"ADMIN".equals(role))) {
+            response.put("success", false);
+            response.put("message", "Không thể tự hạ quyền hoặc tự khóa chính mình!");
+            return response;
         }
 
-        user.setRole(role);
-        user.setIsActive(isActive);
-        userRepository.save(user);
-
-        result.put("success", true);
-        result.put("message", "Cập nhật thành công!");
-        result.put("role", user.getRole());
-        result.put("isActive", user.getIsActive());
-        return result;
-    }
-
-    @GetMapping("/dashboard")
-    public String dashboard(HttpSession session, Model model) {
-        if (!isAdmin(session)) return "redirect:/";
-
-        User user = (User) session.getAttribute("loggedInUser");
-        model.addAttribute("currentUser", user);
-
-        // Thêm các link menu admin
-        model.addAttribute("adminMenus", new String[][]{
-                {"/admin/users", "👥 Quản Lý Người Dùng"},
-                {"/admin/publishers", "📚 Quản Lý Nhà Xuất Bản"},
-                {"/admin/categories", "📂 Quản Lý Thể Loại"},
-                {"/admin/mangas", "🎨 Quản Lý Manga"},
-                {"/admin/inventory", "📦 Quản Lý Kho"}
-        });
-
-        return "admin/dashboard";
+        user.setRole(role); user.setIsActive(isActive); userRepository.save(user);
+        response.put("success", true); response.put("role", user.getRole()); response.put("isActive", user.getIsActive());
+        return response;
     }
 }

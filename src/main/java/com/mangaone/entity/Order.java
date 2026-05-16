@@ -35,8 +35,8 @@ public class Order {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    // 1 Order có nhiều OrderDetail
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+ 
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<OrderDetail> orderDetails;
 
 

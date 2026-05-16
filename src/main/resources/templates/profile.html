@@ -63,6 +63,11 @@
         /* Navbar & Footer Light Mode */
         .navbar-custom { background: #ffffff; border-bottom: 1px solid #eee; }
         .footer-custom { background: #ffffff; border-top: 1px solid #eee; color: #636e72; }
+
+        /* Kiểu dáng cho danh sách đơn hàng */
+        .table th { font-weight: 700; color: #636e72; background-color: #f8f9fa; border-top: none; }
+        .table td { vertical-align: middle; }
+        .badge-status { font-weight: 700; padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; display: inline-block; }
     </style>
 </head>
 <body>
@@ -116,21 +121,26 @@
         </div>
 
         <div class="col-md-9">
-            <ul class="nav nav-tabs mb-4" id="profileTab">
-                <li class="nav-item">
-                    <a class="nav-link active" data-bs-toggle="tab" href="#tab-info">
+            <ul class="nav nav-tabs mb-4" id="profileTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-info" type="button" role="tab">
                         <i class="bi bi-person me-1"></i>Thông tin cá nhân
-                    </a>
+                    </button>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" data-bs-toggle="tab" href="#tab-password">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-orders" type="button" role="tab">
+                        <i class="bi bi-bag-check me-1"></i>Đơn hàng của tôi
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-password" type="button" role="tab">
                         <i class="bi bi-lock me-1"></i>Đổi mật khẩu
-                    </a>
+                    </button>
                 </li>
             </ul>
 
-            <div class="tab-content">
-                <div class="tab-pane fade show active" id="tab-info">
+            <div class="tab-content" id="profileTabContent">
+                <div class="tab-pane fade show active" id="tab-info" role="tabpanel">
                     <div class="card">
                         <div class="card-header">📝 Cập nhật thông tin</div>
                         <div class="card-body p-4">
@@ -162,7 +172,77 @@
                     </div>
                 </div>
 
-                <div class="tab-pane fade" id="tab-password">
+                <div class="tab-pane fade" id="tab-orders" role="tabpanel">
+                    <div class="card">
+                        <div class="card-header">📦 Lịch sử đặt hàng</div>
+                        <div class="card-body p-0">
+                            <div th:if="${#lists.isEmpty(user.orders)}" class="p-4 text-center text-muted">
+                                <i class="bi bi-basket3 fs-1 d-block mb-2 text-secondary"></i>
+                                Bạn chưa có đơn hàng nào cả.
+                            </div>
+                            
+                            <div class="table-responsive">
+    <table class="table table-hover mb-0 align-middle" style="min-width: 800px;">
+        <thead>
+            <tr class="text-secondary" style="font-size: 0.9rem;">
+                <th class="ps-4 py-3" style="width: 10%;">Mã đơn</th>
+                <th class="py-3" style="width: 15%;">Người nhận</th>
+                <th class="py-3" style="width: 35%;">Sách đã mua</th>
+                <th class="py-3" style="width: 15%;">Ngày đặt</th>
+                <th class="py-3" style="width: 12%;">Tổng tiền</th>
+                <th class="py-3" style="width: 13%;">Trạng thái</th>
+                <th class="pe-4 py-3 text-end" style="width: 10%;">Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="order : ${user.orders}" style="border-bottom: 1px solid #f8f9fa;">
+                <td class="ps-4 fw-bold text-dark py-3" th:text="'#' + ${order.orderId}">#1</td>
+                
+                <td class="text-secondary" style="white-space: nowrap;" th:text="${order.receiverName}">Tên</td>
+                
+                <td class="py-3" style="line-height: 1.5; color: #2d3436; font-weight: 600;">
+                    <span th:each="detail, iterStat : ${order.orderDetails}">
+                        <span th:text="${detail.manga.title}"></span><th:block th:if="${!iterStat.last}">, </th:block>
+                    </span>
+                </td>
+
+                <td class="text-muted" style="white-space: nowrap; font-size: 0.9rem;" 
+                    th:text="${#temporals.format(order.createdAt, 'dd/MM/yyyy HH:mm')}">Ngày đặt</td>
+                
+                <td class="fw-bold text-danger" style="white-space: nowrap;" 
+                    th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</td>
+                
+                <td style="white-space: nowrap;">
+                    <span th:if="${order.status == 'PENDING'}" class="badge-status bg-warning text-dark">Chờ xử lý</span>
+                    <span th:if="${order.status == 'CONFIRMED'}" class="badge-status bg-info text-white">Đã xác nhận</span>
+                    <span th:if="${order.status == 'SHIPPING'}" class="badge-status bg-primary text-white">Đang giao</span>
+                    <span th:if="${order.status == 'COMPLETED'}" class="badge-status bg-success text-white">Thành công</span>
+                    <span th:if="${order.status == 'CANCELLED'}" class="badge-status bg-secondary text-white">Đã hủy</span>
+                </td>
+                
+                <td class="pe-4 text-end" style="white-space: nowrap;">
+                    <div th:if="${order.status == 'PENDING' or order.status == 'CONFIRMED'}">
+                        <form th:action="@{/order/cancel}" method="post" 
+                              onsubmit="return confirm('Bố Duy chắc chắn muốn hủy đơn hàng này?');" class="m-0">
+                            <input type="hidden" name="orderId" th:value="${order.orderId}"/>
+                            <button type="submit" class="btn btn-outline-danger btn-sm px-2 py-1 rounded-2" style="font-size: 0.82rem; font-weight: 600;">
+                                <i class="bi bi-trash3 me-1"></i>Hủy đơn
+                            </button>
+                        </form>
+                    </div>
+                    <div th:unless="${order.status == 'PENDING' or order.status == 'CONFIRMED'}">
+                        <span class="text-muted small">-</span>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="tab-password" role="tabpanel">
                     <div class="card">
                         <div class="card-header">🔒 Đổi mật khẩu</div>
                         <div class="card-body p-4">
