@@ -182,7 +182,7 @@
 						<!-- Ảnh + tên + giá -->
 						<td>
 							<div class="d-flex align-items-center gap-3">
-								<img th:src="@{'/' + ${item.manga.image}}"
+								<img th:src="${item.manga.image}"
 									 th:alt="${item.manga.title}"
 									 class="cart-img"
 									 onerror="this.src='/images/no-image.png'">

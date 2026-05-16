@@ -5,7 +5,7 @@ import com.mangaone.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -74,13 +74,4 @@ public class AuthController {
         return "redirect:/?openRegister=true";
     }
 
-    // ================= XỬ LÝ ĐĂNG XUẤT =================
-    @GetMapping("/logout")
-    public String logout(HttpSession session) {
-        session.removeAttribute("loggedInUser"); // Xóa user khỏi session của dự án
-        session.removeAttribute("PREVIOUS_URL"); // Dọn dẹp
-        SecurityContextHolder.clearContext(); // Xóa context của Spring Security
-        session.invalidate(); // Hủy toàn bộ session
-        return "redirect:/";
-    }
 }
