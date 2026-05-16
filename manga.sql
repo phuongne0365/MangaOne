@@ -92,62 +92,63 @@ INSERT INTO PUBLISHERS (publisher_name) VALUES
 ('Skybooks Tsubasa'),
 ('NXB Hà Nội');
 
+-- ✅ CHỈ SỬA PHẦN image_url: đổi từ đường dẫn local sang URL thật
 INSERT INTO MANGAS (title, author, description, price, stock_quantity, image_url, category_id, publisher_id) VALUES
-('Chú Thuật Hồi Chiến (Jujutsu Kaisen)', 'Gege Akutami', 'Hành trình của Yuji Itadori bước vào thế giới Chú Thuật Sư.', 30000, 150, 'images/manga/jujutsu-kaisen-tap1.jpg', 
+('Chú Thuật Hồi Chiến (Jujutsu Kaisen)', 'Gege Akutami', 'Hành trình của Yuji Itadori bước vào thế giới Chú Thuật Sư.', 30000, 150, 'https://m.media-amazon.com/images/I/81qPzeEO5IL._SL1500_.jpg', 
     (SELECT category_id FROM CATEGORIES WHERE category_name LIKE '%Shonen%'), (SELECT publisher_id FROM PUBLISHERS WHERE publisher_name = 'NXB Kim Đồng')),
 
-('Spy x Family', 'Tatsuya Endo', 'Gia đình giả của điệp viên, sát thủ và cô bé ngoại cảm.', 25000, 250, 'images/manga/spy-family-tap1.jpg', 
+('Spy x Family', 'Tatsuya Endo', 'Gia đình giả của điệp viên, sát thủ và cô bé ngoại cảm.', 25000, 250, 'https://cdn.myanimelist.net/images/manga/1/267793.jpg', 
     (SELECT category_id FROM CATEGORIES WHERE category_name LIKE '%Comedy%'), (SELECT publisher_id FROM PUBLISHERS WHERE publisher_name = 'NXB Kim Đồng')),
 
-('Thanh Gươm Diệt Quỷ (Demon Slayer)', 'Koyoharu Gotouge', 'Hành trình diệt quỷ của Tanjiro.', 25000, 300, 'images/manga/demon-slayer-tap1.jpg', 
+('Thanh Gươm Diệt Quỷ (Demon Slayer)', 'Koyoharu Gotouge', 'Hành trình diệt quỷ của Tanjiro.', 25000, 300, 'https://cdn.myanimelist.net/images/manga/3/179023.jpg', 
     (SELECT category_id FROM CATEGORIES WHERE category_name LIKE '%Shonen%'), (SELECT publisher_id FROM PUBLISHERS WHERE publisher_name = 'NXB Kim Đồng')),
 
-('Frieren - Pháp Sư Tiễn Táng', 'Kanehito Yamada', 'Chuyến hành trình chiêm nghiệm của Elf Frieren.', 35000, 120, 'images/manga/frieren-tap1.jpg', 
+('Frieren - Pháp Sư Tiễn Táng', 'Kanehito Yamada', 'Chuyến hành trình chiêm nghiệm của Elf Frieren.', 35000, 120, 'https://cdn.myanimelist.net/images/manga/3/188896.jpg', 
     (SELECT category_id FROM CATEGORIES WHERE category_name LIKE '%Slice of Life%'), (SELECT publisher_id FROM PUBLISHERS WHERE publisher_name = 'NXB Kim Đồng')),
 
-('Thám Tử Lừng Danh Conan', 'Gosho Aoyama', 'Học sinh trung học Shinichi bị teo nhỏ.', 22000, 500, 'images/manga/conan-tap1.jpg', 
+('Thám Tử Lừng Danh Conan', 'Gosho Aoyama', 'Học sinh trung học Shinichi bị teo nhỏ.', 22000, 500, 'https://cdn.myanimelist.net/images/manga/3/188896l.jpg', 
     (SELECT category_id FROM CATEGORIES WHERE category_name LIKE '%Shonen%'), (SELECT publisher_id FROM PUBLISHERS WHERE publisher_name = 'NXB Kim Đồng')),
 
-('Chainsaw Man', 'Tatsuki Fujimoto', 'Thiếu niên mang trong mình sức mạnh Quỷ Cưa.', 40000, 100, 'images/manga/chainsaw-man-tap1.jpg', 
+('Chainsaw Man', 'Tatsuki Fujimoto', 'Thiếu niên mang trong mình sức mạnh Quỷ Cưa.', 40000, 100, 'https://cdn.myanimelist.net/images/manga/3/216464.jpg', 
     (SELECT category_id FROM CATEGORIES WHERE category_name LIKE '%Shonen%'), (SELECT publisher_id FROM PUBLISHERS WHERE publisher_name = 'NXB Trẻ')),
 
-('Attack on Titan (Đại Chiến Titan)', 'Hajime Isayama', 'Cuộc chiến sinh tồn trước loài Titan.', 35000, 80, 'images/manga/attach-on-titan-tap1.jpg', 
+('Attack on Titan (Đại Chiến Titan)', 'Hajime Isayama', 'Cuộc chiến sinh tồn trước loài Titan.', 35000, 80, 'https://cdn.myanimelist.net/images/manga/2/37846.jpg', 
     (SELECT category_id FROM CATEGORIES WHERE category_name LIKE '%Seinen%'), (SELECT publisher_id FROM PUBLISHERS WHERE publisher_name = 'NXB Trẻ')),
 
-('Dưới Ánh Hào Quang (Oshi no Ko)', 'Aka Akasaka', 'Góc khuất ngành công nghiệp giải trí idol.', 45000, 200, 'images/manga/oshi-no-koto-tap1.jpg', 
+('Dưới Ánh Hào Quang (Oshi no Ko)', 'Aka Akasaka', 'Góc khuất ngành công nghiệp giải trí idol.', 45000, 200, 'https://cdn.myanimelist.net/images/manga/3/249658.jpg', 
     (SELECT category_id FROM CATEGORIES WHERE category_name LIKE '%Seinen%'), (SELECT publisher_id FROM PUBLISHERS WHERE publisher_name = 'IPM')),
 
-('Thất Nghiệp Chuyển Sinh (Mushoku Tensei)', 'Rifujin na Magonote', 'Hành trình làm lại cuộc đời ở thế giới phép thuật.', 50000, 90, 'images/manga/mushoku-tensei-tap1.jpg', 
+('Thất Nghiệp Chuyển Sinh (Mushoku Tensei)', 'Rifujin na Magonote', 'Hành trình làm lại cuộc đời ở thế giới phép thuật.', 50000, 90, 'https://cdn.myanimelist.net/images/manga/1/157897.jpg', 
     (SELECT category_id FROM CATEGORIES WHERE category_name LIKE '%Isekai%'), (SELECT publisher_id FROM PUBLISHERS WHERE publisher_name = 'IPM')),
 
-('One Piece (Đảo Hải Tặc)', 'Eiichiro Oda', 'Hành trình tìm kiếm kho báu huyền thoại One Piece.', 25000, 1000, 'images/manga/one-piece-tap1.jpg', 
+('One Piece (Đảo Hải Tặc)', 'Eiichiro Oda', 'Hành trình tìm kiếm kho báu huyền thoại One Piece.', 25000, 1000, 'https://cdn.myanimelist.net/images/manga/2/253146.jpg', 
     (SELECT category_id FROM CATEGORIES WHERE category_name LIKE '%Shonen%'), (SELECT publisher_id FROM PUBLISHERS WHERE publisher_name = 'NXB Kim Đồng')),
 
-('Death Note (Quyển Sổ Thiên Mệnh)', 'Tsugumi Ohba', 'Cuộc đấu trí thông qua quyển sổ tử thần.', 45000, 150, 'images/manga/death-note-tap1.jpg', 
+('Death Note (Quyển Sổ Thiên Mệnh)', 'Tsugumi Ohba', 'Cuộc đấu trí thông qua quyển sổ tử thần.', 45000, 150, 'https://cdn.myanimelist.net/images/manga/1/258245.jpg', 
     (SELECT category_id FROM CATEGORIES WHERE category_name LIKE '%Bí ẩn%'), (SELECT publisher_id FROM PUBLISHERS WHERE publisher_name = 'NXB Trẻ')),
 
-('Blue Lock', 'Muneyuki Kaneshiro', 'Dự án đào tạo tiền đạo ích kỷ nhất thế giới.', 35000, 200, 'images/manga/blue-lock-tap1.jpg', 
+('Blue Lock', 'Muneyuki Kaneshiro', 'Dự án đào tạo tiền đạo ích kỷ nhất thế giới.', 35000, 200, 'https://cdn.myanimelist.net/images/manga/2/253146.jpg', 
     (SELECT category_id FROM CATEGORIES WHERE category_name LIKE '%Sports%'), (SELECT publisher_id FROM PUBLISHERS WHERE publisher_name = 'NXB Kim Đồng')),
 
-('Blue Box (Hộp Xanh)', 'Kouji Miura', 'Câu chuyện tình cảm học đường nhẹ nhàng.', 30000, 180, 'images/manga/box-tap1.jpg', 
+('Blue Box (Hộp Xanh)', 'Kouji Miura', 'Câu chuyện tình cảm học đường nhẹ nhàng.', 30000, 180, 'https://cdn.myanimelist.net/images/manga/2/279463.jpg', 
     (SELECT category_id FROM CATEGORIES WHERE category_name LIKE '%Romance%'), (SELECT publisher_id FROM PUBLISHERS WHERE publisher_name = 'NXB Kim Đồng')),
 
-('Bleach', 'Tite Kubo', 'Hành trình làm Thần Chết và bảo vệ thế giới của Ichigo.', 35000, 100, 'images/manga/bleach-tap1.jpg', 
+('Bleach', 'Tite Kubo', 'Hành trình làm Thần Chết và bảo vệ thế giới của Ichigo.', 35000, 100, 'https://m.media-amazon.com/images/I/91D07epNE9L._SL1500_.jpg', 
     (SELECT category_id FROM CATEGORIES WHERE category_name LIKE '%Shonen%'), (SELECT publisher_id FROM PUBLISHERS WHERE publisher_name = 'NXB Kim Đồng')),
 
-('Black Clover', 'Yuki Tabata', 'Cậu bé không có phép thuật và giấc mơ trở thành Ma Pháp Vương.', 38000, 90, 'images/manga/black-clover-tap1.jpg', 
+('Black Clover', 'Yuki Tabata', 'Cậu bé không có phép thuật và giấc mơ trở thành Ma Pháp Vương.', 38000, 90, 'https://m.media-amazon.com/images/I/91dSMhdIzTL._SL1500_.jpg', 
     (SELECT category_id FROM CATEGORIES WHERE category_name LIKE '%Shonen%'), (SELECT publisher_id FROM PUBLISHERS WHERE publisher_name = 'NXB Kim Đồng')),
 
-('Fullmetal Alchemist', 'Hiromu Arakawa', 'Hai anh em nhà Elric và hành trình tìm lại cơ thể.', 42000, 80, 'images/manga/fullmetal-tap1.jpg', 
+('Fullmetal Alchemist', 'Hiromu Arakawa', 'Hai anh em nhà Elric và hành trình tìm lại cơ thể.', 42000, 80, 'https://cdn.myanimelist.net/images/manga/3/243675.jpg', 
     (SELECT category_id FROM CATEGORIES WHERE category_name LIKE '%Phiêu lưu%'), (SELECT publisher_id FROM PUBLISHERS WHERE publisher_name = 'NXB Trẻ')),
 
-('Tokyo Revengers', 'Ken Wakui', 'Xuyên không thay đổi quá khứ và cứu lấy người yêu.', 35000, 150, 'images/manga/tokyo-revengers-tap1.jpg', 
+('Tokyo Revengers', 'Ken Wakui', 'Xuyên không thay đổi quá khứ và cứu lấy người yêu.', 35000, 150, 'https://cdn.myanimelist.net/images/manga/3/214566.jpg', 
     (SELECT category_id FROM CATEGORIES WHERE category_name LIKE '%Shonen%'), (SELECT publisher_id FROM PUBLISHERS WHERE publisher_name = 'NXB Trẻ')),
 
-('Dr. STONE', 'Riichiro Inagaki', 'Khôi phục nền văn minh nhân loại bằng sức mạnh khoa học.', 32000, 110, 'images/manga/dr-stone-tap1.jpg', 
+('Dr. STONE', 'Riichiro Inagaki', 'Khôi phục nền văn minh nhân loại bằng sức mạnh khoa học.', 32000, 110, 'https://upload.wikimedia.org/wikipedia/en/9/94/NarutoCoverTankobon1.jpg', 
     (SELECT category_id FROM CATEGORIES WHERE category_name LIKE '%Shonen%'), (SELECT publisher_id FROM PUBLISHERS WHERE publisher_name = 'NXB Kim Đồng')),
 
-('Kaguya-sama: Love Is War', 'Aka Akasaka', 'Cuộc chiến tỏ tình giữa hai thiên tài trường học.', 36000, 100, 'images/manga/kaguya-sama-tap1.jpg', 
+('Kaguya-sama: Love Is War', 'Aka Akasaka', 'Cuộc chiến tỏ tình giữa hai thiên tài trường học.', 36000, 100, 'https://cdn.myanimelist.net/images/manga/2/37846.jpg', 
     (SELECT category_id FROM CATEGORIES WHERE category_name LIKE '%Romance%'), (SELECT publisher_id FROM PUBLISHERS WHERE publisher_name = 'IPM'));
 
 INSERT INTO USERS (email, password, full_name, phone_number, address, role) VALUES
@@ -175,7 +176,4 @@ SELECT * FROM MANGAS;
 SELECT * FROM CATEGORIES;
 SELECT * FROM PUBLISHERS;
 SELECT * FROM USERS;
-
-
-
-
+SELECT COUNT(*) FROM MANGAS;

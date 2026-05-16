@@ -1,5 +1,6 @@
 package com.mangaone.controller;
 
+import com.mangaone.service.MangaScraperService;
 import com.mangaone.entity.Manga;
 import com.mangaone.repository.MangaRepository;
 import com.mangaone.service.CategoryService;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Comparator;
 import java.util.List;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class MangaController {
@@ -26,6 +28,8 @@ public class MangaController {
 
     @Autowired
     private MangaService mangaService;
+    @Autowired
+    private MangaScraperService mangaScraperService;
 
     @GetMapping("/mangas")
     public String khoTruyen(
@@ -88,5 +92,26 @@ public class MangaController {
         }
 
         return "redirect:/kho-truyen"; 
+    }
+    @GetMapping("/admin/crawl-phuongnam")
+    @ResponseBody
+    public String crawlData() {
+        long startTime = System.currentTimeMillis();
+        
+        // Kích hoạt hàm cào dữ liệu tự động giới hạn 500 cuốn
+        int total = mangaScraperService.scrapePhuongNamWithLimit();
+        
+        long endTime = System.currentTimeMillis();
+        long duration = (endTime - startTime) / 1000; // Tính số giây chạy
+        
+        // Trả về một giao diện HTML thông báo ngắn gọn, sạch đẹp
+        return "<div style='text-align: center; margin-top: 50px; font-family: Arial, sans-serif;'>" +
+               "   <h2 style='color: #2c3e50;'>HỆ THỐNG ĐỒNG BỘ DỮ LIỆU MANGAONE</h2>" +
+               "   <p style='color: #27ae60; font-size: 18px;'><b>Trạng thái:</b> Đồng bộ thành công!</p>" +
+               "   <p style='font-size: 16px;'>Đã nạp thành công: <b style='color: #e74c3c; font-size: 20px;'>" + total + "</b> đầu truyện vào Database.</p>" +
+               "   <p style='color: #7f8c8d;'>Thời gian thực hiện: " + duration + " giây.</p>" +
+               "   <br/>" +
+               "   <a href='/' style='padding: 10px 20px; background-color: #3498db; color: white; text-decoration: none; border-radius: 5px;'>Quay lại Trang chủ MangaOne</a>" +
+               "</div>";
     }
 }

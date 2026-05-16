@@ -238,7 +238,7 @@
 	            <div class="manga-card card h-100 shadow-sm">
 	
 	                <div class="img-wrapper">
-	                    <img th:src="@{'/' + ${manga.image}}"
+	                    <img th:src="${manga.image}"
 	                         th:alt="${manga.title}"
 	                         onerror="this.src='/images/manga/default.jpg'">
 	
