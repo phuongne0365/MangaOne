@@ -34,4 +34,18 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     // Lấy chi tiết 1 đơn hàng
     Optional<Order> findById(Long orderId);
+
+    // =========================================================================
+    // 🔥 PHẦN BỔ SUNG CHO TÍNH NĂNG THỐNG KÊ BIỂU ĐỒ CỦA BỐ DUY
+    // =========================================================================
+    
+    // Hàm 1: Tính tổng doanh thu của tất cả các đơn hàng hợp lệ (Đã giao hoặc đang giao)
+    @Query("SELECT SUM(o.totalAmount) FROM Order o WHERE o.status IN ('SHIPPING', 'DELIVERED', 'COMPLETED')")
+    Long calculateTotalRevenue();
+
+    // Hàm 2: Lấy tổng doanh thu nhóm theo từng tháng trong năm hiện tại (2026) để vẽ biểu đồ đường
+    @Query("SELECT MONTH(o.createdAt), SUM(o.totalAmount) FROM Order o " +
+           "WHERE YEAR(o.createdAt) = YEAR(CURRENT_DATE) AND o.status IN ('SHIPPING', 'DELIVERED', 'COMPLETED') " +
+           "GROUP BY MONTH(o.createdAt) ORDER BY MONTH(o.createdAt)")
+    List<Object[]> getRevenueByMonth();
 }

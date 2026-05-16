@@ -1,17 +1,15 @@
 package com.mangaone.controller;
 
-import com.mangaone.entity.CartItem;
-import com.mangaone.entity.User;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import com.mangaone.repository.MangaRepository;
 import com.mangaone.service.CartService;
 import com.mangaone.service.CategoryService;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import jakarta.servlet.http.HttpSession;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class HomeController {
@@ -36,7 +34,7 @@ public class HomeController {
 
         model.addAttribute("categories",  categoryService.getAllCategories());
         model.addAttribute("listManga",   mangaRepository.findAll());
-        model.addAttribute("bestSellers", mangaRepository.findTopBestSellers());
+        model.addAttribute("bestSellers", mangaRepository.findTop5ByOrderByStockQuantityAsc());
 
         // Lỗi đăng nhập: ưu tiên từ request param (Spring Security failureUrl)
         // sau đó kiểm tra session (fallback cũ)

@@ -1,5 +1,7 @@
 package com.mangaone.entity;
 import jakarta.persistence.*;
+import java.util.List;
+import jakarta.persistence.OneToMany;
 @Entity
 @Table(name = "USERS")
 
@@ -66,4 +68,15 @@ public class User {
 	public void setIsActive(Boolean isActive) {
 		this.isActive = isActive;
 	}
+	
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Order> orders;
+
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
+    }
 }

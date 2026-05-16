@@ -81,16 +81,7 @@
         object-fit: contain;
         transition: transform 0.4s ease;
     }
-    .main-img-box::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: rgba(26, 26, 46, 0.40);
-        z-index: 2;
-        opacity: 0;
-        transition: 0.35s;
-    }
-    .main-img-box:hover::before { opacity: 1; }
+    
     .main-img-box:hover img { transform: scale(1.06); }
 
     /* Nút hover trên ảnh */
@@ -362,16 +353,7 @@
                      src="/images/manga/demon-slayer-tap1.jpg"
                      alt="Manga Cover">
 
-                <div class="img-action-buttons">
-                    <button type="button" class="btn-img-action">
-                        <i class="bi bi-heart-fill"></i>
-                        <span>Yêu thích</span>
-                    </button>
-                    <button type="button" class="btn-img-action">
-                        <i class="bi bi-share-fill"></i>
-                        <span>Chia sẻ</span>
-                    </button>
-                </div>
+                
             </div>
         </div>
 
