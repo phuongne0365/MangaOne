@@ -1,10 +1,14 @@
 package com.mangaone.controller;
 
+import com.mangaone.entity.User;
+import com.mangaone.repository.UserRepository;
 import com.mangaone.service.InventoryService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.List;
 
 /**
  * Tất cả URL bắt đầu bằng /admin → chỉ Admin mới được truy cập
@@ -14,9 +18,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class AdminInventoryController {
 
     private final InventoryService inventoryService;
+    private final UserRepository userRepository;
 
-    public AdminInventoryController(InventoryService inventoryService) {
+    public AdminInventoryController(InventoryService inventoryService, UserRepository userRepository) {
         this.inventoryService = inventoryService;
+        this.userRepository = userRepository;
     }
 
     // 
@@ -27,16 +33,28 @@ public class AdminInventoryController {
 
     // TRANG DASHBOARD : GET /admin/dashboard
     @GetMapping("/dashboard")
-    public String dashboard(Model model) {
+    public String dashboard(Model model, jakarta.servlet.http.HttpSession session) {
 
-    	model.addAttribute("currentPage", "dashboard"); 
-        // Thẻ thống kê
+    	model.addAttribute("currentPage", "dashboard");
+        model.addAttribute("currentUser", session.getAttribute("loggedInUser"));
+        // Thẻ thống kê kho
         model.addAttribute("tongSoTruyen",  inventoryService.demTongSoTruyen());
         model.addAttribute("soHetHang",     inventoryService.demHetHang());
         model.addAttribute("soSapHetHang",  inventoryService.demSapHetHang());
 
         // Bảng cảnh báo sắp hết hàng
         model.addAttribute("danhSachSapHet", inventoryService.getSapHetHang());
+
+        // ── Thống kê thành viên (tích hợp vào Dashboard) ──
+        List<User> allUsers = userRepository.findAll();
+        long hoatDong  = allUsers.stream().filter(u -> Boolean.TRUE.equals(u.getIsActive())).count();
+        long biBiKhoa  = allUsers.stream().filter(u -> !Boolean.TRUE.equals(u.getIsActive())).count();
+        long adminCount = allUsers.stream().filter(u -> "ADMIN".equals(u.getRole())).count();
+        model.addAttribute("danhSachThanhVien", allUsers);
+        model.addAttribute("tongThanhVien",     allUsers.size());
+        model.addAttribute("thanhVienHoatDong", hoatDong);
+        model.addAttribute("thanhVienBiKhoa",   biBiKhoa);
+        model.addAttribute("soQuanTriVien",      adminCount);
 
         return "admin/dashboard";   
     }
