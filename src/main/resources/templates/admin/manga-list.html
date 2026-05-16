@@ -38,8 +38,7 @@
         <div class="card-body p-4">
             <form th:action="@{/admin/mangas/save}"
                   th:object="${manga}"
-                  method="post"
-                  enctype="multipart/form-data">
+                  method="post">
 
                 <!-- Hidden ID -->
                 <input type="hidden" th:field="*{id}">
@@ -141,33 +140,42 @@
                     </div>
                 </div>
 
-                <!-- ROW 4: Upload ảnh -->
+                <!-- ROW 4: URL ảnh bìa -->
                 <div class="row g-3 mb-4">
-                    <div class="col-md-6">
-                        <label class="form-label fw-semibold small text-uppercase text-muted">Ảnh bìa</label>
-                        <input type="file"
-                               name="imageFile"
-                               class="form-control"
-                               accept="image/*"
-                               onchange="previewImage(event)">
+                    <div class="col-md-7">
+                        <label class="form-label fw-semibold small text-uppercase text-muted">URL ảnh bìa</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0">
+                                <i class="bi bi-link-45deg text-muted"></i>
+                            </span>
+                            <input type="text"
+                                   name="imageUrl"
+                                   id="imageUrlInput"
+                                   class="form-control border-start-0"
+                                   th:value="${manga.image}"
+                                   placeholder="https://example.com/anh-bia.jpg"
+                                   oninput="previewImageUrl(this.value)">
+                        </div>
                         <div class="form-text">
-                            <i class="bi bi-info-circle me-1"></i>Chấp nhận PNG, JPG, WEBP. Tối đa 5MB.
+                            <i class="bi bi-info-circle me-1"></i>
+                            Dán đường link ảnh <strong>trực tiếp</strong> (kết thúc bằng .jpg, .png, .webp).<br>
+                            <span class="text-success">✓ Dùng được:</span> imgur.com, i.postimg.cc, cdn.myanimelist.net<br>
+                            <span class="text-danger">✗ Không dùng:</span> Wikipedia, Google Images (bị chặn hotlink)
                         </div>
                     </div>
 
-                    <!-- Ảnh hiện tại khi EDIT -->
-                    <div class="col-md-6 d-flex align-items-center gap-3"
-                         th:if="${manga.image != null}"
-                         id="current-image-box">
-                        <img th:src="${manga.image}"
+                    <!-- Preview ảnh -->
+                    <div class="col-md-5 d-flex align-items-center gap-3" id="current-image-box"
+                         th:style="${manga.image != null} ? '' : 'display:none !important'">
+                        <img th:src="${manga.image != null ? manga.image : ''}"
                              id="preview-img"
                              alt="Ảnh bìa"
-                             width="60"
-                             height="76"
-                             class="rounded-2 object-fit-cover border shadow-sm">
+                             width="60" height="76"
+                             class="rounded-2 object-fit-cover border shadow-sm"
+                             onerror="this.closest('#current-image-box').style.display='none'">
                         <div>
-                            <div class="fw-semibold small">Ảnh hiện tại</div>
-                            <div class="text-muted small">Chọn file mới để thay thế</div>
+                            <div class="fw-semibold small" id="preview-label">Ảnh xem trước</div>
+                            <div class="text-muted small" id="preview-sub">URL hợp lệ</div>
                         </div>
                     </div>
                 </div>
@@ -334,32 +342,43 @@
             });
         }
 
-        /* Preview ảnh khi chọn file mới */
-        function previewImage(e) {
-            const file = e.target.files[0];
-            if (!file) return;
-            const url = URL.createObjectURL(file);
-            let box = document.getElementById('current-image-box');
-            if (box) {
-                const img = box.querySelector('img');
-                if (img) img.src = url;
-                const label = box.querySelector('.fw-semibold');
-                if (label) label.textContent = file.name;
-            } else {
-                /* Tạo mới nếu đang ở chế độ thêm mới */
-                box = document.createElement('div');
-                box.id = 'current-image-box';
-                box.className = 'col-md-6 d-flex align-items-center gap-3';
-                box.innerHTML = `
-                    <img src="${url}" id="preview-img" alt="preview"
-                         width="60" height="76"
-                         class="rounded-2 object-fit-cover border shadow-sm">
-                    <div>
-                        <div class="fw-semibold small">${file.name}</div>
-                        <div class="text-muted small">Ảnh xem trước</div>
-                    </div>`;
-                e.target.closest('.row').appendChild(box);
+        /* Preview ảnh khi nhập URL */
+        function previewImageUrl(url) {
+            const box = document.getElementById('current-image-box');
+            const img = document.getElementById('preview-img');
+            const label = document.getElementById('preview-label');
+            const sub = document.getElementById('preview-sub');
+
+            if (!url || url.trim() === '') {
+                box.style.display = 'none';
+                return;
             }
+
+            // Kiểm tra URL có vẻ hợp lệ không
+            const trimmed = url.trim();
+            if (!trimmed.startsWith('http://') && !trimmed.startsWith('https://') && !trimmed.startsWith('/')) {
+                box.style.display = 'flex';
+                img.src = '';
+                if (label) label.textContent = 'URL không hợp lệ';
+                if (sub) sub.innerHTML = '<span class="text-danger">Phải bắt đầu bằng https://</span>';
+                return;
+            }
+
+            box.style.display = 'flex';
+            img.src = trimmed;
+            if (label) label.textContent = 'Ảnh xem trước';
+            if (sub) sub.textContent = 'Đang tải...';
+
+            img.onerror = function () {
+                if (label) label.textContent = 'Không load được ảnh';
+                if (sub) sub.innerHTML = '<span class="text-danger">Site này chặn hotlink. Thử dùng imgur.com</span>';
+                this.style.opacity = '0.3';
+            };
+            img.onload = function () {
+                if (label) label.textContent = 'Ảnh xem trước';
+                if (sub) sub.innerHTML = '<span class="text-success">URL hợp lệ ✓</span>';
+                this.style.opacity = '1';
+            };
         }
     </script>
 

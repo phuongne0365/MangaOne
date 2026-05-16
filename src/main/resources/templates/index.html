@@ -188,7 +188,7 @@
                     <div class="card position-relative p-4 border rounded-3 h-100 shadow-sm border-0">
                         
                         <div class="img-container position-relative overflow-hidden rounded-3">
-                            <img th:src="@{'/' + ${m.image}}" class="img-fluid" alt="manga item"
+                            <img th:src="${m.image}" class="img-fluid" alt="manga item"
                                  style="height: 300px; width: 100%; object-fit: cover; transition: 0.5s;">
                             
                             <div class="overlay-buttons d-flex flex-row justify-content-center align-items-end gap-2 pb-3">

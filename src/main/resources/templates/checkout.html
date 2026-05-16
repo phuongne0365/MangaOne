@@ -49,7 +49,7 @@
                             <tr th:each="item : ${cartItems}">
                                 <td>
                                     <div class="d-flex align-items-center">
-                                        <img th:src="@{'/' + ${item.manga.image}}" alt="Truyện"
+                                        <img th:src="${item.manga.image}" alt="Truyện"
                                              class="shadow-sm me-3"
                                              style="width: 60px; height: 85px; object-fit: cover; border-radius: 6px; flex-shrink: 0;"
                                              onerror="this.src='/images/no-image.png'">
