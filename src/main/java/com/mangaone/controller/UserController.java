@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -32,6 +33,7 @@ public class UserController {
 
     // ===== TRANG THÔNG TIN CÁ NHÂN =====
     @GetMapping("/profile")
+    @Transactional  // ✨ Giữ session mở để load lazy-loaded orders
     public String profile(HttpSession session, Model model) {
         User loggedIn = (User) session.getAttribute("loggedInUser");
         if (loggedIn == null) return "redirect:/login";
@@ -50,6 +52,7 @@ public class UserController {
 
     // ===== CẬP NHẬT THÔNG TIN CÁ NHÂN =====
     @PostMapping("/profile/update")
+    @Transactional  // ✨ Giữ session mở để load lazy-loaded orders
     public String updateProfile(@RequestParam("fullName")    String fullName,
                                 @RequestParam("phoneNumber") String phoneNumber,
                                 @RequestParam("address")     String address,
@@ -77,6 +80,7 @@ public class UserController {
 
     // ===== ĐỔI MẬT KHẨU =====
     @PostMapping("/profile/change-password")
+    @Transactional  // ✨ Giữ session mở để load lazy-loaded orders
     public String changePassword(@RequestParam("oldPassword") String oldPassword,
                                  @RequestParam("newPassword") String newPassword,
                                  @RequestParam("confirmPassword") String confirmPassword,

@@ -12059,7 +12059,7 @@
 					ShowCompartmentStereotypes 	TRUE
 					IncludeAttribute 	TRUE
 					IncludeOperation 	TRUE
-					location   	(909, 1025)
+					location   	(909, 956)
 					font       	(object Font
 					    size       	10
 					    face       	"Arial"
@@ -12071,7 +12071,7 @@
 					    default_color 	TRUE)
 					label      	(object ItemLabel
 					    Parent_View 	@595
-					    location   	(600, 816)
+					    location   	(600, 747)
 					    fill_color 	13434879
 					    nlines     	1
 					    max_width  	618
@@ -12079,7 +12079,7 @@
 					    label      	"DanhSachTheLoaiTruyenScreen")
 					stereotype 	(object ItemLabel
 					    Parent_View 	@595
-					    location   	(600, 766)
+					    location   	(600, 697)
 					    fill_color 	13434879
 					    anchor     	10
 					    nlines     	1
@@ -12092,7 +12092,7 @@
 					quidu      	"6A0881A20312"
 					compartment 	(object Compartment
 					    Parent_View 	@595
-					    location   	(600, 877)
+					    location   	(600, 808)
 					    font       	(object Font
 						size       	10
 						face       	"Arial"
@@ -12170,7 +12170,7 @@
 					annotation 	8
 					autoResize 	TRUE)
 				    (object AssociationViewNew "kich chon the loai" @597
-					location   	(897, 643)
+					location   	(897, 608)
 					font       	(object Font
 					    size       	10
 					    face       	"Arial"
@@ -12182,7 +12182,7 @@
 					    default_color 	TRUE)
 					label      	(object SegLabel @598
 					    Parent_View 	@597
-					    location   	(897, 584)
+					    location   	(912, 579)
 					    font       	(object Font
 						size       	10
 						face       	"Arial"
@@ -12198,8 +12198,8 @@
 					    max_width  	450
 					    justify    	0
 					    label      	"kich chon the loai"
-					    pctDist    	0.500000
-					    height     	60
+					    pctDist    	0.750000
+					    height     	29
 					    orientation 	0)
 					stereotype 	TRUE
 					line_color 	3342489
@@ -12207,27 +12207,27 @@
 					roleview_list 	(list RoleViews
 					    (object RoleView "" @599
 						Parent_View 	@597
-						location   	(-21, 246)
+						location   	(-21, 211)
 						stereotype 	TRUE
 						line_color 	3342489
 						quidu      	"6A08863E0063"
 						client     	@597
 						supplier   	@595
 						vertices   	(list Points
-						    (897, 643)
-						    (900, 753))
+						    (897, 608)
+						    (900, 684))
 						line_style 	0)
 					    (object RoleView "" @600
 						Parent_View 	@597
-						location   	(-21, 246)
+						location   	(-21, 211)
 						stereotype 	TRUE
 						line_color 	3342489
 						quidu      	"6A08863E0068"
 						client     	@597
 						supplier   	@596
 						vertices   	(list Points
-						    (897, 643)
-						    (894, 533))
+						    (897, 608)
+						    (895, 533))
 						line_style 	0)))
 				    (object ClassView "Class" "Logical View::MoHinhManHinh::TheLoaiForm" @601
 					ShowCompartmentStereotypes 	TRUE

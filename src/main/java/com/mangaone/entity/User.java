@@ -69,7 +69,7 @@ public class User {
 		this.isActive = isActive;
 	}
 	
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Order> orders;
 
     public List<Order> getOrders() {
