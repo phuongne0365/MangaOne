@@ -153,14 +153,6 @@ public class CartController {
         } catch (IllegalStateException e) {
             redirectAttributes.addFlashAttribute("errorMsg", e.getMessage());
         }
-
-
-        for (int i = 0; i < cartIds.size(); i++) {
-            int qty = (i < quantities.size()) ? quantities.get(i) : 1;
-            cartService.updateQuantity(cartIds.get(i), qty);
-        }
-
-        redirectAttributes.addFlashAttribute("successMsg", "✅ Đã cập nhật giỏ hàng!");
         return "redirect:/cart";
     }
 
