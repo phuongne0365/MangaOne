@@ -296,15 +296,7 @@
 		    <span>Quản lý đơn hàng</span>
 		</a>
     </div>
-    <div class="nav-item">
-      <a th:href="${currentPage == 'dashboard'} ? '#section-thanh-vien' : '/admin/dashboard#section-thanh-vien'"
-         class="nav-link"
-         th:classappend="${currentPage == 'dashboard'} ? 'active' : ''"
-         onclick="if(window.location.pathname==='/admin/dashboard'){event.preventDefault();document.getElementById('section-thanh-vien').scrollIntoView({behavior:'smooth'});document.querySelectorAll('.nav-link.active').forEach(el=>el.classList.remove('active'));this.classList.add('active');}">
-          <i class="bi bi-people"></i>
-          <span>Quản lý thành viên</span>
-      </a>
-    </div>
+
 
     
 </aside>

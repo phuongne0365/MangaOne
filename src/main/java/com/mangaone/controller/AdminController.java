@@ -39,7 +39,7 @@ public class AdminController {
         long biBiKhoa  = allUsers.stream().filter(u -> !Boolean.TRUE.equals(u.getIsActive())).count();
         long adminCount = allUsers.stream().filter(u -> "ADMIN".equals(u.getRole())).count();
         
-        model.addAttribute("danhSachThanhVien", allUsers);
+        model.addAttribute("users", allUsers);
         model.addAttribute("tongThanhVien",     allUsers.size());
         model.addAttribute("thanhVienHoatDong", hoatDong);
         model.addAttribute("thanhVienBiKhoa",   biBiKhoa);
