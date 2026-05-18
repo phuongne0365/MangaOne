@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
             return "Email đã tồn tại!";
         }
 
-        // ✨ MÃ HÓA MẬT KHẨU
+        //  MÃ HÓA MẬT KHẨU
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         return "Đăng ký thành công!";
@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserService {
     public User login(String email, String password) {
         User user = userRepository.findByEmail(email);
 
-        // ✨ SO SÁNH MẬT KHẨU BẰNG BCrypt
+        //  SO SÁNH MẬT KHẨU BẰNG BCrypt
         if (user != null && passwordEncoder.matches(password, user.getPassword())) {
             return user;
         }

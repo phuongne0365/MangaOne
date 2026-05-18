@@ -31,7 +31,7 @@ public class MangaController {
     @Autowired
     private MangaScraperService mangaScraperService;
 
-    @GetMapping("/mangas")
+    @GetMapping("/mangas" )
     public String khoTruyen(
             @RequestParam(value = "category_id", required = false) Long categoryId,
             @RequestParam(value = "keyword",     required = false, defaultValue = "") String keyword,

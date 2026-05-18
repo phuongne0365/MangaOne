@@ -8,7 +8,6 @@ import jakarta.persistence.OneToMany;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    
     private Long userId;
     
     @Column(name = "email", unique = true, length = 100)

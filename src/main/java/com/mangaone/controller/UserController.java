@@ -33,7 +33,7 @@ public class UserController {
 
     // ===== TRANG THÔNG TIN CÁ NHÂN =====
     @GetMapping("/profile")
-    @Transactional  // ✨ Giữ session mở để load lazy-loaded orders
+    @Transactional  //  Giữ session mở để load lazy-loaded orders
     public String profile(HttpSession session, Model model) {
         User loggedIn = (User) session.getAttribute("loggedInUser");
         if (loggedIn == null) return "redirect:/login";
@@ -42,7 +42,7 @@ public class UserController {
         User user = userRepository.findById(loggedIn.getUserId()).orElse(null);
         if (user == null) return "redirect:/login";
         
-        // ĐÃ FIX: Lấy danh sách đơn hàng mới nhất và gán vào Object User để Thymeleaf hiển thị ra bảng
+        //  Lấy danh sách đơn hàng mới nhất và gán vào Object User để Thymeleaf hiển thị ra bảng
         List<Order> orders = orderRepository.findByUserOrderByCreatedAtDesc(user);
         user.setOrders(orders);
         
