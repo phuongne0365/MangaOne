@@ -17,6 +17,10 @@ import java.util.Comparator;
 import java.util.List;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import org.springframework.data.domain.Page; 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+
 @Controller
 public class MangaController {
 
@@ -36,6 +40,7 @@ public class MangaController {
             @RequestParam(value = "category_id", required = false) Long categoryId,
             @RequestParam(value = "keyword",     required = false, defaultValue = "") String keyword,
             @RequestParam(value = "sortBy",      required = false, defaultValue = "") String sortBy,
+            @RequestParam(value = "page",        required = false, defaultValue = "1") int page,
             Model model) {
 
         List<Manga> mangas;
@@ -61,11 +66,26 @@ public class MangaController {
             mangas.sort(Comparator.comparing(Manga::getTitle));
         }
 
-        model.addAttribute("mangas", mangas);
+        // ===== THÊM: PHÂN TRANG (50 truyện/trang) =====
+        int pageSize   = 50;
+        int totalItems = mangas.size();
+        int totalPages = (int) Math.ceil((double) totalItems / pageSize);
+        if (totalPages == 0) totalPages = 1;
+        if (page < 1) page = 1;
+        if (page > totalPages) page = totalPages;
+        int fromIndex  = (page - 1) * pageSize;
+        int toIndex    = Math.min(fromIndex + pageSize, totalItems);
+        List<Manga> pagedMangas = mangas.subList(fromIndex, toIndex);
+        // ===== KẾT THÚC PHÂN TRANG =====
+
+        model.addAttribute("mangas", pagedMangas);
         model.addAttribute("categories", categoryService.getAllCategories());
         model.addAttribute("keyword", keyword);
         model.addAttribute("categoryId", categoryId);
         model.addAttribute("sortBy", sortBy);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("totalItems", totalItems);
 
         return "kho-truyen";
     }
@@ -82,29 +102,24 @@ public class MangaController {
     // ================= MỞ TRANG CHI TIẾT TRUYỆN =================
     @GetMapping("/manga/{id}")
     public String showMangaDetail(@PathVariable("id") Long id, Model model) {
-        Manga manga = mangaService.getMangaById(id); // Lấy thông tin chi tiết truyện
+        Manga manga = mangaService.getMangaById(id);
 
         if (manga != null) {
             model.addAttribute("manga", manga);
-            // Giữ lại menu thể loại trên thanh điều hướng
             model.addAttribute("categories", categoryService.getAllCategories());
             return "manga-detail"; 
         }
 
         return "redirect:/kho-truyen"; 
     }
+
     @GetMapping("/admin/crawl-phuongnam")
     @ResponseBody
     public String crawlData() {
         long startTime = System.currentTimeMillis();
-        
-        // Kích hoạt hàm cào dữ liệu tự động giới hạn 500 cuốn
         int total = mangaScraperService.scrapePhuongNamWithLimit();
-        
         long endTime = System.currentTimeMillis();
-        long duration = (endTime - startTime) / 1000; // Tính số giây chạy
-        
-        // Trả về một giao diện HTML thông báo ngắn gọn, sạch đẹp
+        long duration = (endTime - startTime) / 1000;
         return "<div style='text-align: center; margin-top: 50px; font-family: Arial, sans-serif;'>" +
                "   <h2 style='color: #2c3e50;'>HỆ THỐNG ĐỒNG BỘ DỮ LIỆU MANGAONE</h2>" +
                "   <p style='color: #27ae60; font-size: 18px;'><b>Trạng thái:</b> Đồng bộ thành công!</p>" +
@@ -114,4 +129,20 @@ public class MangaController {
                "   <a href='/' style='padding: 10px 20px; background-color: #3498db; color: white; text-decoration: none; border-radius: 5px;'>Quay lại Trang chủ MangaOne</a>" +
                "</div>";
     }
+
+    @GetMapping("/api/manga/page")
+    @ResponseBody
+    public Page<Manga> getMangaPaging(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "50") int size,
+            @RequestParam(defaultValue = "") String keyword) {
+
+        Pageable pageable = PageRequest.of(page, size);
+
+        if (keyword != null && !keyword.trim().isEmpty()) {
+        }
+
+        return mangaRepository.findAll(pageable);
+    }
+
 }

@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{admin/admin-layout :: layout(~{::title}, ~{::section#content})}">
+<head>
+  <title>Quản lý thành viên - MangaOne Admin</title>
+</head>
+<body>
+
+<section id="content">
+
+  <!-- Tiêu đề trang -->
+  <div class="d-flex align-items-start justify-content-between mb-4">
+    <div>
+      <h1 class="page-title">Quản lý thành viên 👥</h1>
+      <p class="page-subtitle">Danh sách tất cả tài khoản trong hệ thống.</p>
+    </div>
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item"><a th:href="@{/}" class="text-decoration-none">Trang chủ</a></li>
+        <li class="breadcrumb-item"><a th:href="@{/admin/dashboard}" class="text-decoration-none">Admin</a></li>
+        <li class="breadcrumb-item active">Thành viên</li>
+      </ol>
+    </nav>
+  </div>
+
+  <!-- Thống kê 4 ô -->
+  <div class="row g-3 mb-4">
+    <div class="col-xl-3 col-md-6">
+      <div class="stat-card">
+        <div class="stat-icon pink"><i class="bi bi-people-fill"></i></div>
+        <div>
+          <div class="stat-value" th:text="${tongThanhVien}">0</div>
+          <div class="stat-label">Tổng thành viên</div>
+          <div class="stat-change up"><i class="bi bi-arrow-up-short"></i> Đang kinh doanh</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+      <div class="stat-card">
+        <div class="stat-icon green"><i class="bi bi-person-check-fill"></i></div>
+        <div>
+          <div class="stat-value" th:text="${thanhVienHoatDong}">0</div>
+          <div class="stat-label">Đang hoạt động</div>
+          <div class="stat-change up"><i class="bi bi-check-circle"></i> Bình thường</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+      <div class="stat-card">
+        <div class="stat-icon orange"><i class="bi bi-shield-fill-check"></i></div>
+        <div>
+          <div class="stat-value" th:text="${soQuanTriVien}">0</div>
+          <div class="stat-label">Quản trị viên</div>
+          <div class="stat-change warn"><i class="bi bi-star-fill"></i> Admin</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+      <div class="stat-card">
+        <div class="stat-icon red"><i class="bi bi-person-lock"></i></div>
+        <div>
+          <div class="stat-value" th:text="${thanhVienBiKhoa}">0</div>
+          <div class="stat-label">Đã khóa</div>
+          <div class="stat-change danger"><i class="bi bi-x-circle"></i> Bị hạn chế</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toolbar tìm kiếm + lọc -->
+  <div class="content-card mb-3 px-3 py-3">
+    <div class="d-flex flex-wrap gap-2 align-items-center">
+      <div class="position-relative flex-grow-1" style="min-width:220px;max-width:360px;">
+        <i class="bi bi-search position-absolute"
+           style="left:12px;top:50%;transform:translateY(-50%);color:#aab;font-size:14px;pointer-events:none;"></i>
+        <input id="searchInput" type="text"
+               placeholder="Tìm theo tên, email, SĐT..."
+               oninput="applyFilters()"
+               class="form-control"
+               style="padding-left:36px;font-size:14px;border-radius:10px;border:1px solid #edf0f7;background:#f4f6fb;"/>
+      </div>
+      <select id="filterRole" onchange="applyFilters()"
+              class="form-select"
+              style="width:auto;min-width:160px;font-size:14px;border-radius:10px;border:1px solid #edf0f7;background:#f4f6fb;">
+        <option value="">Tất cả vai trò</option>
+        <option value="USER">👤 User</option>
+        <option value="ADMIN">⭐ Admin</option>
+        <option value="STAFF">🛒 Staff</option>
+      </select>
+      <select id="filterStatus" onchange="applyFilters()"
+              class="form-select"
+              style="width:auto;min-width:180px;font-size:14px;border-radius:10px;border:1px solid #edf0f7;background:#f4f6fb;">
+        <option value="">Tất cả trạng thái</option>
+        <option value="active">✅ Hoạt động</option>
+        <option value="locked">🔒 Đã khóa</option>
+      </select>
+      <button onclick="clearFilters()"
+              style="padding:8px 14px;border-radius:10px;border:1px solid #edf0f7;background:#f4f6fb;
+                     color:#8890aa;font-size:13px;cursor:pointer;white-space:nowrap;">
+        <i class="bi bi-x-lg me-1"></i>Xóa lọc
+      </button>
+      <span id="resultCount" style="font-size:13px;color:#8890aa;font-weight:600;white-space:nowrap;margin-left:4px;"></span>
+    </div>
+  </div>
+
+  <!-- Bảng danh sách -->
+  <div class="content-card">
+    <div class="content-card-header">
+      <h5><i class="bi bi-table me-2" style="color:#e8517a;"></i>Danh sách thành viên</h5>
+      <span style="background:#fdf0f4;color:#e8517a;font-size:12px;font-weight:700;border-radius:20px;padding:5px 12px;"
+            th:text="${tongThanhVien} + ' thành viên'">0 thành viên</span>
+    </div>
+    <div class="table-responsive">
+      <table class="table" style="margin:0;">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Thành viên</th>
+            <th>Số điện thoại</th>
+            <th>Vai trò</th>
+            <th>Trạng thái</th>
+            <th style="text-align:center;">Thao tác</th>
+          </tr>
+        </thead>
+        <tbody id="userTableBody">
+
+          <tr th:if="${users == null or users.isEmpty()}">
+            <td colspan="6" style="text-align:center;padding:40px;color:#8890aa;">
+              <i class="bi bi-people" style="font-size:2.5rem;display:block;margin-bottom:10px;"></i>
+              Chưa có thành viên nào
+            </td>
+          </tr>
+
+          <tr th:each="user, stat : ${users}"
+              th:data-name="${#strings.toLowerCase(user.fullName)}"
+              th:data-email="${#strings.toLowerCase(user.email)}"
+              th:data-phone="${user.phoneNumber != null ? #strings.toLowerCase(user.phoneNumber) : ''}"
+              th:data-role="${user.role}"
+              th:data-active="${user.isActive}">
+
+            <td style="color:#8890aa;font-size:13px;" th:text="${stat.index + 1}">1</td>
+
+            <td>
+              <div class="d-flex align-items-center gap-3">
+                <div style="width:38px;height:38px;border-radius:50%;display:flex;align-items:center;
+                            justify-content:center;font-weight:800;font-size:15px;color:#fff;flex-shrink:0;"
+                     th:style="${user.role == 'ADMIN'}
+                       ? 'width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;color:#fff;flex-shrink:0;background:linear-gradient(135deg,#e8517a,#f07);'
+                       : 'width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;color:#fff;flex-shrink:0;background:linear-gradient(135deg,#6c8cff,#5a6fd8);'"
+                     th:text="${#strings.substring(user.fullName,0,1)}">A</div>
+                <div>
+                  <div style="font-weight:700;font-size:14px;color:#2d3142;" th:text="${user.fullName}">Tên</div>
+                  <div style="font-size:12px;color:#8890aa;" th:text="${user.email}">email</div>
+                </div>
+              </div>
+            </td>
+
+            <td style="font-size:14px;color:#5a6080;"
+                th:text="${user.phoneNumber != null ? user.phoneNumber : '—'}">—</td>
+
+            <td>
+              <span th:if="${user.role == 'ADMIN'}"
+                    style="display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;background:#fff5ec;color:#f07830;">
+                <i class="bi bi-star-fill"></i> Admin
+              </span>
+              <span th:if="${user.role == 'STAFF'}"
+                    style="display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;background:#f0f4ff;color:#4c6ef5;">
+                <i class="bi bi-bag-fill"></i> Staff
+              </span>
+              <span th:if="${user.role == 'USER' or (user.role != 'ADMIN' and user.role != 'STAFF')}"
+                    style="display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;background:#f0f2ff;color:#5a6fd8;">
+                <i class="bi bi-person-fill"></i> User
+              </span>
+            </td>
+
+            <td>
+              <span th:if="${user.isActive}"
+                    style="display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;background:#edfaf4;color:#18b86e;">
+                <i class="bi bi-check-circle-fill"></i> Hoạt động
+              </span>
+              <span th:unless="${user.isActive}"
+                    style="display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700;background:#fff0f0;color:#e03;">
+                <i class="bi bi-x-circle-fill"></i> Đã khóa
+              </span>
+            </td>
+
+            <td style="text-align:center;">
+              <!-- Tài khoản của chính mình -->
+              <div th:if="${user.userId == currentUser.userId}"
+                   style="font-size:12px;color:#8890aa;font-weight:600;text-align:center;">
+                Tài khoản của bạn
+              </div>
+
+              <!-- Tài khoản người khác -->
+              <div th:unless="${user.userId == currentUser.userId}"
+                   class="d-flex align-items-center justify-content-center gap-2">
+
+                <!-- Khóa / Mở khóa -->
+                <form th:action="@{/admin/users/toggle-active}" method="post" class="d-inline m-0">
+                  <input type="hidden" name="userId" th:value="${user.userId}">
+                  <button type="submit"
+                          th:title="${user.isActive} ? 'Khóa tài khoản' : 'Mở khóa tài khoản'"
+                          th:style="${user.isActive}
+                            ? 'width:34px;height:34px;border-radius:8px;border:none;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:15px;background:#fff5ec;color:#f07830;'
+                            : 'width:34px;height:34px;border-radius:8px;border:none;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:15px;background:#edfaf4;color:#18b86e;'">
+                    <i class="bi" th:classappend="${user.isActive} ? 'bi-lock-fill' : 'bi-unlock-fill'"></i>
+                  </button>
+                </form>
+
+                <!-- Đổi vai trò nhanh -->
+                <form th:action="@{/admin/users/toggle-role}" method="post" class="d-inline m-0">
+                  <input type="hidden" name="userId" th:value="${user.userId}">
+                  <button type="submit"
+                          th:title="${user.role == 'ADMIN'} ? 'Hạ xuống User' : 'Nâng lên Admin'"
+                          style="width:34px;height:34px;border-radius:8px;border:none;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:15px;background:#f0f2ff;color:#5a6fd8;">
+                    <i class="bi bi-arrow-repeat"></i>
+                  </button>
+                </form>
+
+                <!-- Xóa -->
+                <form th:action="@{/admin/users/delete}" method="post" class="d-inline m-0"
+                      onsubmit="return confirm('Bạn chắc chắn muốn xóa tài khoản này?')">
+                  <input type="hidden" name="userId" th:value="${user.userId}">
+                  <button type="submit" title="Xóa tài khoản"
+                          style="width:34px;height:34px;border-radius:8px;border:none;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:15px;background:#fff0f0;color:#e03;">
+                    <i class="bi bi-trash3"></i>
+                  </button>
+                </form>
+
+              </div>
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+
+      <!-- Không có kết quả lọc -->
+      <div id="noResult" style="display:none;text-align:center;padding:40px;color:#8890aa;">
+        <i class="bi bi-search" style="font-size:2.5rem;display:block;margin-bottom:10px;"></i>
+        Không tìm thấy thành viên phù hợp
+      </div>
+
+    </div>
+  </div>
+
+  <!-- JavaScript tìm kiếm & lọc -->
+  <script>
+    function applyFilters() {
+      var keyword = (document.getElementById('searchInput').value || '').toLowerCase().trim();
+      var role    = (document.getElementById('filterRole').value || '').toUpperCase().trim();
+      var status  = (document.getElementById('filterStatus').value || '').trim();
+      var rows    = document.querySelectorAll('#userTableBody tr[data-name]');
+      var visible = 0;
+
+      rows.forEach(function(row) {
+        var name      = (row.getAttribute('data-name')   || '').toLowerCase();
+        var email     = (row.getAttribute('data-email')  || '').toLowerCase();
+        var phone     = (row.getAttribute('data-phone')  || '').toLowerCase();
+        var rowRole   = (row.getAttribute('data-role')   || '').toUpperCase().trim();
+        // Chuẩn hóa data-active: chấp nhận 'true'/'True'/'TRUE' đều như nhau
+        var rawActive = (row.getAttribute('data-active') || '').trim().toLowerCase();
+        var isActive  = (rawActive === 'true');
+
+        var matchKeyword = !keyword || name.includes(keyword) || email.includes(keyword) || phone.includes(keyword);
+        var matchRole    = !role    || rowRole === role;
+        var matchStatus  = !status
+          || (status === 'active' && isActive === true)
+          || (status === 'locked' && isActive === false);
+
+        if (matchKeyword && matchRole && matchStatus) {
+          row.style.display = '';
+          visible++;
+        } else {
+          row.style.display = 'none';
+        }
+      });
+
+      // Cập nhật badge đếm
+      var rc = document.getElementById('resultCount');
+      if (rc) rc.textContent = 'Hiển thị ' + visible + ' / ' + rows.length + ' thành viên';
+
+      // Hiện/ẩn dòng không có kết quả
+      var noResult = document.getElementById('noResult');
+      if (noResult) noResult.style.display = (visible === 0 && rows.length > 0) ? 'block' : 'none';
+    }
+
+    function clearFilters() {
+      document.getElementById('searchInput').value  = '';
+      document.getElementById('filterRole').value   = '';
+      document.getElementById('filterStatus').value = '';
+      applyFilters();
+    }
+
+    // Chạy ngay khi load trang
+    document.addEventListener('DOMContentLoaded', function() {
+      applyFilters();
+
+      // Đảm bảo ô tìm kiếm có thể nhập và trigger lọc theo từng ký tự
+      var searchInput = document.getElementById('searchInput');
+      if (searchInput) {
+        searchInput.addEventListener('input', applyFilters);
+        searchInput.addEventListener('keyup', applyFilters);
+      }
+
+      // Đảm bảo các select lọc hoạt động
+      var filterRole   = document.getElementById('filterRole');
+      var filterStatus = document.getElementById('filterStatus');
+      if (filterRole)   filterRole.addEventListener('change', applyFilters);
+      if (filterStatus) filterStatus.addEventListener('change', applyFilters);
+    });
+  </script>
+
+</section>
+</body>
+</html>
