@@ -300,41 +300,142 @@
 	        <p>Hãy thêm truyện vào Database để hiển thị tại đây.</p>
 	    </div>
 	
-	    <!-- ===== PHÂN TRANG ===== -->
-	    <div class="d-flex justify-content-center mt-5" th:if="${totalPages > 1}">
-	        <nav>
-	            <ul class="pagination">
-	                <!-- Nút Trước -->
-	                <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
-	                    <a class="page-link"
-	                       th:href="@{/mangas(page=${currentPage - 1}, keyword=${keyword}, category_id=${categoryId}, sortBy=${sortBy})}">
-	                        <i class="bi bi-chevron-left"></i>
-	                    </a>
-	                </li>
-	
-	                <!-- Các số trang -->
-	                <li class="page-item"
-	                    th:each="i : ${#numbers.sequence(1, totalPages)}"
-	                    th:classappend="${i == currentPage} ? 'active'">
-	                    <a class="page-link"
-	                       th:href="@{/mangas(page=${i}, keyword=${keyword}, category_id=${categoryId}, sortBy=${sortBy})}"
-	                       th:text="${i}">1</a>
-	                </li>
-	
-	                <!-- Nút Sau -->
-	                <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
-	                    <a class="page-link"
-	                       th:href="@{/mangas(page=${currentPage + 1}, keyword=${keyword}, category_id=${categoryId}, sortBy=${sortBy})}">
-	                        <i class="bi bi-chevron-right"></i>
-	                    </a>
-	                </li>
-	            </ul>
-	        </nav>
-	    </div>
-	
-	    <!-- Thông tin trang -->
-	    <p class="text-center text-muted mt-2" th:if="${totalPages > 1}"
-	       th:text="'Trang ' + ${currentPage} + ' / ' + ${totalPages} + ' — Tổng ' + ${totalItems} + ' truyện'"></p>
+    <!-- ===== PHÂN TRANG ===== -->
+    <style>
+        .pagination-manga .page-link {
+            border-radius: 50% !important;
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            border: none;
+            color: #1a1a2e;
+            background: #f0f0f0;
+            margin: 0 3px;
+            transition: all 0.2s ease;
+        }
+        .pagination-manga .page-link:hover {
+            background: #e94560;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(233,69,96,0.3);
+        }
+        .pagination-manga .page-item.active .page-link {
+            background: #e94560;
+            color: white;
+            box-shadow: 0 4px 12px rgba(233,69,96,0.4);
+        }
+        .pagination-manga .page-item.disabled .page-link {
+            background: #f8f8f8;
+            color: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        .pagination-manga .page-dots {
+            background: transparent !important;
+            color: #999 !important;
+            font-weight: 700;
+            letter-spacing: 2px;
+            cursor: default;
+        }
+        .pagination-manga .page-arrow {
+            background: #fff !important;
+            border: 2px solid #e94560 !important;
+            color: #e94560 !important;
+        }
+        .pagination-manga .page-arrow:hover {
+            background: #e94560 !important;
+            color: white !important;
+        }
+        .pagination-manga .page-item.disabled .page-arrow {
+            border-color: #ddd !important;
+            color: #ccc !important;
+        }
+    </style>
+
+    <div th:if="${totalPages > 1}" class="d-flex flex-column align-items-center mt-5 gap-2">
+        <nav>
+            <ul class="pagination pagination-manga mb-1">
+
+                <!-- << Trang đầu -->
+                <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
+                    <a class="page-link page-arrow"
+                       th:href="@{/mangas(page=1, keyword=${keyword}, category_id=${categoryId}, sortBy=${sortBy})}"
+                       title="Trang đầu">
+                        <i class="bi bi-chevron-double-left"></i>
+                    </a>
+                </li>
+
+                <!-- < Trang trước -->
+                <li class="page-item" th:classappend="${currentPage == 1} ? 'disabled'">
+                    <a class="page-link page-arrow"
+                       th:href="@{/mangas(page=${currentPage - 1}, keyword=${keyword}, category_id=${categoryId}, sortBy=${sortBy})}"
+                       title="Trang trước">
+                        <i class="bi bi-chevron-left"></i>
+                    </a>
+                </li>
+
+                <!-- Trang 1 luôn hiện -->
+                <li class="page-item" th:classappend="${currentPage == 1} ? 'active'">
+                    <a class="page-link"
+                       th:href="@{/mangas(page=1, keyword=${keyword}, category_id=${categoryId}, sortBy=${sortBy})}">1</a>
+                </li>
+
+                <!-- ... trái nếu currentPage > 4 -->
+                <li class="page-item disabled" th:if="${currentPage > 4}">
+                    <span class="page-link page-dots">...</span>
+                </li>
+
+                <!-- Các trang xung quanh currentPage (trừ trang 1 và trang cuối) -->
+                <th:block th:each="i : ${#numbers.sequence(2, totalPages - 1)}">
+                    <li class="page-item"
+                        th:if="${i >= currentPage - 2 and i <= currentPage + 2}"
+                        th:classappend="${i == currentPage} ? 'active'">
+                        <a class="page-link"
+                           th:href="@{/mangas(page=${i}, keyword=${keyword}, category_id=${categoryId}, sortBy=${sortBy})}"
+                           th:text="${i}">i</a>
+                    </li>
+                </th:block>
+
+                <!-- ... phải nếu currentPage < totalPages - 3 -->
+                <li class="page-item disabled" th:if="${currentPage < totalPages - 3}">
+                    <span class="page-link page-dots">...</span>
+                </li>
+
+                <!-- Trang cuối luôn hiện -->
+                <li class="page-item" th:if="${totalPages > 1}" th:classappend="${currentPage == totalPages} ? 'active'">
+                    <a class="page-link"
+                       th:href="@{/mangas(page=${totalPages}, keyword=${keyword}, category_id=${categoryId}, sortBy=${sortBy})}"
+                       th:text="${totalPages}">N</a>
+                </li>
+
+                <!-- > Trang sau -->
+                <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
+                    <a class="page-link page-arrow"
+                       th:href="@{/mangas(page=${currentPage + 1}, keyword=${keyword}, category_id=${categoryId}, sortBy=${sortBy})}"
+                       title="Trang sau">
+                        <i class="bi bi-chevron-right"></i>
+                    </a>
+                </li>
+
+                <!-- >> Trang cuối -->
+                <li class="page-item" th:classappend="${currentPage == totalPages} ? 'disabled'">
+                    <a class="page-link page-arrow"
+                       th:href="@{/mangas(page=${totalPages}, keyword=${keyword}, category_id=${categoryId}, sortBy=${sortBy})}"
+                       title="Trang cuối">
+                        <i class="bi bi-chevron-double-right"></i>
+                    </a>
+                </li>
+
+            </ul>
+        </nav>
+        <p class="text-muted small mb-0"
+           th:text="'Trang ' + ${currentPage} + ' / ' + ${totalPages} + ' — Tổng ' + ${totalItems} + ' truyện'"></p>
+    </div>
 	
 	</div><!-- end container -->
 
