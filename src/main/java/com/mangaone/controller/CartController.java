@@ -153,7 +153,6 @@ public class CartController {
         } catch (IllegalStateException e) {
             redirectAttributes.addFlashAttribute("errorMsg", e.getMessage());
         }
-
         return "redirect:/cart";
     }
 

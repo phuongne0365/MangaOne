@@ -136,7 +136,7 @@ INSERT INTO MANGAS (title, author, description, price, stock_quantity, image_url
 ('Bleach', 'Tite Kubo', 'Hành trình làm Thần Chết và bảo vệ thế giới của Ichigo.', 35000, 100, 'https://m.media-amazon.com/images/I/91D07epNE9L._SL1500_.jpg', 
     (SELECT category_id FROM CATEGORIES WHERE category_name LIKE '%Shonen%'), (SELECT publisher_id FROM PUBLISHERS WHERE publisher_name = 'NXB Kim Đồng')),
 
-('Black Clover', 'Yuki Tabata', 'Cậu bé không có phép thuật và giấc mơ trở thành Ma Pháp Vương.', 38000, 90, 'https://m.media-amazon.com/images/I/91dSMhdIzTL._SL1500_.jpg', 
+('Black Clover', 'Yuki Tabata', 'Cậu bé không có phép Zthuật và giấc mơ trở thành Ma Pháp Vương.', 38000, 90, 'https://m.media-amazon.com/images/I/91dSMhdIzTL._SL1500_.jpg', 
     (SELECT category_id FROM CATEGORIES WHERE category_name LIKE '%Shonen%'), (SELECT publisher_id FROM PUBLISHERS WHERE publisher_name = 'NXB Kim Đồng')),
 
 ('Fullmetal Alchemist', 'Hiromu Arakawa', 'Hai anh em nhà Elric và hành trình tìm lại cơ thể.', 42000, 80, 'https://cdn.myanimelist.net/images/manga/3/243675.jpg', 
@@ -176,4 +176,7 @@ SELECT * FROM MANGAS;
 SELECT * FROM CATEGORIES;
 SELECT * FROM PUBLISHERS;
 SELECT * FROM USERS;
+
+
+-- Kiểm tra còn bao nhiêu
 SELECT COUNT(*) FROM MANGAS;
