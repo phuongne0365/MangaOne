@@ -196,7 +196,7 @@
                                 <a th:href="@{/manga/{id}(id=${m.id})}" class="btn btn-light btn-sm rounded-pill px-3 fw-bold shadow-sm">
                                     <i class="bi bi-eye"></i> Xem
                                 </a>
-                                <form th:action="@{/cart/add}" method="post" class="m-0">
+                                <form th:action="@{/cart/add}" method="post" class="m-0" onsubmit="addToCartAjax(this,event)">
                                     <input type="hidden" name="mangaId" th:value="${m.id}">
                                     <button type="submit" class="btn btn-danger btn-sm rounded-pill px-3 fw-bold shadow-sm">
                                         <i class="bi bi-cart-plus"></i> Thêm

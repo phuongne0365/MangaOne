@@ -406,9 +406,8 @@
                 </div>
             </div>
 
-            <!-- Action box -->
             <div class="action-container">
-                <form th:action="@{/cart/add}" method="post">
+                <form th:action="@{/cart/add}" method="post" onsubmit="addToCartAjax(this,event)">
                     <input type="hidden" name="mangaId" th:value="${manga.id}">
 
                     <div class="d-flex align-items-center justify-content-between mb-4">

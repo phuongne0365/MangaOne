@@ -95,6 +95,28 @@ public class CartController {
         return "redirect:/cart";
     }
 
+    // THÊM VÀO GIỎ AJAX: POST /cart/add-ajax (trả JSON, không redirect)
+    @PostMapping("/add-ajax")
+    @ResponseBody
+    public ResponseEntity<?> themVaoGioAjax(@RequestParam Long mangaId,
+                                             @RequestParam(defaultValue = "1") int quantity,
+                                             HttpSession session) {
+        User user = (User) session.getAttribute("loggedInUser");
+
+        if (user == null) {
+            return ResponseEntity.ok(Map.of("success", false, "requireLogin", true, "count", 0));
+        }
+
+        try {
+            cartService.addToCart(user, mangaId, quantity);
+            List<CartItem> cartItems = cartService.getCartItems(user);
+            int count = cartItems.size();
+            return ResponseEntity.ok(Map.of("success", true, "count", count, "message", "Đã thêm vào giỏ hàng!"));
+        } catch (IllegalStateException e) {
+            return ResponseEntity.ok(Map.of("success", false, "requireLogin", false, "count", 0, "message", e.getMessage()));
+        }
+    }
+
     // CẬP NHẬT SỐ LƯỢNG: POST /cart/update
     @PostMapping("/update")
     public String capNhatSoLuong(@RequestParam Integer cartId,

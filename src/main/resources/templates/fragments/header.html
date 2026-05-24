@@ -110,6 +110,63 @@
       </symbol>
     </svg>
 
+    <!-- Cart shake animation -->
+    <style>
+      @keyframes cartShake {
+        0%   { transform: rotate(0deg); }
+        10%  { transform: rotate(-18deg); }
+        20%  { transform: rotate(18deg); }
+        30%  { transform: rotate(-14deg); }
+        40%  { transform: rotate(14deg); }
+        50%  { transform: rotate(-10deg); }
+        60%  { transform: rotate(10deg); }
+        70%  { transform: rotate(-6deg); }
+        80%  { transform: rotate(6deg); }
+        90%  { transform: rotate(-2deg); }
+        100% { transform: rotate(0deg); }
+      }
+      .cart-icon-shake {
+        animation: cartShake 0.7s cubic-bezier(0.36,0.07,0.19,0.97) both;
+        transform-origin: 50% 0;
+      }
+      /* Toast thông báo thêm giỏ hàng */
+      #cartToast {
+        position: fixed;
+        top: 80px;
+        right: 24px;
+        z-index: 99999;
+        min-width: 240px;
+        max-width: 320px;
+        background: #1a1a2e;
+        color: #fff;
+        border-radius: 12px;
+        padding: 14px 20px;
+        font-size: 0.88rem;
+        font-weight: 700;
+        box-shadow: 0 8px 28px rgba(0,0,0,0.25);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        opacity: 0;
+        transform: translateX(120%);
+        transition: opacity 0.3s, transform 0.35s cubic-bezier(0.175,0.885,0.32,1.275);
+        pointer-events: none;
+      }
+      #cartToast.show {
+        opacity: 1;
+        transform: translateX(0);
+      }
+      #cartToast.error {
+        background: #c73652;
+      }
+    </style>
+
+    <!-- Cart toast element -->
+    <div id="cartToast">
+      <span id="cartToastIcon">🛒</span>
+      <span id="cartToastMsg">Đã thêm vào giỏ hàng!</span>
+    </div>
+
     <header id="header" class="site-header sticky-top shadow-sm" style="z-index: 1050;">
 
       <div class="top-info border-bottom d-none d-md-block ">
@@ -217,19 +274,7 @@
                       <a th:href="@{/profile}" class="text-decoration-none">
                         
                       </a>
-                      	<!-- Nút Quản lý: chỉ hiện với tài khoản Admin -->
-						<a th:if="${session.loggedInUser.role == 'ADMIN'}"
-						   th:href="@{/admin/dashboard}"
-						   class="btn btn-sm"
-						   style="padding:6px 12px;font-size:12px;min-width:unset;height:auto;line-height:normal;
-						          border-radius:6px;background:#1a1d2e;color:#fff;font-weight:700;
-						          border:none;display:inline-flex;align-items:center;gap:5px;
-						          text-decoration:none;">
-						  <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 16 16" style="flex-shrink:0;">
-						    <path d="M2 10h3a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1zm9-9h3a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1h-3a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 2h3a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1zm9 8h3a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-3a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1z"/>
-						  </svg>
-						  Quản lý
-						</a>
+
                       
                     </span>
                     <!-- Nếu chưa đăng nhập: mở modal -->
@@ -463,6 +508,81 @@
                             }
                           }).catch(function () { });
                       });
+
+                      /* ========= HÀM AJAX THÊM VÀO GIỎ HÀNG ========= */
+                      window.addToCartAjax = function(form, event) {
+                        event.preventDefault();
+                        var mangaId  = form.querySelector('[name="mangaId"]').value;
+                        var qtyInput = form.querySelector('[name="quantity"]');
+                        var quantity = qtyInput ? qtyInput.value : '1';
+
+                        /* Vô hiệu hóa nút để tránh double click */
+                        var btn = form.querySelector('button[type="submit"]');
+                        if (btn) { btn.disabled = true; }
+
+                        fetch('/cart/add-ajax', {
+                          method: 'POST',
+                          credentials: 'same-origin',
+                          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                          body: 'mangaId=' + encodeURIComponent(mangaId) + '&quantity=' + encodeURIComponent(quantity)
+                        })
+                        .then(function(r) { return r.json(); })
+                        .then(function(data) {
+                          if (data.requireLogin) {
+                            /* Chưa đăng nhập → mở modal */
+                            var modalEl = document.getElementById('exampleModal');
+                            if (modalEl) {
+                              var modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+                              modal.show();
+                            }
+                          } else {
+                            /* Cập nhật badge số lượng */
+                            var badge = document.getElementById('miniCartBadge');
+                            if (data.success && badge) {
+                              badge.textContent = data.count > 99 ? '99+' : data.count;
+                              badge.style.display = data.count > 0 ? 'inline-block' : 'none';
+                            }
+
+                            /* Rung icon giỏ hàng */
+                            var cartSvg = document.querySelector('#miniCartToggle .cart');
+                            if (cartSvg) {
+                              cartSvg.classList.remove('cart-icon-shake');
+                              void cartSvg.offsetWidth; /* reflow để restart animation */
+                              cartSvg.classList.add('cart-icon-shake');
+                              cartSvg.addEventListener('animationend', function() {
+                                cartSvg.classList.remove('cart-icon-shake');
+                              }, { once: true });
+                            }
+
+                            /* Hiện toast thông báo */
+                            var toast  = document.getElementById('cartToast');
+                            var toastMsg  = document.getElementById('cartToastMsg');
+                            var toastIcon = document.getElementById('cartToastIcon');
+                            if (toast && toastMsg) {
+                              toast.classList.remove('error');
+                              if (data.success) {
+                                toastIcon.textContent = '✅';
+                                toastMsg.textContent  = data.message || 'Đã thêm vào giỏ hàng!';
+                              } else {
+                                toast.classList.add('error');
+                                toastIcon.textContent = '⚠️';
+                                toastMsg.textContent  = data.message || 'Không thể thêm!';
+                              }
+                              toast.classList.add('show');
+                              setTimeout(function() { toast.classList.remove('show'); }, 3000);
+                            }
+                          }
+                        })
+                        .catch(function() {
+                          /* Fallback: submit form thường nếu lỗi */
+                          form.submit();
+                        })
+                        .finally(function() {
+                          if (btn) {
+                            setTimeout(function() { btn.disabled = false; }, 1500);
+                          }
+                        });
+                      };
                     })();
                   </script>
                 </ul>

@@ -63,6 +63,7 @@ public class AdminOrderController {
             }
         }
 
+        model.addAttribute("currentPage", "orders");
         model.addAttribute("orders", orders);
         model.addAttribute("selectedStatus", status);
         model.addAttribute("searchKeyword", search);

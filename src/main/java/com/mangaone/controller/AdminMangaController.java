@@ -27,6 +27,7 @@ public class AdminMangaController {
     // LIST
     @GetMapping("/admin/mangas")
     public String list(Model model) {
+        model.addAttribute("currentPage", "mangas");
         model.addAttribute("mangas", mangaRepository.findAll());
         model.addAttribute("categories", categoryRepository.findAll());
         model.addAttribute("publishers", publisherRepository.findAll());
@@ -106,4 +107,4 @@ public class AdminMangaController {
         mangaRepository.deleteById(id);
         return "redirect:/admin/mangas";
     }
-}
+}
