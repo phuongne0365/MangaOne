@@ -60,46 +60,69 @@
           <use xlink:href="#alt-arrow-left-outline"></use>
         </svg>
       </div>
-      <div class="swiper main-swiper">
-        <div class="swiper-wrapper d-flex align-items-center">
-          <div class="swiper-slide">
+      <div class="swiper main-swiper swiper-initialized swiper-horizontal swiper-backface-hidden">
+    <div class="swiper-wrapper d-flex align-items-center" id="swiper-wrapper-43fca8775c3cea93" aria-live="polite">
+        
+        <div class="swiper-slide" role="group" aria-label="1 / 3" data-swiper-slide-index="0" style="width: 1973px;">
             <div class="container">
-              <div class="row d-flex flex-column-reverse flex-md-row align-items-center">
-                <div class="col-md-5 offset-md-1 mt-5 mt-md-0 text-center text-md-start">
-                  <div class="banner-content">
-                    <h2>Thế Giới Truyện Tranh MangaOne</h2>
-                    <p>Khám phá hàng ngàn tựa truyện Manga hot nhất. Giảm giá 30% cho thành viên mới!</p>
-                    <a th:href="@{/mangas}" class="btn mt-3">Mua Ngay</a>
-                  </div>
+                <div class="row d-flex flex-column-reverse flex-md-row align-items-center">
+                    <div class="col-md-5 offset-md-1 mt-5 mt-md-0 text-center text-md-start">
+                        <div class="banner-content">
+                            <h2>Thế Giới Truyện Tranh MangaOne</h2>
+                            <p>Khám phá hàng ngàn tựa truyện Manga hot nhất. Giảm giá 30% cho thành viên mới!</p>
+                            <a href="/mangas" class="btn mt-3">Mua Ngay</a>
+                        </div>
+                    </div>
+                    <div class="col-md-6 text-center">
+                        <div class="image-holder">
+                            <img src="/images/banner-image2.png" class="img-fluid" alt="banner">
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-6 text-center">
-                  <div class="image-holder">
-                    <img th:src="@{/images/banner-image2.png}" class="img-fluid" alt="banner">
-                  </div>
-                </div>
-              </div>
             </div>
-          </div>
-          <div class="swiper-slide">
-            <div class="container">
-              <div class="row d-flex flex-column-reverse flex-md-row align-items-center">
-                <div class="col-md-5 offset-md-1 mt-5 mt-md-0 text-center text-md-start">
-                  <div class="banner-content">
-                    <h2>Tuyệt Đỉnh Shounen</h2>
-                    <p>Cập nhật liên tục các chapter mới nhất của Naruto, One Piece, Bleach...</p>
-                    <a th:href="@{/mangas(category_id=1)}" class="btn mt-3">Xem Bộ Sưu Tập</a>
-                  </div>
-                </div>
-                <div class="col-md-6 text-center">
-                  <div class="image-holder">
-                    <img th:src="@{/images/banner-image1.png}" class="img-fluid" alt="banner">
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
-      </div>
+
+        <div class="swiper-slide" role="group" aria-label="2 / 3" data-swiper-slide-index="1" style="width: 1973px;">
+            <div class="container">
+                <div class="row d-flex flex-column-reverse flex-md-row align-items-center">
+                    <div class="col-md-5 offset-md-1 mt-5 mt-md-0 text-center text-md-start">
+                        <div class="banner-content">
+                            <h2>Tuyệt Đỉnh Shounen</h2>
+                            <p>Cập nhật liên tục các chapter mới nhất của Naruto, One Piece, Bleach...</p>
+                            <a href="/mangas?category_id=1" class="btn mt-3">Xem Bộ Sưu Tập</a>
+                        </div>
+                    </div>
+                    <div class="col-md-6 text-center">
+                        <div class="image-holder">
+                            <img src="/images/banner-image1.png" class="img-fluid" alt="banner">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="swiper-slide" role="group" aria-label="3 / 3" data-swiper-slide-index="2" style="width: 1973px;">
+            <div class="container">
+                <div class="row d-flex flex-column-reverse flex-md-row align-items-center">
+                    <div class="col-md-5 offset-md-1 mt-5 mt-md-0 text-center text-md-start">
+                        <div class="banner-content">
+                            <h2>Siêu Phẩm Manga Bí Ẩn</h2>
+                            <p>Hồi hộp, kịch tính với những tình tiết trinh thám và plot twist đỉnh cao của Conan, Death Note...</p>
+                            <a href="/mangas" class="btn mt-3">Khám Phá Ngay</a>
+                        </div>
+                    </div>
+                    <div class="col-md-6 text-center">
+                        <div class="image-holder">
+                            <img src="/images/banner-image3.png" class="img-fluid" alt="banner">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
+</div>
     </section>
 
     <section id="company-services" class="padding-large pb-0">

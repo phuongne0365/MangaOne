@@ -117,13 +117,18 @@
         $("#video").attr('src',$videoSrc); 
       })
 
-      var mainSwiper = new Swiper(".main-swiper", {
-        speed: 500,
-        navigation: {
-          nextEl: ".main-slider-button-next",
-          prevEl: ".main-slider-button-prev",
-        },
-      });
+	  var mainSwiper = new Swiper(".main-swiper", {
+	          speed: 500,
+	          loop: true, // Thêm vòng lặp vô hạn ở đây để bấm nút không bị liệt
+	          autoplay: {
+	            delay: 5000, // Tự động lướt sau 5 giây
+	            disableOnInteraction: false, // Bấm nút xong vẫn tự chạy tiếp
+	          },
+	          navigation: {
+	            nextEl: ".main-slider-button-next",
+	            prevEl: ".main-slider-button-prev",
+	          },
+	        });
 
       var productSwiper = new Swiper(".product-swiper", {
         spaceBetween: 20,        
@@ -167,11 +172,13 @@
         },
       });
 
-    }); // End of a document ready
+    }); 
 
     window.addEventListener("load", function () {
       const preloader = document.getElementById("preloader");
       preloader.classList.add("hide-preloader");
     });
+	
+	
 
 })(jQuery);
