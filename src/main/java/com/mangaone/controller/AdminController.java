@@ -45,7 +45,7 @@ public class AdminController {
         model.addAttribute("thanhVienBiKhoa",   biBiKhoa);
         model.addAttribute("soQuanTriVien",     adminCount);
 
-        return "admin/admin-users"; // Trả về file giao diện riêng của nhóm Duy
+        return "admin/admin-users"; // Trả về file giao diện riêng 
     }
 
     @PostMapping("/users/toggle-active")

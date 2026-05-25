@@ -35,7 +35,7 @@ public class AdminInventoryController {
         return "redirect:/admin/dashboard";
     }
 
-    // 📊 TRANG DASHBOARD CHỈ CHỨA THỐNG KÊ KHO & BIỂU ĐỒ DOANH THU
+ // 📊 TRANG DASHBOARD CHỈ CHỨA THỐNG KÊ KHO & BIỂU ĐỒ DOANH THU
     @GetMapping("/dashboard")
     public String dashboard(HttpSession session, Model model) {
         if (!isAdmin(session)) return "redirect:/";
@@ -46,15 +46,33 @@ public class AdminInventoryController {
 
         // Thống kê Kho hàng
         model.addAttribute("tongSoTruyen",  inventoryService.demTongSoTruyen());
-        model.addAttribute("soHetHang",     inventoryService.demHetHang());
+        model.addAttribute("soHetHang",      inventoryService.demHetHang());
         model.addAttribute("soSapHetHang",  inventoryService.demSapHetHang());
         model.addAttribute("danhSachSapHet", inventoryService.getSapHetHang());
 
-        // Thống kê doanh thu & Mảng vẽ biểu đồ của Bố Duy
+        // 💰 1. Thống kê tổng doanh thu thực tế từ database 
         Long totalRevenue = orderRepository.calculateTotalRevenue();
-        model.addAttribute("totalRevenue", totalRevenue != null ? totalRevenue : 1884000L);
+        model.addAttribute("totalRevenue", totalRevenue != null ? totalRevenue : 0L);
 
-        Long[] monthlyRevenue = {1200000L, 1884000L, 1500000L, 2200000L, 3100000L, 2600000L, 0L, 0L, 0L, 0L, 0L, 0L};
+        // 📈 2. ĐOẠN ĐÃ ĐỔI: Khớp dữ liệu List<Object[]> của vào mảng 12 tháng
+        Long[] monthlyRevenue = new Long[12];
+        // Khởi tạo tất cả các tháng bằng 0 tránh bị lỗi NULL biểu đồ
+        java.util.Arrays.fill(monthlyRevenue, 0L); 
+
+        // Lấy danh sách doanh thu các tháng từ câu lệnh Query 
+        List<Object[]> rawData = orderRepository.getRevenueByMonth();
+        
+        // Đổ data thực tế vào đúng vị trí tháng trong mảng (Tháng 1 -> Index 0)
+        for (Object[] row : rawData) {
+            if (row[0] != null && row[1] != null) {
+                int month = ((Number) row[0]).intValue(); // Lấy số tháng (1 - 12)
+                Long amount = ((Number) row[1]).longValue(); // Lấy tổng tiền của tháng đó
+                
+                if (month >= 1 && month <= 12) {
+                    monthlyRevenue[month - 1] = amount; // Đưa vào mảng (Index từ 0 đến 11)
+                }
+            }
+        }
         model.addAttribute("monthlyRevenue", monthlyRevenue);
 
         return "admin/dashboard";   

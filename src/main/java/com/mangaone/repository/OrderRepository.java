@@ -36,7 +36,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     Optional<Order> findById(Long orderId);
 
     // =========================================================================
-    // 🔥 PHẦN BỔ SUNG CHO TÍNH NĂNG THỐNG KÊ BIỂU ĐỒ CỦA BỐ DUY
+    // 🔥 PHẦN BỔ SUNG CHO TÍNH NĂNG THỐNG KÊ BIỂU ĐỒ 
     // =========================================================================
     
     // Hàm 1: Tính tổng doanh thu của tất cả các đơn hàng hợp lệ (Đã giao hoặc đang giao)
