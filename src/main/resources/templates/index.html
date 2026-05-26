@@ -1,925 +1,939 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-	<!-- ================fragments/head =============-->
-  <head th:replace="~{fragments/head :: head}"></head>
-  <body>
+<!-- ================fragments/head =============-->
 
-    <div id="preloader" class="preloader-container">
-      <div class="book">
-        <div class="inner">
-          <div class="left"></div>
-          <div class="middle"></div>
-          <div class="right"></div>
-        </div>
-        <ul>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-        </ul>
+<head th:replace="~{fragments/head :: head}"></head>
+
+<body>
+
+  <div id="preloader" class="preloader-container">
+    <div class="book">
+      <div class="inner">
+        <div class="left"></div>
+        <div class="middle"></div>
+        <div class="right"></div>
       </div>
+      <ul>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+      </ul>
     </div>
+  </div>
 
-	<!-- ====== fragment search -->
-    <div th:replace="~{fragments/search-popup :: search-popup}"></div>
+  <!-- ====== fragment search -->
+  <div th:replace="~{fragments/search-popup :: search-popup}"></div>
 
-    <!-- ====== fragment header -->
-    <div th:replace="~{fragments/header :: header(activePage='home')}"></div>
+  <!-- ====== fragment header -->
+  <div th:replace="~{fragments/header :: header(activePage='home')}"></div>
 
-    <!--
+  <!--
       FLAG TỰ ĐỘNG MỞ MODAL: JS sẽ tìm element này để quyết định mở modal.
       th:if="${openLogin}" → element chỉ render ra HTML khi server set openLogin=true
     -->
-    <div id="flag-open-login"    th:if="${openLogin}"    style="display:none;"></div>
-    <div id="flag-open-register" th:if="${openRegister}" style="display:none;"></div>
+  <div id="flag-open-login" th:if="${openLogin}" style="display:none;"></div>
+  <div id="flag-open-register" th:if="${openRegister}" style="display:none;"></div>
 
 
-    <section id="billboard" class="position-relative d-flex align-items-center py-5 bg-light-gray"
-      style="background-image: url(images/banner-image-bg.jpg); background-size: cover; background-repeat: no-repeat; background-position: center; height: 800px;">
-      <div class="position-absolute end-0 pe-0 pe-xxl-5 me-0 me-xxl-5 swiper-next main-slider-button-next">
-        <svg class="chevron-forward-circle d-flex justify-content-center align-items-center p-2" width="80" height="80">
-          <use xlink:href="#alt-arrow-right-outline"></use>
-        </svg>
-      </div>
-      <div class="position-absolute start-0 ps-0 ps-xxl-5 ms-0 ms-xxl-5 swiper-prev main-slider-button-prev">
-        <svg class="chevron-back-circle d-flex justify-content-center align-items-center p-2" width="80" height="80">
-          <use xlink:href="#alt-arrow-left-outline"></use>
-        </svg>
-      </div>
-      <div class="swiper main-swiper swiper-initialized swiper-horizontal swiper-backface-hidden">
-    <div class="swiper-wrapper d-flex align-items-center" id="swiper-wrapper-43fca8775c3cea93" aria-live="polite">
-        
+  <section id="billboard" class="position-relative d-flex align-items-center py-5 bg-light-gray"
+    style="background-image: url(images/banner-image-bg.jpg); background-size: cover; background-repeat: no-repeat; background-position: center; height: 800px;">
+    <div class="position-absolute end-0 pe-0 pe-xxl-5 me-0 me-xxl-5 swiper-next main-slider-button-next">
+      <svg class="chevron-forward-circle d-flex justify-content-center align-items-center p-2" width="80" height="80">
+        <use xlink:href="#alt-arrow-right-outline"></use>
+      </svg>
+    </div>
+    <div class="position-absolute start-0 ps-0 ps-xxl-5 ms-0 ms-xxl-5 swiper-prev main-slider-button-prev">
+      <svg class="chevron-back-circle d-flex justify-content-center align-items-center p-2" width="80" height="80">
+        <use xlink:href="#alt-arrow-left-outline"></use>
+      </svg>
+    </div>
+    <div class="swiper main-swiper swiper-initialized swiper-horizontal swiper-backface-hidden">
+      <div class="swiper-wrapper d-flex align-items-center" id="swiper-wrapper-43fca8775c3cea93" aria-live="polite">
+
         <div class="swiper-slide" role="group" aria-label="1 / 3" data-swiper-slide-index="0" style="width: 1973px;">
-            <div class="container">
-                <div class="row d-flex flex-column-reverse flex-md-row align-items-center">
-                    <div class="col-md-5 offset-md-1 mt-5 mt-md-0 text-center text-md-start">
-                        <div class="banner-content">
-                            <h2>Thế Giới Truyện Tranh MangaOne</h2>
-                            <p>Khám phá hàng ngàn tựa truyện Manga hot nhất. Giảm giá 30% cho thành viên mới!</p>
-                            <a href="/mangas" class="btn mt-3">Mua Ngay</a>
-                        </div>
-                    </div>
-                    <div class="col-md-6 text-center">
-                        <div class="image-holder">
-                            <img src="/images/banner-image2.png" class="img-fluid" alt="banner">
-                        </div>
-                    </div>
+          <div class="container">
+            <div class="row d-flex flex-column-reverse flex-md-row align-items-center">
+              <div class="col-md-5 offset-md-1 mt-5 mt-md-0 text-center text-md-start">
+                <div class="banner-content">
+                  <h2>Thế Giới Truyện Tranh MangaOne</h2>
+                  <p>Khám phá hàng ngàn tựa truyện Manga hot nhất. Giảm giá 30% cho thành viên mới!</p>
+                  <a href="/mangas" class="btn mt-3">Mua Ngay</a>
                 </div>
+              </div>
+              <div class="col-md-6 text-center">
+                <div class="image-holder">
+                  <img src="/images/banner-image2.png" class="img-fluid" alt="banner">
+                </div>
+              </div>
             </div>
+          </div>
         </div>
 
         <div class="swiper-slide" role="group" aria-label="2 / 3" data-swiper-slide-index="1" style="width: 1973px;">
-            <div class="container">
-                <div class="row d-flex flex-column-reverse flex-md-row align-items-center">
-                    <div class="col-md-5 offset-md-1 mt-5 mt-md-0 text-center text-md-start">
-                        <div class="banner-content">
-                            <h2>Tuyệt Đỉnh Shounen</h2>
-                            <p>Cập nhật liên tục các chapter mới nhất của Naruto, One Piece, Bleach...</p>
-                            <a href="/mangas?category_id=1" class="btn mt-3">Xem Bộ Sưu Tập</a>
-                        </div>
-                    </div>
-                    <div class="col-md-6 text-center">
-                        <div class="image-holder">
-                            <img src="/images/banner-image1.png" class="img-fluid" alt="banner">
-                        </div>
-                    </div>
+          <div class="container">
+            <div class="row d-flex flex-column-reverse flex-md-row align-items-center">
+              <div class="col-md-5 offset-md-1 mt-5 mt-md-0 text-center text-md-start">
+                <div class="banner-content">
+                  <h2>Tuyệt Đỉnh Shounen</h2>
+                  <p>Cập nhật liên tục các chapter mới nhất của Naruto, One Piece, Bleach...</p>
+                  <a href="/mangas?category_id=1" class="btn mt-3">Xem Bộ Sưu Tập</a>
                 </div>
+              </div>
+              <div class="col-md-6 text-center">
+                <div class="image-holder">
+                  <img src="/images/banner-image1.png" class="img-fluid" alt="banner">
+                </div>
+              </div>
             </div>
+          </div>
         </div>
 
         <div class="swiper-slide" role="group" aria-label="3 / 3" data-swiper-slide-index="2" style="width: 1973px;">
-            <div class="container">
-                <div class="row d-flex flex-column-reverse flex-md-row align-items-center">
-                    <div class="col-md-5 offset-md-1 mt-5 mt-md-0 text-center text-md-start">
-                        <div class="banner-content">
-                            <h2>Siêu Phẩm Manga Bí Ẩn</h2>
-                            <p>Hồi hộp, kịch tính với những tình tiết trinh thám và plot twist đỉnh cao của Conan, Death Note...</p>
-                            <a href="/mangas" class="btn mt-3">Khám Phá Ngay</a>
-                        </div>
-                    </div>
-                    <div class="col-md-6 text-center">
-                        <div class="image-holder">
-                            <img src="/images/banner-image3.png" class="img-fluid" alt="banner">
-                        </div>
-                    </div>
+          <div class="container">
+            <div class="row d-flex flex-column-reverse flex-md-row align-items-center">
+              <div class="col-md-5 offset-md-1 mt-5 mt-md-0 text-center text-md-start">
+                <div class="banner-content">
+                  <h2>Siêu Phẩm Manga Bí Ẩn</h2>
+                  <p>Hồi hộp, kịch tính với những tình tiết trinh thám và plot twist đỉnh cao của Conan, Death Note...
+                  </p>
+                  <a href="/mangas" class="btn mt-3">Khám Phá Ngay</a>
                 </div>
+              </div>
+              <div class="col-md-6 text-center">
+                <div class="image-holder">
+                  <img src="/images/banner-image3.png" class="img-fluid" alt="banner">
+                </div>
+              </div>
             </div>
+          </div>
         </div>
 
+      </div>
+      <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
     </div>
-    <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
-</div>
-    </section>
+  </section>
 
-    <section id="company-services" class="padding-large pb-0">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-3 col-md-6 pb-3 pb-lg-0">
-            <div class="icon-box d-flex">
-              <div class="icon-box-icon pe-3 pb-3">
-                <svg class="cart-outline">
-                  <use xlink:href="#cart-outline" />
-                </svg>
-              </div>
-              <div class="icon-box-content">
-                <h4 class="card-title mb-1 text-capitalize text-dark">Miễn phí vận chuyển</h4>
-                <p>Giao hàng ngay với địa chỉ trong nội thành.</p>
-              </div>
+  <section id="company-services" class="padding-large pb-0">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-3 col-md-6 pb-3 pb-lg-0">
+          <div class="icon-box d-flex">
+            <div class="icon-box-icon pe-3 pb-3">
+              <svg class="cart-outline">
+                <use xlink:href="#cart-outline" />
+              </svg>
+            </div>
+            <div class="icon-box-content">
+              <h4 class="card-title mb-1 text-capitalize text-dark">Miễn phí vận chuyển</h4>
+              <p>Giao hàng ngay với địa chỉ trong nội thành.</p>
             </div>
           </div>
-          <div class="col-lg-3 col-md-6 pb-3 pb-lg-0">
-            <div class="icon-box d-flex">
-              <div class="icon-box-icon pe-3 pb-3">
-                <svg class="quality">
-                  <use xlink:href="#quality" />
-                </svg>
-              </div>
-              <div class="icon-box-content">
-                <h4 class="card-title mb-1 text-capitalize text-dark">Đảm bảo chất lượng</h4>
-                <p>Được kiểm định bởi giới chuyên gia và nhiều chứng nhận đi cùng.</p>
-              </div>
+        </div>
+        <div class="col-lg-3 col-md-6 pb-3 pb-lg-0">
+          <div class="icon-box d-flex">
+            <div class="icon-box-icon pe-3 pb-3">
+              <svg class="quality">
+                <use xlink:href="#quality" />
+              </svg>
+            </div>
+            <div class="icon-box-content">
+              <h4 class="card-title mb-1 text-capitalize text-dark">Đảm bảo chất lượng</h4>
+              <p>Được kiểm định bởi giới chuyên gia và nhiều chứng nhận đi cùng.</p>
             </div>
           </div>
-          <div class="col-lg-3 col-md-6 pb-3 pb-lg-0">
-            <div class="icon-box d-flex">
-              <div class="icon-box-icon pe-3 pb-3">
-                <svg class="price-tag">
-                  <use xlink:href="#price-tag" />
-                </svg>
-              </div>
-              <div class="icon-box-content">
-                <h4 class="card-title mb-1 text-capitalize text-dark">Khuyến mãi hàng ngày</h4>
-                <p>Nhận được 1 tag truyện tranh với đơn hàng trên 1.000.000đ.</p>
-              </div>
+        </div>
+        <div class="col-lg-3 col-md-6 pb-3 pb-lg-0">
+          <div class="icon-box d-flex">
+            <div class="icon-box-icon pe-3 pb-3">
+              <svg class="price-tag">
+                <use xlink:href="#price-tag" />
+              </svg>
+            </div>
+            <div class="icon-box-content">
+              <h4 class="card-title mb-1 text-capitalize text-dark">Khuyến mãi hàng ngày</h4>
+              <p>Nhận được 1 tag truyện tranh với đơn hàng trên 1.000.000đ.</p>
             </div>
           </div>
-          <div class="col-lg-3 col-md-6 pb-3 pb-lg-0">
-            <div class="icon-box d-flex">
-              <div class="icon-box-icon pe-3 pb-3">
-                <svg class="shield-plus">
-                  <use xlink:href="#shield-plus" />
-                </svg>
-              </div>
-              <div class="icon-box-content">
-                <h4 class="card-title mb-1 text-capitalize text-dark">Đảm bảo giao dịch 100%</h4>
-                <p>Phương thức thanh toán uy tín và hỗ trợ đổi hàng nếu hàng bị lỗi.</p>
-              </div>
+        </div>
+        <div class="col-lg-3 col-md-6 pb-3 pb-lg-0">
+          <div class="icon-box d-flex">
+            <div class="icon-box-icon pe-3 pb-3">
+              <svg class="shield-plus">
+                <use xlink:href="#shield-plus" />
+              </svg>
+            </div>
+            <div class="icon-box-content">
+              <h4 class="card-title mb-1 text-capitalize text-dark">Đảm bảo giao dịch 100%</h4>
+              <p>Phương thức thanh toán uy tín và hỗ trợ đổi hàng nếu hàng bị lỗi.</p>
             </div>
           </div>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-   <section id="best-selling-items" class="position-relative padding-large">
+  <section id="best-selling-items" class="position-relative padding-large">
     <div class="container position-relative">
-        <div class="section-title d-md-flex justify-content-between align-items-center mb-4">
-            <h3 class="d-flex align-items-center fw-bold">Manga Bán Chạy Nhất</h3>
-            <a th:href="@{/mangas}" class="btn btn-outline-dark rounded-pill px-4" style="font-weight: 700;">Xem Tất Cả</a>
-        </div>
+      <div class="section-title d-md-flex justify-content-between align-items-center mb-4">
+        <h3 class="d-flex align-items-center fw-bold">Manga Bán Chạy Nhất</h3>
+        <a th:href="@{/mangas}" class="btn btn-outline-dark rounded-pill px-4" style="font-weight: 700;">Xem Tất Cả</a>
+      </div>
 
-        <div class="swiper-prev product-slider-button-prev position-absolute top-50 start-0 translate-middle-y"
-             style="z-index: 100; cursor: pointer; margin-left: -30px !important;">
-            <svg class="chevron-back-circle" width="50" height="50" style="fill: #808080 !important;">
-                <use xlink:href="#alt-arrow-left-outline"></use>
-            </svg>
-        </div>
+      <div class="swiper-prev product-slider-button-prev position-absolute top-50 start-0 translate-middle-y"
+        style="z-index: 100; cursor: pointer; margin-left: -30px !important;">
+        <svg class="chevron-back-circle" width="50" height="50" style="fill: #808080 !important;">
+          <use xlink:href="#alt-arrow-left-outline"></use>
+        </svg>
+      </div>
 
-        <div class="swiper-next product-slider-button-next position-absolute top-50 end-0 translate-middle-y"
-             style="z-index: 100; cursor: pointer; margin-right: -30px !important;">
-            <svg class="chevron-forward-circle" width="50" height="50" style="fill: #808080 !important;">
-                <use xlink:href="#alt-arrow-right-outline"></use>
-            </svg>
-        </div>
+      <div class="swiper-next product-slider-button-next position-absolute top-50 end-0 translate-middle-y"
+        style="z-index: 100; cursor: pointer; margin-right: -30px !important;">
+        <svg class="chevron-forward-circle" width="50" height="50" style="fill: #808080 !important;">
+          <use xlink:href="#alt-arrow-right-outline"></use>
+        </svg>
+      </div>
 
-        <div class="swiper product-swiper">
-            <div class="swiper-wrapper">
-                <div class="swiper-slide" th:each="m : ${bestSellers}">
-                    <div class="card position-relative p-3 border rounded-4 h-100 shadow-sm border-0 bg-white">
-                        
-                        <div class="img-container position-relative overflow-hidden rounded-3" 
-                             style="background-color: #f8f9fa; border: 1px solid #f1f5f9;">
-                            <img th:src="${m.image != null ? m.image : '/images/default-manga.png'}" class="img-fluid d-block mx-auto" alt="manga item"
-                                 style="height: 300px; width: 100%; object-fit: contain; transition: transform 0.5s ease;">
-                            
-                            <div class="overlay-buttons d-flex flex-row justify-content-center align-items-end gap-2 pb-3">
-                                <a th:href="@{/manga/{id}(id=${m.id})}" class="btn btn-light btn-sm rounded-pill px-3 fw-bold shadow-sm">
-                                    <i class="bi bi-eye"></i> Xem
-                                </a>
-                                <form th:action="@{/cart/add}" method="post" class="m-0" onsubmit="addToCartAjax(this,event)">
-                                    <input type="hidden" name="mangaId" th:value="${m.id}">
-                                    <button type="submit" class="btn btn-danger btn-sm rounded-pill px-3 fw-bold shadow-sm">
-                                        <i class="bi bi-cart-plus"></i> Thêm
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
+      <div class="swiper product-swiper">
+        <div class="swiper-wrapper">
+          <div class="swiper-slide" th:each="m : ${bestSellers}">
+            <div class="card position-relative p-3 border rounded-4 h-100 shadow-sm border-0 bg-white">
 
-                        <h6 class="mt-3 mb-0 fw-bold text-truncate">
-                            <span th:text="${m.title}" class="text-dark" style="font-size: 1.05rem;">Tên Manga</span>
-                        </h6>
+              <div class="img-container position-relative overflow-hidden rounded-3"
+                style="background-color: #f8f9fa; border: 1px solid #f1f5f9;">
+                <img th:src="${m.image != null ? m.image : '/images/default-manga.png'}"
+                  class="img-fluid d-block mx-auto" alt="manga item"
+                  style="height: 300px; width: 100%; object-fit: contain; transition: transform 0.5s ease;">
 
-                        <div class="review-content d-flex justify-content-between align-items-center mb-2">
-                            <p class="my-2 fs-6 text-black-50 text-truncate" style="max-width: 70%;" th:text="${m.author}">Tác giả</p>
-                            <div class="rating text-warning d-flex">
-                                <svg class="star star-fill" width="12" height="12"><use xlink:href="#star-fill"></use></svg>
-                                <svg class="star star-fill" width="12" height="12"><use xlink:href="#star-fill"></use></svg>
-                                <svg class="star star-fill" width="12" height="12"><use xlink:href="#star-fill"></use></svg>
-                            </div>
-                        </div>
-
-                        <span class="price text-danger fw-bold fs-5 mt-auto"
-                              th:text="${#numbers.formatDecimal(m.price, 0, 'COMMA', 0, 'POINT')} + ' đ'"></span>
-                    </div>
+                <div class="overlay-buttons d-flex flex-row justify-content-center align-items-end gap-2 pb-3">
+                  <a th:href="@{/manga/{id}(id=${m.id})}"
+                    class="btn btn-light btn-sm rounded-pill px-3 fw-bold shadow-sm">
+                    <i class="bi bi-eye"></i> Xem
+                  </a>
+                  <form th:action="@{/cart/add}" method="post" class="m-0" onsubmit="addToCartAjax(this,event)">
+                    <input type="hidden" name="mangaId" th:value="${m.id}">
+                    <button type="submit" class="btn btn-danger btn-sm rounded-pill px-3 fw-bold shadow-sm">
+                      <i class="bi bi-cart-plus"></i> Thêm
+                    </button>
+                  </form>
                 </div>
+              </div>
+
+              <h6 class="mt-3 mb-0 fw-bold text-truncate">
+                <span th:text="${m.title}" class="text-dark" style="font-size: 1.05rem;">Tên Manga</span>
+              </h6>
+
+              <div class="review-content d-flex justify-content-between align-items-center mb-2">
+                <p class="my-2 fs-6 text-black-50 text-truncate" style="max-width: 70%;" th:text="${m.author}">Tác giả
+                </p>
+                <div class="rating text-warning d-flex">
+                  <svg class="star star-fill" width="12" height="12">
+                    <use xlink:href="#star-fill"></use>
+                  </svg>
+                  <svg class="star star-fill" width="12" height="12">
+                    <use xlink:href="#star-fill"></use>
+                  </svg>
+                  <svg class="star star-fill" width="12" height="12">
+                    <use xlink:href="#star-fill"></use>
+                  </svg>
+                </div>
+              </div>
+
+              <span class="price text-danger fw-bold fs-5 mt-auto"
+                th:text="${#numbers.formatDecimal(m.price, 0, 'COMMA', 0, 'POINT')} + ' đ'"></span>
             </div>
+          </div>
         </div>
+      </div>
     </div>
-</section>
-    <section id="limited-offer" class="padding-large"
-      style="background-image: url(images/banner-image-bg-1.jpg); background-size: cover; background-repeat: no-repeat; background-position: center; height: 800px;">
-      <div class="container">
-        <div class="row d-flex align-items-center">
-          <div class="col-md-6 text-center">
-            <div class="image-holder">
-              <img src="images/banner-image3.png" class="img-fluid" alt="banner">
-            </div>
-          </div>
-          <div class="col-md-5 offset-md-1 mt-5 mt-md-0 text-center text-md-start">
-            <h2>Khuyến mãi 30% với tất cả các truyện. Nhanh nào !!!</h2>
-            <div id="countdown-clock" class="text-dark d-flex align-items-center my-3">
-              <div class="time d-grid pe-3">
-                <span class="days fs-1 fw-normal"></span>
-                <small>Days</small>
-              </div>
-              <span class="fs-1 text-primary">:</span>
-              <div class="time d-grid pe-3 ps-3">
-                <span class="hours fs-1 fw-normal"></span>
-                <small>Hrs</small>
-              </div>
-              <span class="fs-1 text-primary">:</span>
-              <div class="time d-grid pe-3 ps-3">
-                <span class="minutes fs-1 fw-normal"></span>
-                <small>Min</small>
-              </div>
-              <span class="fs-1 text-primary">:</span>
-              <div class="time d-grid ps-3">
-                <span class="seconds fs-1 fw-normal"></span>
-                <small>Sec</small>
-              </div>
-            </div>
-            <a href="shop.html" class="btn mt-3">Shop Collection</a>
+  </section>
+  <section id="limited-offer" class="padding-large"
+    style="background-image: url(images/banner-image-bg-1.jpg); background-size: cover; background-repeat: no-repeat; background-position: center; height: 800px;">
+    <div class="container">
+      <div class="row d-flex align-items-center">
+        <div class="col-md-6 text-center">
+          <div class="image-holder">
+            <img src="images/banner-image3.png" class="img-fluid" alt="banner">
           </div>
         </div>
+        <div class="col-md-5 offset-md-1 mt-5 mt-md-0 text-center text-md-start">
+          <h2>Khuyến mãi 30% với tất cả các truyện. Nhanh nào !!!</h2>
+          <div id="countdown-clock" class="text-dark d-flex align-items-center my-3">
+            <div class="time d-grid pe-3">
+              <span class="days fs-1 fw-normal"></span>
+              <small>Days</small>
+            </div>
+            <span class="fs-1 text-primary">:</span>
+            <div class="time d-grid pe-3 ps-3">
+              <span class="hours fs-1 fw-normal"></span>
+              <small>Hrs</small>
+            </div>
+            <span class="fs-1 text-primary">:</span>
+            <div class="time d-grid pe-3 ps-3">
+              <span class="minutes fs-1 fw-normal"></span>
+              <small>Min</small>
+            </div>
+            <span class="fs-1 text-primary">:</span>
+            <div class="time d-grid ps-3">
+              <span class="seconds fs-1 fw-normal"></span>
+              <small>Sec</small>
+            </div>
+          </div>
+          <a href="shop.html" class="btn mt-3">Shop Collection</a>
+        </div>
       </div>
-      </div>
-    </section>
+    </div>
+    </div>
+  </section>
 
-    <section id="items-listing" class="padding-large">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-6 mb-4 mb-lg-0 col-lg-3">
-            <div class="featured border rounded-3 p-4">
-              <div class="section-title overflow-hidden mb-5 mt-2">
-                <h3 class="d-flex flex-column mb-0">Nổi bật</h3>
-              </div>
-              <div class="items-lists">
-                <div class="item d-flex">
-                  <img src="images/product-item2.png" class="img-fluid shadow-sm" alt="product item">
-                  <div class="item-content ms-3">
-                    <h6 class="mb-0 fw-bold"><a href="single-product.html">Echoes of the Ancients</a></h6>
-                    <div class="review-content d-flex">
-                      <p class="my-2 me-2 fs-6 text-black-50">Lauren Asher</p>
+  <section id="items-listing" class="padding-large">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 mb-4 mb-lg-0 col-lg-3">
+          <div class="featured border rounded-3 p-4">
+            <div class="section-title overflow-hidden mb-5 mt-2">
+              <h3 class="d-flex flex-column mb-0">Nổi bật</h3>
+            </div>
+            <div class="items-lists">
+              <div class="item d-flex">
+                <img src="images/product-item2.png" class="img-fluid shadow-sm" alt="product item">
+                <div class="item-content ms-3">
+                  <h6 class="mb-0 fw-bold"><a href="single-product.html">Echoes of the Ancients</a></h6>
+                  <div class="review-content d-flex">
+                    <p class="my-2 me-2 fs-6 text-black-50">Lauren Asher</p>
 
-                      <div class="rating text-warning d-flex align-items-center">
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                      </div>
+                    <div class="rating text-warning d-flex align-items-center">
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
                     </div>
-                    <span class="price text-primary fw-bold mb-2 fs-5">$870</span>
                   </div>
+                  <span class="price text-primary fw-bold mb-2 fs-5">$870</span>
                 </div>
-                <hr class="gray-400">
-                <div class="item d-flex">
-                  <img src="images/product-item1.png" class="img-fluid shadow-sm" alt="product item">
-                  <div class="item-content ms-3">
-                    <h6 class="mb-0 fw-bold"><a href="single-product.html">The Midnight Garden</a></h6>
-                    <div class="review-content d-flex">
-                      <p class="my-2 me-2 fs-6 text-black-50">Lauren Asher</p>
-                      <div class="rating text-warning d-flex align-items-center">
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                      </div>
+              </div>
+              <hr class="gray-400">
+              <div class="item d-flex">
+                <img src="images/product-item1.png" class="img-fluid shadow-sm" alt="product item">
+                <div class="item-content ms-3">
+                  <h6 class="mb-0 fw-bold"><a href="single-product.html">The Midnight Garden</a></h6>
+                  <div class="review-content d-flex">
+                    <p class="my-2 me-2 fs-6 text-black-50">Lauren Asher</p>
+                    <div class="rating text-warning d-flex align-items-center">
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
                     </div>
-                    <span class="price text-primary fw-bold mb-2 fs-5">$870</span>
                   </div>
+                  <span class="price text-primary fw-bold mb-2 fs-5">$870</span>
                 </div>
-                <hr>
-                <div class="item d-flex">
-                  <img src="images/product-item3.png" class="img-fluid shadow-sm" alt="product item">
-                  <div class="item-content ms-3">
-                    <h6 class="mb-0 fw-bold"><a href="single-product.html">Shadow of the Serpent</a></h6>
-                    <div class="review-content d-flex">
-                      <p class="my-2 me-2 fs-6 text-black-50">Lauren Asher</p>
+              </div>
+              <hr>
+              <div class="item d-flex">
+                <img src="images/product-item3.png" class="img-fluid shadow-sm" alt="product item">
+                <div class="item-content ms-3">
+                  <h6 class="mb-0 fw-bold"><a href="single-product.html">Shadow of the Serpent</a></h6>
+                  <div class="review-content d-flex">
+                    <p class="my-2 me-2 fs-6 text-black-50">Lauren Asher</p>
 
-                      <div class="rating text-warning d-flex align-items-center">
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                      </div>
+                    <div class="rating text-warning d-flex align-items-center">
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
                     </div>
-                    <span class="price text-primary fw-bold mb-2 fs-5">$870</span>
                   </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6 mb-4 mb-lg-0 col-lg-3">
-            <div class="latest-items border rounded-3 p-4">
-              <div class="section-title overflow-hidden mb-5 mt-2">
-                <h3 class="d-flex flex-column mb-0">Truyện mới nhất</h3>
-              </div>
-              <div class="items-lists">
-                <div class="item d-flex">
-                  <img src="images/product-item4.png" class="img-fluid shadow-sm" alt="product item">
-                  <div class="item-content ms-3">
-                    <h6 class="mb-0 fw-bold"><a href="single-product.html">Whispering Winds</a></h6>
-                    <div class="review-content d-flex">
-                      <p class="my-2 me-2 fs-6 text-black-50">Lauren Asher</p>
-                      <div class="rating text-warning d-flex align-items-center">
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                      </div>
-                    </div>
-                    <span class="price text-primary fw-bold mb-2 fs-5">$870</span>
-                  </div>
-                </div>
-                <hr class="gray-400">
-                <div class="item d-flex">
-                  <img src="images/product-item5.png" class="img-fluid shadow-sm" alt="product item">
-                  <div class="item-content ms-3">
-                    <h6 class="mb-0 fw-bold"><a href="single-product.html">The Forgotten Realm</a></h6>
-                    <div class="review-content d-flex">
-                      <p class="my-2 me-2 fs-6 text-black-50">Lauren Asher</p>
-                      <div class="rating text-warning d-flex align-items-center">
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                      </div>
-                    </div>
-                    <span class="price text-primary fw-bold mb-2 fs-5">$870</span>
-                  </div>
-                </div>
-                <hr>
-                <div class="item d-flex">
-                  <img src="images/product-item6.png" class="img-fluid shadow-sm" alt="product item">
-                  <div class="item-content ms-3">
-                    <h6 class="mb-0 fw-bold"><a href="single-product.html">Moonlit Secrets</a></h6>
-                    <div class="review-content d-flex">
-                      <p class="my-2 me-2 fs-6 text-black-50">Lauren Asher</p>
-                      <div class="rating text-warning d-flex align-items-center">
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                      </div>
-                    </div>
-                    <span class="price text-primary fw-bold mb-2 fs-5">$870</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6 mb-4 mb-lg-0 col-lg-3">
-            <div class="best-reviewed border rounded-3 p-4">
-              <div class="section-title overflow-hidden mb-5 mt-2">
-                <h3 class="d-flex flex-column mb-0">Được đánh giá cao</h3>
-              </div>
-              <div class="items-lists">
-                <div class="item d-flex">
-                  <img src="images/product-item7.png" class="img-fluid shadow-sm" alt="product item">
-                  <div class="item-content ms-3">
-                    <h6 class="mb-0 fw-bold"><a href="single-product.html">The Crystal Key</a></h6>
-                    <div class="review-content d-flex">
-                      <p class="my-2 me-2 fs-6 text-black-50">Lauren Asher</p>
-                      <div class="rating text-warning d-flex align-items-center">
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                      </div>
-                    </div>
-                    <span class="price text-primary fw-bold mb-2 fs-5">$870</span>
-                  </div>
-                </div>
-                <hr class="gray-400">
-                <div class="item d-flex">
-                  <img src="images/product-item8.png" class="img-fluid shadow-sm" alt="product item">
-                  <div class="item-content ms-3">
-                    <h6 class="mb-0 fw-bold"><a href="single-product.html">Starlight Sonata</a></h6>
-                    <div class="review-content d-flex">
-                      <p class="my-2 me-2 fs-6 text-black-50">Lauren Asher</p>
-                      <div class="rating text-warning d-flex align-items-center">
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                      </div>
-                    </div>
-                    <span class="price text-primary fw-bold mb-2 fs-5">$870</span>
-                  </div>
-                </div>
-                <hr>
-                <div class="item d-flex">
-                  <img src="images/product-item9.png" class="img-fluid shadow-sm" alt="product item">
-                  <div class="item-content ms-3">
-                    <h6 class="mb-0 fw-bold"><a href="single-product.html">Tales of the Enchanted Forest</a></h6>
-                    <div class="review-content d-flex">
-                      <p class="my-2 me-2 fs-6 text-black-50">Lauren Asher</p>
-                      <div class="rating text-warning d-flex align-items-center">
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                      </div>
-                    </div>
-                    <span class="price text-primary fw-bold mb-2 fs-5">$870</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6 mb-4 mb-lg-0 col-lg-3">
-            <div class="on-sale border rounded-3 p-4">
-              <div class="section-title overflow-hidden mb-5 mt-2">
-                <h3 class="d-flex flex-column mb-0">Đang khuyến mãi</h3>
-              </div>
-              <div class="items-lists">
-                <div class="item d-flex">
-                  <img src="images/product-item10.png" class="img-fluid shadow-sm" alt="product item">
-                  <div class="item-content ms-3">
-                    <h6 class="mb-0 fw-bold"><a href="single-product.html">The Phoenix Chronicles</a></h6>
-                    <div class="review-content d-flex">
-                      <p class="my-2 me-2 fs-6 text-black-50">Lauren Asher</p>
-                      <div class="rating text-warning d-flex align-items-center">
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                      </div>
-                    </div>
-                    <span class="price text-primary fw-bold mb-2 fs-5"><s class="text-black-50">$1666</s>
-                      $999</span>
-                  </div>
-                </div>
-                <hr class="gray-400">
-                <div class="item d-flex">
-                  <img src="images/product-item11.png" class="img-fluid shadow-sm" alt="product item">
-                  <div class="item-content ms-3">
-                    <h6 class="mb-0 fw-bold"><a href="single-product.html">Dreams of Avalon</a></h6>
-                    <div class="review-content d-flex">
-                      <p class="my-2 me-2 fs-6 text-black-50">Lauren Asher</p>
-                      <div class="rating text-warning d-flex align-items-center">
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                      </div>
-                    </div>
-                    <span class="price text-primary fw-bold mb-2 fs-5"><s class="text-black-50">$500</s>
-                      $410</span>
-                  </div>
-                </div>
-                <hr>
-                <div class="item d-flex">
-                  <img src="images/product-item12.png" class="img-fluid shadow-sm" alt="product item">
-                  <div class="item-content ms-3">
-                    <h6 class="mb-0 fw-bold"><a href="single-product.html">Legends of the Dragon Isles</a></h6>
-                    <div class="review-content d-flex">
-                      <p class="my-2 me-2 fs-6 text-black-50">Lauren Asher</p>
-                      <div class="rating text-warning d-flex align-items-center">
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                        <svg class="star star-fill">
-                          <use xlink:href="#star-fill"></use>
-                        </svg>
-                      </div>
-                    </div>
-                    <span class="price text-primary fw-bold mb-2 fs-5"><s class="text-black-50">$600</s>
-                      $500</span>
-                  </div>
+                  <span class="price text-primary fw-bold mb-2 fs-5">$870</span>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
-
-    <section id="categories" class="padding-large pt-0">
-      <div class="container">
-        <div class="section-title overflow-hidden mb-4">
-          <h3 class="d-flex align-items-center">Thể loại nổi bật</h3>
+        <div class="col-md-6 mb-4 mb-lg-0 col-lg-3">
+          <div class="latest-items border rounded-3 p-4">
+            <div class="section-title overflow-hidden mb-5 mt-2">
+              <h3 class="d-flex flex-column mb-0">Truyện mới nhất</h3>
+            </div>
+            <div class="items-lists">
+              <div class="item d-flex">
+                <img src="images/product-item4.png" class="img-fluid shadow-sm" alt="product item">
+                <div class="item-content ms-3">
+                  <h6 class="mb-0 fw-bold"><a href="single-product.html">Whispering Winds</a></h6>
+                  <div class="review-content d-flex">
+                    <p class="my-2 me-2 fs-6 text-black-50">Lauren Asher</p>
+                    <div class="rating text-warning d-flex align-items-center">
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                    </div>
+                  </div>
+                  <span class="price text-primary fw-bold mb-2 fs-5">$870</span>
+                </div>
+              </div>
+              <hr class="gray-400">
+              <div class="item d-flex">
+                <img src="images/product-item5.png" class="img-fluid shadow-sm" alt="product item">
+                <div class="item-content ms-3">
+                  <h6 class="mb-0 fw-bold"><a href="single-product.html">The Forgotten Realm</a></h6>
+                  <div class="review-content d-flex">
+                    <p class="my-2 me-2 fs-6 text-black-50">Lauren Asher</p>
+                    <div class="rating text-warning d-flex align-items-center">
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                    </div>
+                  </div>
+                  <span class="price text-primary fw-bold mb-2 fs-5">$870</span>
+                </div>
+              </div>
+              <hr>
+              <div class="item d-flex">
+                <img src="images/product-item6.png" class="img-fluid shadow-sm" alt="product item">
+                <div class="item-content ms-3">
+                  <h6 class="mb-0 fw-bold"><a href="single-product.html">Moonlit Secrets</a></h6>
+                  <div class="review-content d-flex">
+                    <p class="my-2 me-2 fs-6 text-black-50">Lauren Asher</p>
+                    <div class="rating text-warning d-flex align-items-center">
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                    </div>
+                  </div>
+                  <span class="price text-primary fw-bold mb-2 fs-5">$870</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="row">
-          <div class="col-md-4">
-            <div class="card mb-4 border-0 rounded-3 position-relative">
-              <a href="shop.html">
-                <img th:src="@{/images/category1.jpg}" class="img-fluid rounded-3" alt="category">
-                <h6 class=" position-absolute bottom-0 bg-primary m-4 py-2 px-3 rounded-3"><a href="shop.html" class="text-white">Hành Động</a></h6>
-              </a>
+        <div class="col-md-6 mb-4 mb-lg-0 col-lg-3">
+          <div class="best-reviewed border rounded-3 p-4">
+            <div class="section-title overflow-hidden mb-5 mt-2">
+              <h3 class="d-flex flex-column mb-0">Được đánh giá cao</h3>
+            </div>
+            <div class="items-lists">
+              <div class="item d-flex">
+                <img src="images/product-item7.png" class="img-fluid shadow-sm" alt="product item">
+                <div class="item-content ms-3">
+                  <h6 class="mb-0 fw-bold"><a href="single-product.html">The Crystal Key</a></h6>
+                  <div class="review-content d-flex">
+                    <p class="my-2 me-2 fs-6 text-black-50">Lauren Asher</p>
+                    <div class="rating text-warning d-flex align-items-center">
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                    </div>
+                  </div>
+                  <span class="price text-primary fw-bold mb-2 fs-5">$870</span>
+                </div>
+              </div>
+              <hr class="gray-400">
+              <div class="item d-flex">
+                <img src="images/product-item8.png" class="img-fluid shadow-sm" alt="product item">
+                <div class="item-content ms-3">
+                  <h6 class="mb-0 fw-bold"><a href="single-product.html">Starlight Sonata</a></h6>
+                  <div class="review-content d-flex">
+                    <p class="my-2 me-2 fs-6 text-black-50">Lauren Asher</p>
+                    <div class="rating text-warning d-flex align-items-center">
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                    </div>
+                  </div>
+                  <span class="price text-primary fw-bold mb-2 fs-5">$870</span>
+                </div>
+              </div>
+              <hr>
+              <div class="item d-flex">
+                <img src="images/product-item9.png" class="img-fluid shadow-sm" alt="product item">
+                <div class="item-content ms-3">
+                  <h6 class="mb-0 fw-bold"><a href="single-product.html">Tales of the Enchanted Forest</a></h6>
+                  <div class="review-content d-flex">
+                    <p class="my-2 me-2 fs-6 text-black-50">Lauren Asher</p>
+                    <div class="rating text-warning d-flex align-items-center">
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                    </div>
+                  </div>
+                  <span class="price text-primary fw-bold mb-2 fs-5">$870</span>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="col-md-4">
-            <div class="card text-center mb-4 border-0 rounded-3">
-              <a href="shop.html">
-                <img th:src="@{/images/category2.jpg}" class="img-fluid rounded-3" alt="category">
-                <h6 class=" position-absolute bottom-0 bg-primary m-4 py-2 px-3 rounded-3"><a href="shop.html" class="text-white">Phiêu Lưu</a></h6>
-              </a>
+        </div>
+        <div class="col-md-6 mb-4 mb-lg-0 col-lg-3">
+          <div class="on-sale border rounded-3 p-4">
+            <div class="section-title overflow-hidden mb-5 mt-2">
+              <h3 class="d-flex flex-column mb-0">Đang khuyến mãi</h3>
             </div>
-          </div>
-          <div class="col-md-4">
-            <div class="card text-center mb-4 border-0 rounded-3">
-              <a href="shop.html">
-                <img th:src="@{/images/category3.jpg}" class="img-fluid rounded-3" alt="category">
-                <h6 class=" position-absolute bottom-0 bg-primary m-4 py-2 px-3 rounded-3"><a href="shop.html" class="text-white">Học Đường</a></h6>
-              </a>
+            <div class="items-lists">
+              <div class="item d-flex">
+                <img src="images/product-item10.png" class="img-fluid shadow-sm" alt="product item">
+                <div class="item-content ms-3">
+                  <h6 class="mb-0 fw-bold"><a href="single-product.html">The Phoenix Chronicles</a></h6>
+                  <div class="review-content d-flex">
+                    <p class="my-2 me-2 fs-6 text-black-50">Lauren Asher</p>
+                    <div class="rating text-warning d-flex align-items-center">
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                    </div>
+                  </div>
+                  <span class="price text-primary fw-bold mb-2 fs-5"><s class="text-black-50">$1666</s>
+                    $999</span>
+                </div>
+              </div>
+              <hr class="gray-400">
+              <div class="item d-flex">
+                <img src="images/product-item11.png" class="img-fluid shadow-sm" alt="product item">
+                <div class="item-content ms-3">
+                  <h6 class="mb-0 fw-bold"><a href="single-product.html">Dreams of Avalon</a></h6>
+                  <div class="review-content d-flex">
+                    <p class="my-2 me-2 fs-6 text-black-50">Lauren Asher</p>
+                    <div class="rating text-warning d-flex align-items-center">
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                    </div>
+                  </div>
+                  <span class="price text-primary fw-bold mb-2 fs-5"><s class="text-black-50">$500</s>
+                    $410</span>
+                </div>
+              </div>
+              <hr>
+              <div class="item d-flex">
+                <img src="images/product-item12.png" class="img-fluid shadow-sm" alt="product item">
+                <div class="item-content ms-3">
+                  <h6 class="mb-0 fw-bold"><a href="single-product.html">Legends of the Dragon Isles</a></h6>
+                  <div class="review-content d-flex">
+                    <p class="my-2 me-2 fs-6 text-black-50">Lauren Asher</p>
+                    <div class="rating text-warning d-flex align-items-center">
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                      <svg class="star star-fill">
+                        <use xlink:href="#star-fill"></use>
+                      </svg>
+                    </div>
+                  </div>
+                  <span class="price text-primary fw-bold mb-2 fs-5"><s class="text-black-50">$600</s>
+                    $500</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <div th:replace="~{fragments/customer-review :: customer-review}"></div>
-
-    <section id="latest-posts" class="padding-large">
-      <div class="container">
-        <div class="section-title d-md-flex justify-content-between align-items-center mb-4">
-          <h3 class="d-flex align-items-center">Bài đăng sớm nhất</h3>
-          <a href="shop.html" class="btn">View All</a>
+  <section id="categories" class="padding-large pt-0">
+    <div class="container">
+      <div class="section-title overflow-hidden mb-4">
+        <h3 class="d-flex align-items-center">Thể loại nổi bật</h3>
+      </div>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="card mb-4 border-0 rounded-3 position-relative">
+            <a href="shop.html">
+              <img th:src="@{/images/category1.jpg}" class="img-fluid rounded-3" alt="category">
+              <h6 class=" position-absolute bottom-0 bg-primary m-4 py-2 px-3 rounded-3"><a href="shop.html"
+                  class="text-white">Hành Động</a></h6>
+            </a>
+          </div>
         </div>
-        <div class="row">
-		  <div class="col-md-3 posts mb-4" th:each="p : ${listPosts}">
-		    
-		    <img th:src="@{'/images/' + ${p.image}}" alt="post image" class="img-fluid rounded-3">
-		    
-		    <a href="blog.html" class="fs-6 text-primary" th:text="${p.category}">Books</a>
-		    
-		    <h4 class="card-title mb-2 text-capitalize text-dark">
-		      <a href="single-post.html" th:text="${p.title}">Tiêu đề bài viết</a>
-		    </h4>
-		    
-		    <p class="mb-2">
-		      <span th:text="${p.shortDescription}">Nội dung mô tả ngắn...</span>
-		      <span><a class="text-decoration-underline text-black-50" href="single-post.html">Read More</a></span>
-		    </p>
-		    
-		  </div>    
+        <div class="col-md-4">
+          <div class="card text-center mb-4 border-0 rounded-3">
+            <a href="shop.html">
+              <img th:src="@{/images/category2.jpg}" class="img-fluid rounded-3" alt="category">
+              <h6 class=" position-absolute bottom-0 bg-primary m-4 py-2 px-3 rounded-3"><a href="shop.html"
+                  class="text-white">Phiêu Lưu</a></h6>
+            </a>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card text-center mb-4 border-0 rounded-3">
+            <a href="shop.html">
+              <img th:src="@{/images/category3.jpg}" class="img-fluid rounded-3" alt="category">
+              <h6 class=" position-absolute bottom-0 bg-primary m-4 py-2 px-3 rounded-3"><a href="shop.html"
+                  class="text-white">Học Đường</a></h6>
+            </a>
+          </div>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <div th:replace="~{fragments/instagram :: instagram}"></div>
+  <div th:replace="~{fragments/customer-review :: customer-review}"></div>
 
-    <!-- ================================fragment footer============================= -->
-    <div th:replace="~{fragments/footer :: footer}"></div>
+  <section id="latest-posts" class="padding-large">
+    <div class="container">
+      <div class="section-title d-md-flex justify-content-between align-items-center mb-4">
+        <h3 class="d-flex align-items-center">Bài đăng sớm nhất</h3>
+        <a href="shop.html" class="btn">View All</a>
+      </div>
+      <div class="row">
+        <div class="col-md-3 posts mb-4" th:each="p : ${listPosts}">
 
-    <!-- ===== CHATBOT AI ===== -->
-    <div id="chatbot-widget" style="position:fixed;bottom:24px;right:24px;z-index:9999;font-family:'Nunito',sans-serif;">
-      <button id="chatbot-toggle" onclick="toggleChatbot()"
-        style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#e94560,#c73652);
+          <img th:src="@{'/images/' + ${p.image}}" alt="post image" class="img-fluid rounded-3">
+
+          <a href="blog.html" class="fs-6 text-primary" th:text="${p.category}">Books</a>
+
+          <h4 class="card-title mb-2 text-capitalize text-dark">
+            <a href="single-post.html" th:text="${p.title}">Tiêu đề bài viết</a>
+          </h4>
+
+          <p class="mb-2">
+            <span th:text="${p.shortDescription}">Nội dung mô tả ngắn...</span>
+            <span><a class="text-decoration-underline text-black-50" href="single-post.html">Read More</a></span>
+          </p>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div th:replace="~{fragments/instagram :: instagram}"></div>
+
+  <!-- ================================fragment footer============================= -->
+  <div th:replace="~{fragments/footer :: footer}"></div>
+
+  <!-- ===== CHATBOT AI ===== -->
+  <div id="chatbot-widget" style="position:fixed;bottom:24px;right:24px;z-index:9999;font-family:'Nunito',sans-serif;">
+    <button id="chatbot-toggle" onclick="toggleChatbot()" style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#e94560,#c73652);
                border:none;cursor:pointer;box-shadow:0 4px 20px rgba(233,69,96,0.5);
                display:flex;align-items:center;justify-content:center;font-size:1.5rem;
                transition:transform 0.2s;" onmouseover="this.style.transform='scale(1.1)'"
-        onmouseout="this.style.transform='scale(1)'">
-        💬
-      </button>
-      <div id="chatbot-box" style="display:none;position:absolute;bottom:70px;right:0;
+      onmouseout="this.style.transform='scale(1)'">
+      💬
+    </button>
+    <div id="chatbot-box" style="display:none;position:absolute;bottom:70px;right:0;
            width:320px;background:#fff;border-radius:16px;
            box-shadow:0 8px 40px rgba(0,0,0,0.2);overflow:hidden;border:1px solid #f0f0f0;">
-        <div style="background:linear-gradient(135deg,#1a1a2e,#0f3460);padding:14px 18px;
+      <div style="background:linear-gradient(135deg,#1a1a2e,#0f3460);padding:14px 18px;
                     display:flex;align-items:center;justify-content:space-between;">
-          <div style="display:flex;align-items:center;gap:10px;">
-            <span style="font-size:1.3rem;">🤖</span>
-            <div>
-              <div style="color:white;font-weight:800;font-size:0.9rem;">MangaBot</div>
-              <div style="color:rgba(255,255,255,0.5);font-size:0.72rem;">Trợ lý AI của MangaOne</div>
-            </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="font-size:1.3rem;">🤖</span>
+          <div>
+            <div style="color:white;font-weight:800;font-size:0.9rem;">MangaBot</div>
+            <div style="color:rgba(255,255,255,0.5);font-size:0.72rem;">Trợ lý AI của MangaOne</div>
           </div>
-          <button onclick="toggleChatbot()" style="background:none;border:none;color:white;cursor:pointer;font-size:1.1rem;">✕</button>
         </div>
-        <div id="chatbot-messages" style="height:260px;overflow-y:auto;padding:14px;
+        <button onclick="toggleChatbot()"
+          style="background:none;border:none;color:white;cursor:pointer;font-size:1.1rem;">✕</button>
+      </div>
+      <div id="chatbot-messages" style="height:260px;overflow-y:auto;padding:14px;
              display:flex;flex-direction:column;gap:10px;background:#f8f9fa;">
-          <div style="background:#e94560;color:white;padding:10px 14px;border-radius:12px 12px 12px 0;
+        <div style="background:#e94560;color:white;padding:10px 14px;border-radius:12px 12px 12px 0;
                       font-size:0.85rem;max-width:80%;align-self:flex-start;">
-            Xin chào! Tôi là MangaBot 🤖 Bạn cần tôi giúp gì về truyện manga không?
-          </div>
-        </div>
-        <div style="padding:12px;border-top:1px solid #f0f0f0;display:flex;gap:8px;background:white;">
-          <input id="chatbot-input" type="text" placeholder="Nhập câu hỏi..."
-            style="flex:1;border:1.5px solid #dee2e6;border-radius:8px;padding:8px 12px;
-                   font-size:0.85rem;outline:none;font-family:inherit;"
-            onkeypress="if(event.key==='Enter')sendChatMessage()"
-            onfocus="this.style.borderColor='#e94560'" onblur="this.style.borderColor='#dee2e6'">
-          <button onclick="sendChatMessage()"
-            style="background:#e94560;color:white;border:none;border-radius:8px;
-                   padding:8px 14px;cursor:pointer;font-size:0.85rem;font-weight:700;">
-            Gửi
-          </button>
+          Xin chào! Tôi là MangaBot 🤖 Bạn cần tôi giúp gì về truyện manga không?
         </div>
       </div>
+      <div style="padding:12px;border-top:1px solid #f0f0f0;display:flex;gap:8px;background:white;">
+        <input id="chatbot-input" type="text" placeholder="Nhập câu hỏi..." style="flex:1;border:1.5px solid #dee2e6;border-radius:8px;padding:8px 12px;
+                   font-size:0.85rem;outline:none;font-family:inherit;"
+          onkeypress="if(event.key==='Enter')sendChatMessage()" onfocus="this.style.borderColor='#e94560'"
+          onblur="this.style.borderColor='#dee2e6'">
+        <button onclick="sendChatMessage()" style="background:#e94560;color:white;border:none;border-radius:8px;
+                   padding:8px 14px;cursor:pointer;font-size:0.85rem;font-weight:700;">
+          Gửi
+        </button>
+      </div>
     </div>
+  </div>
 
-    <!-- ===== ĐÈN BẬT/TẮT ===== -->
-    <div id="lamp-widget" style="position:fixed;bottom:24px;left:24px;z-index:9999;
-         display:flex;flex-direction:column;align-items:center;cursor:pointer;"
-         onclick="toggleLamp()" title="Bật/Tắt đèn">
-      <div id="lamp-bulb" style="width:44px;height:44px;border-radius:50%;
+  <!-- ===== ĐÈN BẬT/TẮT ===== -->
+  <div id="lamp-widget" style="position:fixed;bottom:24px;left:24px;z-index:9999;
+         display:flex;flex-direction:column;align-items:center;cursor:pointer;" onclick="toggleLamp()"
+    title="Bật/Tắt đèn">
+    <div id="lamp-bulb" style="width:44px;height:44px;border-radius:50%;
            background:radial-gradient(circle at 40% 35%, #fffde0, #f9c74f);
            box-shadow:0 0 20px 8px rgba(249,199,79,0.7);
            border:2px solid #f4a100;transition:all 0.4s;cursor:pointer;">
-      </div>
-      <div style="width:2px;height:20px;background:rgba(120,120,120,0.4);"></div>
-      <div style="width:28px;height:6px;background:rgba(120,120,120,0.3);border-radius:3px;"></div>
-      <div style="color:rgba(255,255,255,0.5);font-size:0.65rem;margin-top:4px;font-weight:600;">
-        Đèn (click)
-      </div>
     </div>
+    <div style="width:2px;height:20px;background:rgba(120,120,120,0.4);"></div>
+    <div style="width:28px;height:6px;background:rgba(120,120,120,0.3);border-radius:3px;"></div>
+    <div style="color:rgba(255,255,255,0.5);font-size:0.65rem;margin-top:4px;font-weight:600;">
+      Đèn (click)
+    </div>
+  </div>
 
-    <div id="lamp-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.93);
+  <div id="lamp-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.93);
          z-index:9990;transition:opacity 0.4s;"></div>
 
-    <script th:src="@{/js/jquery-1.11.0.min.js}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-      crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
-    <script type="text/javascript" th:src="@{/js/script.js}"></script>
+  <script th:src="@{/js/jquery-1.11.0.min.js}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+  <script type="text/javascript" th:src="@{/js/script.js}"></script>
 
-    <!-- ====== GỘP CẢ 2 SCRIPT: chatbot + đèn (HEAD) và swiper (GitHub) ====== -->
-    <script>
-      // ===== CHATBOT =====
-      function toggleChatbot() {
-        var box = document.getElementById('chatbot-box');
-        box.style.display = box.style.display === 'none' ? 'block' : 'none';
+  <!-- ====== GỘP CẢ 2 SCRIPT: chatbot + đèn (HEAD) và swiper (GitHub) ====== -->
+  <script>
+    // ===== CHATBOT =====
+    function toggleChatbot() {
+      var box = document.getElementById('chatbot-box');
+      box.style.display = box.style.display === 'none' ? 'block' : 'none';
+    }
+
+    var chatResponses = {
+      'xin chào': 'Xin chào bạn! Tôi có thể giúp gì cho bạn về truyện manga? 😊',
+      'hello': 'Hello! Chào mừng bạn đến MangaOne! 📚',
+      'truyện': 'MangaOne có hơn 1000+ bộ truyện từ nhiều thể loại: Shonen, Seinen, Romance, Isekai... Bạn muốn tìm thể loại nào?',
+      'giá': 'Giá truyện tại MangaOne từ 22.000đ đến 50.000đ/cuốn. Thành viên mới được giảm 30%!',
+      'đăng ký': 'Bạn có thể đăng ký tài khoản miễn phí tại trang Đăng ký. Chỉ cần email và mật khẩu!',
+      'đăng nhập': 'Bạn bấm vào icon người ở góc trên phải để đăng nhập nhé!',
+      'liên hệ': 'Bạn có thể liên hệ MangaOne qua số: 112233344455 hoặc trang Liên Hệ!',
+      'vận chuyển': 'MangaOne giao hàng toàn quốc trong 2-3 ngày làm việc. Miễn phí vận chuyển!',
+      'conan': 'Thám Tử Lừng Danh Conan có tại MangaOne với giá 22.000đ/cuốn! 🔍',
+      'one piece': 'One Piece (Đảo Hải Tặc) có tại MangaOne với giá 25.000đ/cuốn! ⚓',
+      'default': 'Xin lỗi, tôi chưa hiểu câu hỏi của bạn. Bạn có thể hỏi về: truyện, giá cả, đăng ký, vận chuyển... 😊'
+    };
+
+    function sendChatMessage() {
+      var input = document.getElementById('chatbot-input');
+      var msg = input.value.trim();
+      if (!msg) return;
+
+      var messages = document.getElementById('chatbot-messages');
+
+      var userMsg = document.createElement('div');
+      userMsg.style.cssText = 'background:#1a1a2e;color:white;padding:10px 14px;border-radius:12px 12px 0 12px;font-size:0.85rem;max-width:80%;align-self:flex-end;';
+      userMsg.textContent = msg;
+      messages.appendChild(userMsg);
+
+      var response = chatResponses['default'];
+      var msgLower = msg.toLowerCase();
+      for (var key in chatResponses) {
+        if (msgLower.includes(key)) {
+          response = chatResponses[key];
+          break;
+        }
       }
 
-      var chatResponses = {
-        'xin chào': 'Xin chào bạn! Tôi có thể giúp gì cho bạn về truyện manga? 😊',
-        'hello': 'Hello! Chào mừng bạn đến MangaOne! 📚',
-        'truyện': 'MangaOne có hơn 1000+ bộ truyện từ nhiều thể loại: Shonen, Seinen, Romance, Isekai... Bạn muốn tìm thể loại nào?',
-        'giá': 'Giá truyện tại MangaOne từ 22.000đ đến 50.000đ/cuốn. Thành viên mới được giảm 30%!',
-        'đăng ký': 'Bạn có thể đăng ký tài khoản miễn phí tại trang Đăng ký. Chỉ cần email và mật khẩu!',
-        'đăng nhập': 'Bạn bấm vào icon người ở góc trên phải để đăng nhập nhé!',
-        'liên hệ': 'Bạn có thể liên hệ MangaOne qua số: 112233344455 hoặc trang Liên Hệ!',
-        'vận chuyển': 'MangaOne giao hàng toàn quốc trong 2-3 ngày làm việc. Miễn phí vận chuyển!',
-        'conan': 'Thám Tử Lừng Danh Conan có tại MangaOne với giá 22.000đ/cuốn! 🔍',
-        'one piece': 'One Piece (Đảo Hải Tặc) có tại MangaOne với giá 25.000đ/cuốn! ⚓',
-        'default': 'Xin lỗi, tôi chưa hiểu câu hỏi của bạn. Bạn có thể hỏi về: truyện, giá cả, đăng ký, vận chuyển... 😊'
-      };
-
-      function sendChatMessage() {
-        var input = document.getElementById('chatbot-input');
-        var msg = input.value.trim();
-        if (!msg) return;
-
-        var messages = document.getElementById('chatbot-messages');
-
-        var userMsg = document.createElement('div');
-        userMsg.style.cssText = 'background:#1a1a2e;color:white;padding:10px 14px;border-radius:12px 12px 0 12px;font-size:0.85rem;max-width:80%;align-self:flex-end;';
-        userMsg.textContent = msg;
-        messages.appendChild(userMsg);
-
-        var response = chatResponses['default'];
-        var msgLower = msg.toLowerCase();
-        for (var key in chatResponses) {
-          if (msgLower.includes(key)) {
-            response = chatResponses[key];
-            break;
-          }
-        }
-
-        setTimeout(function() {
-          var botMsg = document.createElement('div');
-          botMsg.style.cssText = 'background:#e94560;color:white;padding:10px 14px;border-radius:12px 12px 12px 0;font-size:0.85rem;max-width:80%;align-self:flex-start;';
-          botMsg.textContent = response;
-          messages.appendChild(botMsg);
-          messages.scrollTop = messages.scrollHeight;
-        }, 500);
-
-        input.value = '';
+      setTimeout(function () {
+        var botMsg = document.createElement('div');
+        botMsg.style.cssText = 'background:#e94560;color:white;padding:10px 14px;border-radius:12px 12px 12px 0;font-size:0.85rem;max-width:80%;align-self:flex-start;';
+        botMsg.textContent = response;
+        messages.appendChild(botMsg);
         messages.scrollTop = messages.scrollHeight;
+      }, 500);
+
+      input.value = '';
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    // ===== ĐÈN BẬT/TẮT =====
+    var lampOn = true;
+    function toggleLamp() {
+      lampOn = !lampOn;
+      var bulb = document.getElementById('lamp-bulb');
+      var overlay = document.getElementById('lamp-overlay');
+      if (lampOn) {
+        bulb.style.background = 'radial-gradient(circle at 40% 35%, #fffde0, #f9c74f)';
+        bulb.style.boxShadow = '0 0 20px 8px rgba(249,199,79,0.7)';
+        overlay.style.display = 'none';
+      } else {
+        bulb.style.background = '#333';
+        bulb.style.boxShadow = 'none';
+        overlay.style.display = 'block';
       }
+    }
 
-      // ===== ĐÈN BẬT/TẮT =====
-      var lampOn = true;
-      function toggleLamp() {
-        lampOn = !lampOn;
-        var bulb    = document.getElementById('lamp-bulb');
-        var overlay = document.getElementById('lamp-overlay');
-        if (lampOn) {
-          bulb.style.background  = 'radial-gradient(circle at 40% 35%, #fffde0, #f9c74f)';
-          bulb.style.boxShadow   = '0 0 20px 8px rgba(249,199,79,0.7)';
-          overlay.style.display  = 'none';
-        } else {
-          bulb.style.background  = '#333';
-          bulb.style.boxShadow   = 'none';
-          overlay.style.display  = 'block';
-        }
-      }
-
-      // ===== SWIPER sản phẩm =====
-      document.addEventListener('DOMContentLoaded', function () {
-        var swiper = new Swiper(".product-swiper", {
-          slidesPerView: 4,
-          spaceBetween: 20,
-          loop: true,
-          navigation: {
-            nextEl: ".product-slider-button-next",
-            prevEl: ".product-slider-button-prev",
-          },
-          breakpoints: {
-            0:    { slidesPerView: 1 },
-            768:  { slidesPerView: 3 },
-            1024: { slidesPerView: 4 }
-          }
-        });
-
-        // ===== TỰ ĐỘNG MỞ MODAL KHI CÓ LỖI ĐĂNG NHẬP / ĐĂNG KÝ =====
-        // Thymeleaf đặt flag vào hidden element, JS đọc và mở modal tương ứng
-        var shouldOpenLogin    = document.getElementById('flag-open-login');
-        var shouldOpenRegister = document.getElementById('flag-open-register');
-        var loginModal         = document.getElementById('exampleModal');
-
-        if (loginModal) {
-          var bsModal = new bootstrap.Modal(loginModal);
-
-          if (shouldOpenLogin) {
-            // Mở modal và chuyển sang tab Sign In
-            bsModal.show();
-            var signInTab = document.getElementById('nav-sign-in-tab');
-            if (signInTab) signInTab.click();
-          } else if (shouldOpenRegister) {
-            // Mở modal và chuyển sang tab Register
-            bsModal.show();
-            var registerTab = document.getElementById('nav-register-tab');
-            if (registerTab) registerTab.click();
-          }
+    // ===== SWIPER sản phẩm =====
+    document.addEventListener('DOMContentLoaded', function () {
+      var swiper = new Swiper(".product-swiper", {
+        slidesPerView: 4,
+        spaceBetween: 20,
+        loop: true,
+        navigation: {
+          nextEl: ".product-slider-button-next",
+          prevEl: ".product-slider-button-prev",
+        },
+        breakpoints: {
+          0: { slidesPerView: 1 },
+          768: { slidesPerView: 3 },
+          1024: { slidesPerView: 4 }
         }
       });
-    </script>
 
-  </body>
+      // ===== TỰ ĐỘNG MỞ MODAL KHI CÓ LỖI ĐĂNG NHẬP / ĐĂNG KÝ =====
+      // Thymeleaf đặt flag vào hidden element, JS đọc và mở modal tương ứng
+      var shouldOpenLogin = document.getElementById('flag-open-login');
+      var shouldOpenRegister = document.getElementById('flag-open-register');
+      var loginModal = document.getElementById('exampleModal');
+
+      if (loginModal) {
+        var bsModal = new bootstrap.Modal(loginModal);
+
+        if (shouldOpenLogin) {
+          // Mở modal và chuyển sang tab Sign In
+          bsModal.show();
+          var signInTab = document.getElementById('nav-sign-in-tab');
+          if (signInTab) signInTab.click();
+        } else if (shouldOpenRegister) {
+          // Mở modal và chuyển sang tab Register
+          bsModal.show();
+          var registerTab = document.getElementById('nav-register-tab');
+          if (registerTab) registerTab.click();
+        }
+      }
+    });
+  </script>
+
+</body>
+
 </html>

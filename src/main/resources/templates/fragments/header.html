@@ -8,7 +8,7 @@
 </head>
 
 <body>
-  <div th:fragment="header(activePage)">
+  <th:block th:fragment="header(activePage)">
     <!-- sticky giúp dính header trên cùng khi cuộn trang -->
     <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
       <symbol id="search" xmlns="http://www.w3.org/2000/symbolsvg" viewBox="0 0 24 24">
@@ -167,7 +167,7 @@
       <span id="cartToastMsg">Đã thêm vào giỏ hàng!</span>
     </div>
 
-    <header id="header" class="site-header sticky-top shadow-sm" style="z-index: 1050;">
+    <header id="header" class="site-header bg-white sticky-top shadow-sm" style="z-index: 1050;">
 
       <div class="top-info border-bottom d-none d-md-block ">
         <div class="container-fluid">
@@ -667,7 +667,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </th:block>
 </body>
 
 </html>

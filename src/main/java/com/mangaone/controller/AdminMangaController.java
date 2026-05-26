@@ -8,9 +8,12 @@ import com.mangaone.repository.MangaRepository;
 import com.mangaone.repository.PublisherRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 public class AdminMangaController {
@@ -24,11 +27,16 @@ public class AdminMangaController {
     @Autowired
     private PublisherRepository publisherRepository;
 
+    // helper: lấy danh sách mangas sắp xếp theo id giảm dần (mới nhất trước)
+    private List<Manga> findAllMangasSorted() {
+        return mangaRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
+    }
+
     // LIST
     @GetMapping("/admin/mangas")
     public String list(Model model) {
         model.addAttribute("currentPage", "mangas");
-        model.addAttribute("mangas", mangaRepository.findAll());
+        model.addAttribute("mangas", findAllMangasSorted());
         model.addAttribute("categories", categoryRepository.findAll());
         model.addAttribute("publishers", publisherRepository.findAll());
         model.addAttribute("manga", new Manga());
@@ -95,7 +103,7 @@ public class AdminMangaController {
     public String edit(@PathVariable Long id, Model model) {
         Manga manga = mangaRepository.findById(id).orElse(null);
         model.addAttribute("manga", manga);
-        model.addAttribute("mangas", mangaRepository.findAll());
+        model.addAttribute("mangas", findAllMangasSorted());
         model.addAttribute("categories", categoryRepository.findAll());
         model.addAttribute("publishers", publisherRepository.findAll());
         return "admin/manga-list";

@@ -19,9 +19,38 @@
         <i class="bi bi-boxes text-danger me-2"></i>Quản lý Kho
       </h4>
       <p class="page-subtitle">Nhập/xuất hàng và theo dõi tồn kho theo thời gian thực.</p>
+
+    </div>
+
+  </div>
+  <div class="content-card mb-4">
+    <div class="content-card-header">
+      <h6 class="mb-0">
+        <i class="bi bi-funnel-fill me-2" style="color:var(--primary);"></i>
+        Bộ lọc tồn kho
+      </h6>
+    </div>
+    <div class="p-4">
+      <form method="get" th:action="@{/admin/inventory}" class="row g-3">
+        <div class="col-md-10">
+          <label class="form-label fw-semibold small text-uppercase text-muted">
+            Tìm kiếm truyện
+          </label>
+          <input type="text" name="q" class="form-control"
+                 placeholder="Nhập tên truyện hoặc tên tác giả..."
+                 th:value="${q}">
+        </div>
+        <div class="col-md-2 d-flex align-items-end gap-2">
+          <button type="submit" class="btn text-white flex-grow-1" style="background-color: var(--primary);">
+            <i class="bi bi-search me-1"></i>Tìm kiếm
+          </button>
+          <a th:if="${q != null and !q.isEmpty()}" th:href="@{/admin/inventory}" class="btn btn-light border" title="Xóa lọc">
+            <i class="bi bi-x-lg text-danger"></i>
+          </a>
+        </div>
+      </form>
     </div>
   </div>
-
   <!-- Thông báo flash (thêm/xóa thành công/lỗi) -->
   <div th:if="${successMsg}" class="alert d-flex align-items-center mb-3"
        style="background:#edfaf4; border:1px solid #b7f0d4; border-radius:10px; color:#18b86e;">

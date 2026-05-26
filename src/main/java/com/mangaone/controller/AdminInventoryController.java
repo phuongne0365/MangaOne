@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin")
@@ -80,14 +81,26 @@ public class AdminInventoryController {
 
     // QUẢN LÝ KHO
     @GetMapping("/inventory")
-    public String inventory(HttpSession session, Model model) {
+    public String inventory(HttpSession session, Model model,
+                            @RequestParam(value = "q", required = false) String q) {
         if (!isAdmin(session)) return "redirect:/";
-        
-        model.addAttribute("currentPage", "inventory");
-        model.addAttribute("danhSachTruyen", inventoryService.getAllMangasForAdmin());
-        return "admin/inventory";  
-    }
 
+        model.addAttribute("currentPage", "inventory");
+
+        List<Manga> all = inventoryService.getAllMangasForAdmin();
+
+        if (q != null && !q.trim().isEmpty()) {
+            String kw = q.trim().toLowerCase();
+            all = all.stream()
+                    .filter(m -> (m.getTitle() != null && m.getTitle().toLowerCase().contains(kw))
+                            || (m.getAuthor() != null && m.getAuthor().toLowerCase().contains(kw)))
+                    .collect(Collectors.toList());
+        }
+
+        model.addAttribute("q", q);
+        model.addAttribute("danhSachTruyen", all);
+        return "admin/inventory";
+    }
     @PostMapping("/inventory/nhap")
     public String nhapHang(@RequestParam Long mangaId, @RequestParam int soLuong, HttpSession session, RedirectAttributes redirectAttributes) {
         if (!isAdmin(session)) return "redirect:/";
