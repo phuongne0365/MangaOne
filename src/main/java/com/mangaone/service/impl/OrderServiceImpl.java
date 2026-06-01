@@ -73,7 +73,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public Order checkout(User user, String receiverName, String receiverPhone, String shippingAddress) {
+    public Order checkout(User user, String receiverName, String receiverPhone, String shippingAddress, String paymentMethod) {
         // Bước 1: Validate input
         if (user == null) {
             throw new IllegalStateException("User không tồn tại!");
@@ -111,15 +111,22 @@ public class OrderServiceImpl implements OrderService {
             totalAmount += price * quantity;
         }
 
-        // Bước 4: Tạo Order mới
+        // Bước 4: Tạo Order mới và set thông tin phương thức thanh toán
         Order order = new Order();
         order.setUser(user);
         order.setReceiverName(receiverName.trim());
         order.setReceiverPhone(receiverPhone.trim());
         order.setShippingAddress(shippingAddress.trim());
         order.setTotalAmount((int) Math.round(totalAmount));
-        order.setStatus("PENDING");
+        order.setPaymentMethod(paymentMethod); // 🔥 BỔ SUNG: Lưu phương thức thanh toán vào DB
         order.setCreatedAt(LocalDateTime.now());
+
+        // 💰 RẼ NHÁNH TIÊU CHÍ NGHIỆP VỤ THỰC TẾ (TX2):
+        if ("BANK_TRANSFER".equals(paymentMethod)) {
+            order.setStatus("PENDING"); // Chuyển khoản QR cần Admin check biến động số dư nên để PENDING
+        } else {
+            order.setStatus("CONFIRMED"); // Khách mua COD hệ thống tự động xác nhận luôn
+        }
 
         // Bước 5: Lưu Order trước
         Order savedOrder = orderRepository.save(order);
@@ -130,20 +137,19 @@ public class OrderServiceImpl implements OrderService {
             Manga manga = item.getManga();
             int quantity = item.getQuantity();
 
-            // Lưu title trước để dùng trong lambda
             String mangaTitle = manga.getTitle();
             Long mangaId = manga.getId();
 
-            // Refresh manga từ DB để đảm bảo stock mới nhất
+            // Refresh manga từ DB để đảm bảo dữ liệu tồn kho đồng bộ
             manga = mangaRepository.findById(mangaId)
                     .orElseThrow(() -> new IllegalStateException("Sản phẩm không tồn tại: " + mangaTitle));
 
-            // Kiểm tra stock
+            // Kiểm tra stock kho hàng
             if (manga.getStockQuantity() == null || manga.getStockQuantity() < quantity) {
                 throw new IllegalStateException("Truyện \"" + manga.getTitle() + "\" không đủ hàng. Tồn kho: " + (manga.getStockQuantity() != null ? manga.getStockQuantity() : 0));
             }
 
-            // Tạo OrderDetail
+            // Tạo cấu trúc dữ liệu OrderDetail
             OrderDetail detail = new OrderDetail();
             detail.setOrder(savedOrder);
             detail.setManga(manga);
@@ -152,15 +158,15 @@ public class OrderServiceImpl implements OrderService {
             orderDetailRepository.save(detail);
             orderDetails.add(detail);
 
-            // Trừ stock
+            // Khấu trừ hàng trong Database
             manga.setStockQuantity(manga.getStockQuantity() - quantity);
             mangaRepository.save(manga);
         }
 
-        // Bước 7: Xóa CartItems
+        // Bước 7: Giải phóng toàn bộ giỏ hàng của User sau khi đặt hàng thành công
         cartItemRepository.deleteByUser(user);
 
-        // Bước 8: Set orderDetails vào order
+        // Bước 8: Gắn tập hợp chi tiết đơn hàng vào đối tượng Order trả về
         savedOrder.setOrderDetails(orderDetails);
 
         return savedOrder;
@@ -168,7 +174,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public Order checkoutSelected(User user, String receiverName, String receiverPhone, String shippingAddress, List<Integer> cartIds) {
+    public Order checkoutSelected(User user, String receiverName, String receiverPhone, String shippingAddress, List<Integer> cartIds, String paymentMethod) {
         // Bước 1: Validate input
         if (user == null) {
             throw new IllegalStateException("User không tồn tại!");
@@ -183,7 +189,7 @@ public class OrderServiceImpl implements OrderService {
             throw new IllegalStateException("Địa chỉ giao hàng không được để trống!");
         }
 
-        // Bước 2: Lấy danh sách CartItem được chọn
+        // Bước 2: Lấy danh sách các CartItem được tích chọn
         if (cartIds == null || cartIds.isEmpty()) {
             throw new IllegalStateException("Vui lòng chọn ít nhất 1 sản phẩm!");
         }
@@ -193,7 +199,7 @@ public class OrderServiceImpl implements OrderService {
             throw new IllegalStateException("Không tìm thấy sản phẩm được chọn!");
         }
 
-        // Bước 3: Tính tổng tiền
+        // Bước 3: Tính tổng tiền các sản phẩm được chọn
         double totalAmount = 0.0;
         for (CartItem item : cartItems) {
             if (item.getManga() == null) {
@@ -210,39 +216,42 @@ public class OrderServiceImpl implements OrderService {
             totalAmount += price * quantity;
         }
 
-        // Bước 4: Tạo Order mới
+        // Bước 4: Khởi tạo Order mới cho luồng mua một phần giỏ hàng
         Order order = new Order();
         order.setUser(user);
         order.setReceiverName(receiverName.trim());
         order.setReceiverPhone(receiverPhone.trim());
         order.setShippingAddress(shippingAddress.trim());
         order.setTotalAmount((int) Math.round(totalAmount));
-        order.setStatus("PENDING");
+        order.setPaymentMethod(paymentMethod); // 🔥 BỔ SUNG: Lưu cấu hình thanh toán
         order.setCreatedAt(LocalDateTime.now());
 
-        // Bước 5: Lưu Order trước
+        // 💰 RẼ NHÁNH TIÊU CHÍ NGHIỆP VỤ THỰC TẾ (TX2):
+        if ("BANK_TRANSFER".equals(paymentMethod)) {
+            order.setStatus("PENDING");
+        } else {
+            order.setStatus("CONFIRMED");
+        }
+
+        // Bước 5: Lưu thông tin Order
         Order savedOrder = orderRepository.save(order);
 
-        // Bước 6: Duyệt CartItems được chọn, kiểm tra stock, tạo OrderDetail, trừ stock
+        // Bước 6: Xử lý ghi nhận chi tiết hóa đơn và trừ tồn kho truyện
         List<OrderDetail> orderDetails = new ArrayList<>();
         for (CartItem item : cartItems) {
             Manga manga = item.getManga();
             int quantity = item.getQuantity();
 
-            // Lưu title và id trước để dùng trong lambda
             String mangaTitle = manga.getTitle();
             Long mangaId = manga.getId();
 
-            // Refresh manga từ DB để đảm bảo stock mới nhất
             manga = mangaRepository.findById(mangaId)
                     .orElseThrow(() -> new IllegalStateException("Sản phẩm không tồn tại: " + mangaTitle));
 
-            // Kiểm tra stock
             if (manga.getStockQuantity() == null || manga.getStockQuantity() < quantity) {
                 throw new IllegalStateException("Truyện \"" + manga.getTitle() + "\" không đủ hàng. Tồn kho: " + (manga.getStockQuantity() != null ? manga.getStockQuantity() : 0));
             }
 
-            // Tạo OrderDetail
             OrderDetail detail = new OrderDetail();
             detail.setOrder(savedOrder);
             detail.setManga(manga);
@@ -251,21 +260,21 @@ public class OrderServiceImpl implements OrderService {
             orderDetailRepository.save(detail);
             orderDetails.add(detail);
 
-            // Trừ stock
             manga.setStockQuantity(manga.getStockQuantity() - quantity);
             mangaRepository.save(manga);
         }
 
-        // Bước 7: Xóa chỉ những CartItems được chọn (không xóa toàn bộ)
+        // Bước 7: Chỉ xóa những CartItems đã được mua ra khỏi giỏ hàng (giữ lại các item không chọn)
         for (Integer cartId : cartIds) {
             cartItemRepository.deleteById(cartId);
         }
 
-        // Bước 8: Set orderDetails vào order
+        // Bước 8: Đính kết tập hợp chi tiết
         savedOrder.setOrderDetails(orderDetails);
 
         return savedOrder;
     }
+
     // ===== ADMIN CÓ THỂ LẤY TẤT CẢ ĐƠN HÀNG =====
     @Override
     public List<Order> getAllOrders() {

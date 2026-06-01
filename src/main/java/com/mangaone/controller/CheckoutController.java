@@ -53,6 +53,7 @@ public class CheckoutController {
     public String processCheckout(@RequestParam String receiverName,
                                   @RequestParam String receiverPhone,
                                   @RequestParam String shippingAddress,
+                                  @RequestParam String paymentMethod, // 🔥 BỔ SUNG: Nhận phương thức thanh toán (COD hoặc BANK_TRANSFER)
                                   HttpSession session,
                                   RedirectAttributes redirectAttributes) {
         User user = (User) session.getAttribute("loggedInUser");
@@ -61,7 +62,8 @@ public class CheckoutController {
         }
 
         try {
-            orderService.checkout(user, receiverName, receiverPhone, shippingAddress);
+            
+            orderService.checkout(user, receiverName, receiverPhone, shippingAddress, paymentMethod);
 
             redirectAttributes.addFlashAttribute("successMsg", "Đặt hàng thành công! Cảm ơn bạn đã mua hàng.");
             return "redirect:/checkout/success";
@@ -107,11 +109,12 @@ public class CheckoutController {
         return "checkout";
     }
 
-    // POST /checkout/selected: Xử lý đặt hàng cho sản phẩm được chọn
+    
     @PostMapping("/selected")
     public String processCheckoutSelected(@RequestParam String receiverName,
                                           @RequestParam String receiverPhone,
                                           @RequestParam String shippingAddress,
+                                          @RequestParam String paymentMethod, 
                                           @RequestParam(value = "cartIds", required = false) List<Integer> cartIds,
                                           HttpSession session,
                                           RedirectAttributes redirectAttributes) {
@@ -121,8 +124,8 @@ public class CheckoutController {
         }
 
         try {
-            // Checkout để từng item được chọn
-            orderService.checkoutSelected(user, receiverName, receiverPhone, shippingAddress, cartIds);
+            
+            orderService.checkoutSelected(user, receiverName, receiverPhone, shippingAddress, cartIds, paymentMethod);
 
             redirectAttributes.addFlashAttribute("successMsg", "Đặt hàng thành công! Cảm ơn bạn đã mua hàng.");
             return "redirect:/checkout/success";

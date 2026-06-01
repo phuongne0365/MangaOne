@@ -121,7 +121,7 @@
 	          speed: 500,
 	          loop: true, // Thêm vòng lặp vô hạn ở đây để bấm nút không bị liệt
 	          autoplay: {
-	            delay: 5000, // Tự động lướt sau 5 giây
+	            delay: 1500, // Tự động lướt sau 5 giây
 	            disableOnInteraction: false, // Bấm nút xong vẫn tự chạy tiếp
 	          },
 	          navigation: {

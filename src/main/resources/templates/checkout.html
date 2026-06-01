@@ -77,10 +77,9 @@
                 <div class="card shadow-sm border-0 rounded-4 p-4 sticky-top" style="top: 20px;">
                     <h4 class="fw-bold mb-4 border-bottom pb-3">Thông tin giao hàng</h4>
 
-                    <!-- Form checkout tất cả -->
-                    <form th:if="${!isPartialCheckout}"  action="/checkout" method="post">
+                    <form th:if="${!isPartialCheckout}" action="/checkout" method="post">
                         <div class="mb-3">
-                            <label for="receiverName" class="form-label text-danger fw-semibold">
+                            <label for="receiverNameSelected" class="form-label text-danger fw-semibold">
                                 Họ và tên người nhận <span class="text-danger">*</span>
                             </label>
                             <input type="text"
@@ -92,7 +91,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="receiverPhone" class="form-label text-danger fw-semibold">
+                            <label for="receiverPhoneSelected" class="form-label text-danger fw-semibold">
                                 Số điện thoại <span class="text-danger">*</span>
                             </label>
                             <input type="tel"
@@ -104,7 +103,7 @@
                         </div>
 
                         <div class="mb-4">
-                            <label for="shippingAddress" class="form-label text-danger fw-semibold">
+                            <label for="shippingAddressSelected" class="form-label text-danger fw-semibold">
                                 Địa chỉ nhận hàng <span class="text-danger">*</span>
                             </label>
                             <textarea id="shippingAddressSelected"
@@ -115,14 +114,41 @@
                                       th:text="${user.address}"></textarea>
                         </div>
 
+                        <div class="mb-4">
+                            <label class="form-label text-danger fw-semibold">Phương thức thanh toán <span class="text-danger">*</span></label>
+                            
+                            <div class="form-check p-3 border rounded-3 mb-2 bg-light dynamic-payment-option" style="cursor: pointer;">
+                                <input class="form-check-input ms-0 me-2" type="radio" name="paymentMethod" id="payCODAll" value="COD" checked onchange="toggleQRField(false, 'All')">
+                                <label class="form-check-label fw-bold text-dark" for="payCODAll" style="cursor: pointer;">
+                                    <i class="bi bi-truck me-2 text-danger"></i>Thanh toán khi nhận hàng (COD)
+                                </label>
+                            </div>
+
+                            <div class="form-check p-3 border rounded-3 bg-light dynamic-payment-option" style="cursor: pointer;">
+                                <input class="form-check-input ms-0 me-2" type="radio" name="paymentMethod" id="payQRAll" value="BANK_TRANSFER" onchange="toggleQRField(true, 'All')">
+                                <label class="form-check-label fw-bold text-dark" for="payQRAll" style="cursor: pointer;">
+                                    <i class="bi bi-qr-code-scan me-2 text-danger"></i>Chuyển khoản nhanh qua VietQR
+                                </label>
+                            </div>
+                        </div>
+
+                        <div id="qrCodeContainerAll" class="mb-4 p-3 border rounded-4 bg-white text-center shadow-sm d-none">
+                            <p class="fw-semibold text-muted mb-2 small"><i class="bi bi-info-circle me-1"></i> Mở App Ngân hàng bất kỳ để quét mã QR</p>
+                            
+                            <img th:src="'https://img.vietqr.io/image/MB-0336691105-qr_only.png?amount=' + ${#numbers.formatDecimal(totalAmount, 0, 'NONE', 0, 'NONE')} + '&addInfo=MANGAONE%20THANH%20TOAN&accountName=TRAN%20HOANG%20DUY'" 
+                                 alt="Mã QR VietQR" class="img-fluid my-2 shadow-sm rounded-3" style="max-width: 230px; border: 1px solid #eee;">
+                            
+                            <div class="alert alert-warning py-2 mb-0 mt-2 border-0 rounded-3" style="font-size: 0.75rem;">
+                                <i class="bi bi-exclamation-triangle-fill me-1"></i> Vui lòng giữ nguyên số tiền và nội dung chuyển khoản để hệ thống đối soát tự động.
+                            </div>
+                        </div>
+
                         <button type="submit" class="btn btn-dark btn-lg w-100 rounded-pill fw-bold shadow-sm mb-3">
                             Xác nhận đặt hàng <i class="bi bi-arrow-right ms-1"></i>
                         </button>
                     </form>
 
-                    <!-- Form checkout selected -->
                     <form th:if="${isPartialCheckout}" id="checkoutForm" action="/checkout/selected" method="post">
-                        <!-- Hidden inputs cho cartIds -->
                         <input type="hidden" name="cartIds" th:each="cartId : ${cartIds}" th:value="${cartId}" />
 
                         <div class="mb-3">
@@ -161,6 +187,35 @@
                                       th:text="${user.address}"></textarea>
                         </div>
 
+                        <div class="mb-4">
+                            <label class="form-label text-danger fw-semibold">Phương thức thanh toán <span class="text-danger">*</span></label>
+                            
+                            <div class="form-check p-3 border rounded-3 mb-2 bg-light dynamic-payment-option" style="cursor: pointer;">
+                                <input class="form-check-input ms-0 me-2" type="radio" name="paymentMethod" id="payCODPart" value="COD" checked onchange="toggleQRField(false, 'Part')">
+                                <label class="form-check-label fw-bold text-dark" for="payCODPart" style="cursor: pointer;">
+                                    <i class="bi bi-truck me-2 text-danger"></i>Thanh toán khi nhận hàng (COD)
+                                </label>
+                            </div>
+
+                            <div class="form-check p-3 border rounded-3 bg-light dynamic-payment-option" style="cursor: pointer;">
+                                <input class="form-check-input ms-0 me-2" type="radio" name="paymentMethod" id="payQRPart" value="BANK_TRANSFER" onchange="toggleQRField(true, 'Part')">
+                                <label class="form-check-label fw-bold text-dark" for="payQRPart" style="cursor: pointer;">
+                                    <i class="bi bi-qr-code-scan me-2 text-danger"></i>Chuyển khoản nhanh qua VietQR
+                                </label>
+                            </div>
+                        </div>
+
+                        <div id="qrCodeContainerPart" class="mb-4 p-3 border rounded-4 bg-white text-center shadow-sm d-none">
+                            <p class="fw-semibold text-muted mb-2 small"><i class="bi bi-info-circle me-1"></i> Mở App Ngân hàng bất kỳ để quét mã QR</p>
+                            
+                            <img th:src="'https://img.vietqr.io/image/MB-0336691105-qr_only.png?amount=' + ${#numbers.formatDecimal(totalAmount, 0, 'NONE', 0, 'NONE')} + '&addInfo=MANGAONE%20THANH%20TOAN&accountName=TRAN%20HOANG%20DUY'" 
+                                 alt="Mã QR VietQR" class="img-fluid my-2 shadow-sm rounded-3" style="max-width: 230px; border: 1px solid #eee;">
+                            
+                            <div class="alert alert-warning py-2 mb-0 mt-2 border-0 rounded-3" style="font-size: 0.75rem;">
+                                <i class="bi bi-exclamation-triangle-fill me-1"></i> Vui lòng giữ nguyên số tiền và nội dung chuyển khoản để hệ thống đối soát tự động.
+                            </div>
+                        </div>
+
                         <button type="submit" class="btn btn-dark btn-lg w-100 rounded-pill fw-bold shadow-sm mb-3">
                             Xác nhận đặt hàng <i class="bi bi-arrow-right ms-1"></i>
                         </button>
@@ -178,6 +233,36 @@
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    function toggleQRField(isQRSelected, suffix) {
+        const qrContainer = document.getElementById('qrCodeContainer' + suffix);
+        if (qrContainer) {
+            if (isQRSelected) {
+                qrContainer.classList.remove('d-none');
+                qrContainer.style.opacity = '0';
+                setTimeout(() => {
+                    qrContainer.style.transition = 'opacity 0.3s ease-in-out';
+                    qrContainer.style.opacity = '1';
+                }, 50);
+            } else {
+                qrContainer.classList.add('d-none');
+            }
+        }
+    }
+
+    document.querySelectorAll('.dynamic-payment-option').forEach(item => {
+        item.addEventListener('click', function(e) {
+            if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'LABEL') {
+                const radio = this.querySelector('input[type="radio"]');
+                if (radio) {
+                    radio.checked = true;
+                    radio.dispatchEvent(new Event('change'));
+                }
+            }
+        });
+    });
+</script>
 
 <div th:replace="~{fragments/customer-review :: customer-review}"></div>
 <div th:replace="~{fragments/instagram :: instagram}"></div>
