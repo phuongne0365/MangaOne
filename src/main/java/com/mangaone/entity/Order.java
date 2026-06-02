@@ -32,6 +32,10 @@ public class Order {
 
     private String status = "PENDING";
 
+    // 🔥 BỔ SUNG: Cột lưu phương thức thanh toán ("COD" hoặc "BANK_TRANSFER")
+    @Column(name = "payment_method")
+    private String paymentMethod;
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
@@ -94,6 +98,15 @@ public class Order {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    // 🔥 BỔ SUNG: Getter & Setter cho thuộc tính paymentMethod
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
     }
 
     public LocalDateTime getCreatedAt() {

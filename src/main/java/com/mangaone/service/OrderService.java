@@ -9,11 +9,12 @@ import java.util.Optional;
 public interface OrderService {
     Order createOrder(Order order);
 
-    // Phương thức checkout tất cả sản phẩm trong giỏ
-    Order checkout(User user, String receiverName, String receiverPhone, String shippingAddress);
+   
+    Order checkout(User user, String receiverName, String receiverPhone, String shippingAddress, String paymentMethod);
 
-    // Phương thức checkout chỉ những sản phẩm được chọn
-    Order checkoutSelected(User user, String receiverName, String receiverPhone, String shippingAddress, List<Integer> cartIds);
+    
+    Order checkoutSelected(User user, String receiverName, String receiverPhone, String shippingAddress, List<Integer> cartIds, String paymentMethod);
+    
     // Lấy tất cả đơn hàng
     List<Order> getAllOrders();
 
