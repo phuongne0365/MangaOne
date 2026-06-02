@@ -6,6 +6,8 @@ import com.mangaone.service.InventoryService;
 import com.mangaone.repository.OrderRepository;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.PrintWriter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -77,6 +79,50 @@ public class AdminInventoryController {
         model.addAttribute("monthlyRevenue", monthlyRevenue);
 
         return "admin/dashboard";   
+    }
+
+    // 📥 XUẤT BÁO CÁO DOANH THU CSV
+    @GetMapping("/dashboard/export-csv")
+    public void exportRevenueCsv(HttpServletResponse response, HttpSession session) throws Exception {
+        if (!isAdmin(session)) {
+            response.sendRedirect("/");
+            return;
+        }
+
+        response.setContentType("text/csv; charset=UTF-8");
+        response.setHeader("Content-Disposition", "attachment; filename=\"baocao-doanhthu.csv\"");
+        
+        // Ghi BOM để Excel nhận diện được Tiếng Việt có dấu (UTF-8)
+        response.getOutputStream().write(0xEF);
+        response.getOutputStream().write(0xBB);
+        response.getOutputStream().write(0xBF);
+
+        PrintWriter writer = new PrintWriter(new java.io.OutputStreamWriter(response.getOutputStream(), java.nio.charset.StandardCharsets.UTF_8));
+        writer.println("Tháng,Doanh thu (VNĐ)");
+
+        Long[] monthlyRevenue = new Long[12];
+        java.util.Arrays.fill(monthlyRevenue, 0L); 
+        List<Object[]> rawData = orderRepository.getRevenueByMonth();
+        
+        for (Object[] row : rawData) {
+            if (row[0] != null && row[1] != null) {
+                int month = ((Number) row[0]).intValue();
+                Long amount = ((Number) row[1]).longValue();
+                if (month >= 1 && month <= 12) {
+                    monthlyRevenue[month - 1] = amount;
+                }
+            }
+        }
+        
+        for (int i = 0; i < 12; i++) {
+            writer.println("Tháng " + (i + 1) + "," + monthlyRevenue[i]);
+        }
+        
+        Long totalRevenue = orderRepository.calculateTotalRevenue();
+        writer.println("Tổng cộng," + (totalRevenue != null ? totalRevenue : 0L));
+        
+        writer.flush();
+        writer.close();
     }
 
     // QUẢN LÝ KHO
