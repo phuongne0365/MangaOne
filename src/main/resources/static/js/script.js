@@ -119,7 +119,7 @@
 
 	  var mainSwiper = new Swiper(".main-swiper", {
 	          speed: 500,
-	          loop: true, // Thêm vòng lặp vô hạn ở đây để bấm nút không bị liệt
+	          loop: true, 
 	          autoplay: {
 	            delay: 1500, // Tự động lướt sau 5 giây
 	            disableOnInteraction: false, // Bấm nút xong vẫn tự chạy tiếp

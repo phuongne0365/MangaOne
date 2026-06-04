@@ -8,16 +8,16 @@
 <style>
     /* ===== ĐỒNG BỘ VỚI KHO TRUYỆN ===== */
     :root {
-        --primary-red:   #e94560;   /* màu đỏ chủ đạo từ kho-truyen */
-        --primary-dark:  #1a1a2e;   /* navy dark từ kho-truyen       */
+        --primary-red:   #e94560;   
+        --primary-dark:  #1a1a2e;   
         --slate-gray:    #334155;
-        --bg-body:       #f8f9fa;   /* nền giống kho-truyen           */
+        --bg-body:       #f8f9fa;   
         --border-color:  #dee2e6;
         --soft-bg:       #f8fafc;
     }
 
     body {
-        font-family: 'Nunito', sans-serif; /* đồng bộ font Nunito */
+        font-family: 'Nunito', sans-serif; 
         background-color: var(--bg-body);
         color: var(--primary-dark);
         line-height: 1.5;
@@ -84,7 +84,6 @@
     
     .main-img-box:hover img { transform: scale(1.06); }
 
-    /* Nút hover trên ảnh */
     .img-action-buttons {
         position: absolute;
         top: 50%; left: 50%;
@@ -129,7 +128,6 @@
     }
     .btn-img-action:hover i { color: #fff; }
 
-    /* Badge "Bán chạy" */
     .badge-trending {
         position: absolute;
         top: 16px; left: 16px;
@@ -219,6 +217,14 @@
         font-size: 0.95rem;
         color: var(--primary-dark);
     }
+    .status-instock {
+        color: #198754 !important;
+        font-weight: 800 !important;
+    }
+    .status-outofstock {
+        color: #dc3545 !important;
+        font-weight: 800 !important;
+    }
 
     /* Action box */
     .action-container {
@@ -287,6 +293,12 @@
         box-shadow: 0 8px 18px rgba(233, 69, 96, 0.25);
         color: white;
     }
+    .btn-disabled {
+        background: #6c757d !important;
+        cursor: not-allowed !important;
+        transform: none !important;
+        box-shadow: none !important;
+    }
 
     /* Trust badges */
     .trust-badges {
@@ -320,7 +332,6 @@
 <body>
 <div th:replace="~{fragments/header :: header(activePage='shop')}"></div>
 
-<!-- BANNER -->
 <section class="site-banner">
     <div class="container">
         <div class="row">
@@ -340,27 +351,18 @@
     </div>
 </section>
 
-<!-- NỘI DUNG CHÍNH -->
 <div class="container mb-5">
     <div class="row g-5 align-items-start">
 
-        <!-- CỘT ẢNH -->
         <div class="col-lg-5">
             <div class="main-img-box">
                 <span class="badge-trending">🔥 Bán chạy</span>
-
-                <img th:src="${manga.image}"
-                     src="/images/manga/demon-slayer-tap1.jpg"
-                     alt="Manga Cover">
-
-                
+                <img th:src="${manga.image}" src="/images/manga/demon-slayer-tap1.jpg" alt="Manga Cover">
             </div>
         </div>
 
-        <!-- CỘT THÔNG TIN -->
         <div class="col-lg-7 ps-lg-4">
 
-            <!-- Thể loại + Đánh giá -->
             <div class="d-flex align-items-center gap-2 mb-3 flex-wrap">
                 <span class="category-badge" th:text="${manga.category.categoryName}">Shonen</span>
                 <div class="text-warning small">
@@ -371,31 +373,31 @@
                 <small class="review-count">(1.2k đánh giá)</small>
             </div>
 
-            <!-- Tiêu đề -->
             <h1 class="manga-title" th:text="${manga.title}">Tên truyện</h1>
 
-            <!-- Giá -->
             <div class="mb-4 d-flex align-items-baseline">
-                    <span class="price-large"
-                          th:text="${#numbers.formatInteger(manga.price, 0, 'COMMA') + ' đ'}">
-                        25,000 đ
-                    </span>
+                <span class="price-large" th:text="${#numbers.formatInteger(manga.price, 0, 'COMMA') + ' đ'}">25,000 đ</span>
                 <span class="price-old">250,000 đ</span>
             </div>
 
-            <!-- Mô tả -->
             <p class="manga-description" th:text="${manga.description}">Mô tả truyện...</p>
 
-            <!-- Grid thông tin -->
             <div class="info-grid">
                 <div class="info-item">
                     <label>Tác giả</label>
                     <span th:text="${manga.author}">Tác giả</span>
                 </div>
+                
                 <div class="info-item">
-                    <label>Trạng thái</label>
-                    <span class="text-success">✓ Còn hàng</span>
+                    <label>Tình Trạng Kho</label>
+                    <span th:if="${manga.stockQuantity > 0}" class="status-instock">
+                        ✓ Còn hàng <span th:text="'(' + ${manga.stockQuantity} + ' cuốn)'">(80 cuốn)</span>
+                    </span>
+                    <span th:if="${manga.stockQuantity <= 0}" class="status-outofstock">
+                        ✗ Hết hàng (Tạm thời hết)
+                    </span>
                 </div>
+                
                 <div class="info-item">
                     <label>Mã sản phẩm</label>
                     <span th:text="${'#MN-' + manga.id}">#MN-00</span>
@@ -413,22 +415,21 @@
                     <div class="d-flex align-items-center justify-content-between mb-4">
                         <span class="qty-label">Số lượng mua:</span>
                         <div class="qty-selector">
-                            <button type="button"
-                                    onclick="this.parentNode.querySelector('input').stepDown()">−</button>
-                            <input type="number" name="quantity" value="1" min="1"
-                                   th:max="${manga.stockQuantity}">
-                            <button type="button"
-                                    onclick="this.parentNode.querySelector('input').stepUp()">+</button>
+                            <button type="button" onclick="this.parentNode.querySelector('input').stepDown()">−</button>
+                            <input type="number" name="quantity" value="1" min="1" th:max="${manga.stockQuantity}">
+                            <button type="button" onclick="this.parentNode.querySelector('input').stepUp()">+</button>
                         </div>
                     </div>
 
-                    <button type="submit" class="btn-cart-main">
+                    <button th:if="${manga.stockQuantity > 0}" type="submit" class="btn-cart-main">
                         <i class="bi bi-cart-fill me-2"></i> Thêm vào giỏ hàng
+                    </button>
+                    <button th:if="${manga.stockQuantity <= 0}" type="button" class="btn-cart-main btn-disabled" disabled>
+                        <i class="bi bi-x-circle-fill me-2"></i> Tạm hết hàng
                     </button>
                 </form>
             </div>
 
-            <!-- Trust badges -->
             <div class="trust-badges">
                 <span><i class="bi bi-shield-check"></i> Chính hãng 100%</span>
                 <span><i class="bi bi-arrow-repeat"></i> Đổi trả 7 ngày</span>
