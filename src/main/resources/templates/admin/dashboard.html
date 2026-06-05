@@ -101,9 +101,14 @@
         </h5>
         <p class="text-muted mb-0" style="font-size: 13px;">Dữ liệu doanh thu tự động tính từ các hóa đơn đã hoàn thành trong cơ sở dữ liệu</p>
       </div>
-      <a th:href="@{/admin/dashboard/export-csv}" class="btn btn-sm" style="background: #18b86e; color: #fff; font-weight: 600; border-radius: 8px;">
-        <i class="bi bi-file-earmark-spreadsheet me-1"></i> Xuất Excel / CSV
-      </a>
+      <form th:action="@{/admin/report/export}" method="get" class="d-flex align-items-center gap-2 m-0">
+        <input type="date" name="startDate" class="form-control form-control-sm" style="width: 130px; font-size: 13px;" title="Từ ngày">
+        <span class="text-muted" style="font-size: 13px;">-</span>
+        <input type="date" name="endDate" class="form-control form-control-sm" style="width: 130px; font-size: 13px;" title="Đến ngày">
+        <button type="submit" class="btn btn-sm" style="background: #18b86e; color: #fff; font-weight: 600; border-radius: 8px; font-size: 13px;">
+          <i class="bi bi-file-earmark-spreadsheet me-1"></i> Xuất Excel
+        </button>
+      </form>
     </div>
     <div style="height: 330px; position: relative;">
       <canvas id="mangaRevenueChart"></canvas>

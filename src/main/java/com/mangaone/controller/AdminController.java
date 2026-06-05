@@ -10,20 +10,48 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import java.time.LocalDate;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import com.mangaone.service.ExcelReportService;
 
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
 
     private final UserRepository userRepository;
+    private final ExcelReportService excelReportService;
 
-    public AdminController(UserRepository userRepository) {
+    public AdminController(UserRepository userRepository, ExcelReportService excelReportService) {
         this.userRepository = userRepository;
+        this.excelReportService = excelReportService;
     }
 
     private boolean isAdmin(HttpSession session) {
         User user = (User) session.getAttribute("loggedInUser");
         return user != null && "ADMIN".equals(user.getRole());
+    }
+
+    @GetMapping("/report/export")
+    public ResponseEntity<byte[]> exportReport(
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            HttpSession session) {
+        if (!isAdmin(session)) return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+
+        User user = (User) session.getAttribute("loggedInUser");
+        String reporterName = (user != null && user.getFullName() != null) ? user.getFullName() : "Admin";
+
+        byte[] excelContent = excelReportService.generateReport(startDate, endDate, reporterName);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
+        headers.setContentDispositionFormData("attachment", "BaoCao_MangaOne.xlsx");
+
+        return new ResponseEntity<>(excelContent, headers, HttpStatus.OK);
     }
 
     // 👥 TRANG RIÊNG BIỆT: GET /admin/users

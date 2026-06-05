@@ -121,12 +121,8 @@ public class OrderServiceImpl implements OrderService {
         order.setPaymentMethod(paymentMethod); // 🔥 BỔ SUNG: Lưu phương thức thanh toán vào DB
         order.setCreatedAt(LocalDateTime.now());
 
-        // 💰 RẼ NHÁNH TIÊU CHÍ NGHIỆP VỤ THỰC TẾ (TX2):
-        if ("BANK_TRANSFER".equals(paymentMethod)) {
-            order.setStatus("PENDING"); // Chuyển khoản QR cần Admin check biến động số dư nên để PENDING
-        } else {
-            order.setStatus("CONFIRMED"); // Khách mua COD hệ thống tự động xác nhận luôn
-        }
+        // 💰 BỔ SUNG: Theo yêu cầu mới, tất cả đơn hàng (COD hay BANK_TRANSFER) đều vào trạng thái PENDING chờ admin duyệt
+        order.setStatus("PENDING");
 
         // Bước 5: Lưu Order trước
         Order savedOrder = orderRepository.save(order);
@@ -226,12 +222,8 @@ public class OrderServiceImpl implements OrderService {
         order.setPaymentMethod(paymentMethod); // 🔥 BỔ SUNG: Lưu cấu hình thanh toán
         order.setCreatedAt(LocalDateTime.now());
 
-        // 💰 RẼ NHÁNH TIÊU CHÍ NGHIỆP VỤ THỰC TẾ (TX2):
-        if ("BANK_TRANSFER".equals(paymentMethod)) {
-            order.setStatus("PENDING");
-        } else {
-            order.setStatus("CONFIRMED");
-        }
+        // 💰 BỔ SUNG: Theo yêu cầu mới, tất cả đơn hàng (COD hay BANK_TRANSFER) đều vào trạng thái PENDING chờ admin duyệt
+        order.setStatus("PENDING");
 
         // Bước 5: Lưu thông tin Order
         Order savedOrder = orderRepository.save(order);

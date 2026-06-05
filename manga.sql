@@ -161,16 +161,6 @@ INSERT INTO USERS (email, password, full_name, phone_number, address, role) VALU
 ('admin4@mangaone.com', '$2a$12$cWLY0ngg2.Qt99p2HH9bTOzimfFVJQ0AOyNlD5HljIEY.A4jLlDQm', 'Tran Hoang Duy', '0901000004', 'Ha Noi', 'ADMIN'),
 ('admin5@mangaone.com', '$2a$12$cWLY0ngg2.Qt99p2HH9bTOzimfFVJQ0AOyNlD5HljIEY.A4jLlDQm', 'Dam Minh Hieu', '0901000005', 'Ha Noi', 'ADMIN');
 
-INSERT INTO CART_ITEMS (user_id, manga_id, quantity) VALUES
-((SELECT user_id FROM USERS WHERE email = 'duyson@gmail.com'), (SELECT manga_id FROM MANGAS WHERE title LIKE '%Chú Thuật Hồi Chiến%' LIMIT 1), 2),
-((SELECT user_id FROM USERS WHERE email = 'duyson@gmail.com'), (SELECT manga_id FROM MANGAS WHERE title LIKE '%Chainsaw Man%' LIMIT 1), 1);
-
-INSERT INTO ORDERS (user_id, receiver_name, receiver_phone, shipping_address, total_amount, status) VALUES
-((SELECT user_id FROM USERS WHERE email = 'bichngoc@gmail.com'), 'Nguyễn Thị Bích Ngọc', '0909090909', 'Số 1, Lê Lợi, Hải Phòng', 69000, 'SHIPPING');
-
-INSERT INTO ORDER_DETAILS (order_id, manga_id, quantity, price) VALUES
-((SELECT order_id FROM ORDERS WHERE receiver_name = 'Nguyễn Thị Bích Ngọc' LIMIT 1), (SELECT manga_id FROM MANGAS WHERE title LIKE '%Spy x Family%' LIMIT 1), 1, 25000),
-((SELECT order_id FROM ORDERS WHERE receiver_name = 'Nguyễn Thị Bích Ngọc' LIMIT 1), (SELECT manga_id FROM MANGAS WHERE title LIKE '%Conan%' LIMIT 1), 2, 22000);
 
 SELECT * FROM MANGAS;
 SELECT * FROM CATEGORIES;
