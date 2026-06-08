@@ -245,8 +245,86 @@ public class ExcelReportServiceImpl implements ExcelReportService {
         // Last-sale map
         Map<Long, LocalDate> lastSaleDates = buildLastSaleMap(allOrders);
 
-        int tableStart = 5;
+        int tableStart = 8;
         createTableHeader(sheet, wb, tableStart, columns);
+
+        // ─── CALCULATE KPI SUMMARY ───────────────────────────────────────────────
+int countOutOfStock = 0;      // Hết sạch (stock == 0)
+int countLowStock = 0;         // Sắp hết (0 < stock < 10)
+int countInStock = 0;          // Còn hàng (stock >= 10)
+
+for (Manga m : allMangas) {
+    int stock = m.getStockQuantity() != null ? m.getStockQuantity() : 0;
+    if (stock == 0) {
+        countOutOfStock++;
+    } else if (stock < 10) {
+        countLowStock++;
+    } else {
+        countInStock++;
+    }
+}
+
+// ─── CREATE KPI SUMMARY ROWS (Row 5-7) ──────────────────────────────────
+// Style cho KPI summary
+XSSFCellStyle kpiRedStyle = wb.createCellStyle();
+kpiRedStyle.setFillForegroundColor(COLOR_WARN_RED_BG);
+kpiRedStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+kpiRedStyle.setAlignment(HorizontalAlignment.LEFT);
+kpiRedStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+applyThinBorderAll(kpiRedStyle);
+XSSFFont kpiRedFont = wb.createFont();
+kpiRedFont.setBold(true);
+kpiRedFont.setFontHeightInPoints((short) 11);
+kpiRedFont.setColor(IndexedColors.RED.getIndex());  // ← Thêm .getIndex()
+kpiRedStyle.setFont(kpiRedFont);
+
+XSSFCellStyle kpiOraStyle = wb.createCellStyle();
+kpiOraStyle.setFillForegroundColor(COLOR_WARN_ORA_BG);
+kpiOraStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+kpiOraStyle.setAlignment(HorizontalAlignment.LEFT);
+kpiOraStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+applyThinBorderAll(kpiOraStyle);
+XSSFFont kpiOraFont = wb.createFont();
+kpiOraFont.setBold(true);
+kpiOraFont.setFontHeightInPoints((short) 11);
+kpiOraFont.setColor(IndexedColors.ORANGE.getIndex());  // ← Thêm .getIndex()
+kpiOraStyle.setFont(kpiOraFont);
+
+XSSFCellStyle kpiGreenStyle = wb.createCellStyle();
+kpiGreenStyle.setFillForegroundColor(fromHex("E2EFDA"));  // Light green
+kpiGreenStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+kpiGreenStyle.setAlignment(HorizontalAlignment.LEFT);
+kpiGreenStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+applyThinBorderAll(kpiGreenStyle);
+XSSFFont kpiGreenFont = wb.createFont();
+kpiGreenFont.setBold(true);
+kpiGreenFont.setFontHeightInPoints((short) 11);
+kpiGreenFont.setColor(IndexedColors.DARK_GREEN.getIndex());  // ← Thêm .getIndex()
+kpiGreenStyle.setFont(kpiGreenFont);
+
+// Row 5: Hết sạch (Đỏ)
+Row kpiRow1 = sheet.createRow(5);
+kpiRow1.setHeightInPoints(20);
+Cell kpiCell1 = kpiRow1.createCell(0);
+kpiCell1.setCellValue("Tổng số đầu truyện HẾT SẠCH: " + countOutOfStock);
+kpiCell1.setCellStyle(kpiRedStyle);
+merge(sheet, 5, 5, 0, columns.length - 1);
+
+// Row 6: Sắp hết (Cam/Vàng)
+Row kpiRow2 = sheet.createRow(6);
+kpiRow2.setHeightInPoints(20);
+Cell kpiCell2 = kpiRow2.createCell(0);
+kpiCell2.setCellValue("Tổng số đầu truyện SẮP HẾT (<10): " + countLowStock);
+kpiCell2.setCellStyle(kpiOraStyle);
+merge(sheet, 6, 6, 0, columns.length - 1);
+
+// Row 7: Còn hàng (Xanh lá)
+Row kpiRow3 = sheet.createRow(7);
+kpiRow3.setHeightInPoints(20);
+Cell kpiCell3 = kpiRow3.createCell(0);
+kpiCell3.setCellValue("Tổng số đầu truyện CÒN HÀNG: " + countInStock);
+kpiCell3.setCellStyle(kpiGreenStyle);
+merge(sheet, 7, 7, 0, columns.length - 1);
 
         CellStyle dataStyle = buildDataStyle(wb, false);
         CellStyle dataAlt   = buildDataStyle(wb, true);
@@ -256,9 +334,30 @@ public class ExcelReportServiceImpl implements ExcelReportService {
         CellStyle warnRed = buildWarningCellStyle(wb, COLOR_WARN_RED_BG, IndexedColors.RED);
         CellStyle warnOra = buildWarningCellStyle(wb, COLOR_WARN_ORA_BG, IndexedColors.DARK_YELLOW);
 
+        // ─── SORT: Ưu tiên 1: Hết sạch (0) → Ưu tiên 2: Sắp hết (<10) → Ưu tiên 3: Còn hàng (≥10) ───
+List<Manga> sortedMangas = allMangas.stream()
+    .sorted((m1, m2) -> {
+        int stock1 = m1.getStockQuantity() != null ? m1.getStockQuantity() : 0;
+        int stock2 = m2.getStockQuantity() != null ? m2.getStockQuantity() : 0;
+
+        // Priority 1: Hết sạch (0)
+        if (stock1 == 0 && stock2 != 0) return -1;  // m1 lên trước
+        if (stock1 != 0 && stock2 == 0) return 1;   // m2 lên trước
+
+        // Priority 2: Sắp hết (0 < stock < 10)
+        boolean m1LowStock = stock1 > 0 && stock1 < 10;
+        boolean m2LowStock = stock2 > 0 && stock2 < 10;
+        if (m1LowStock && !m2LowStock) return -1;
+        if (!m1LowStock && m2LowStock) return 1;
+
+        // Priority 3: Còn hàng (≥10) - sắp tăng dần
+        return Integer.compare(stock1, stock2);
+    })
+    .collect(Collectors.toList());
+
         int rowIdx = tableStart + 1;
         int stt = 1;
-        for (Manga m : allMangas) {
+        for (Manga m : sortedMangas) {
             boolean alt  = (stt % 2 == 0);
             Row row = sheet.createRow(rowIdx++);
             row.setHeightInPoints(18);
